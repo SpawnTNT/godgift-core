@@ -1,0 +1,63 @@
+﻿GodGift Core, le nœud de la chasse de L’Ange de l’Eau (version d’essai)
+
+  1. Décompressez l’archive (Windows : clic droit > Extraire tout).
+  2. Double-cliquez sur « Commencer ici ».
+  3. Choisissez votre appareil : Windows, Mac, Linux, Raspberry Pi, téléphone, ou sans installer.
+     La page détecte le vôtre et affiche les étapes.
+
+GodGift Core suit les 24 coffres sur la chaîne Bitcoin, vérifie tout lui-même, fait chasser
+hors ligne et fait devenir compagnon ; quand vous trouvez, il vide lui-même le coffre vers votre
+adresse de réception signée. Aucune donnée personnelle ; aucune clé conservée.
+Le trésor part tout seul dans la fenêtre de l’application installée, ouverte par son icône.
+Ailleurs (votre navigateur, la version web, une fenêtre rechargée), GodGift Core vous fait d’abord
+retaper 16 caractères de votre adresse de réception, en deux morceaux tirés au hasard et masqués
+à l’écran, lus dans votre propre portefeuille ; sans installer, il ne récupère aucun trésor.
+
+L’installateur vérifie chaque fichier contre fichiers/SHA256SUMS, ne copie que les fichiers de
+cette liste et affiche l’EMPREINTE DU PROGRAMME. Comparez-la à celle que publie l’auteur, ou
+déposez le fichier téléchargé sur angedeleau.com/verifier-installateur. À la sortie officielle,
+l’auteur désignera la version publiée par un message signé qui en donne l’empreinte ;
+recompiler_et_comparer.py (dans les sources) refait le programme et compare, comme on vérifie Bitcoin Core.
+
+INSTALLER, EN BREF
+  Windows             : double-clic sur « Installer (Windows) », puis Installer.
+  Mac                 : glisser « GodGift Core » dans Applications ; la première fois,
+                        Réglages Système > Confidentialité et sécurité > Ouvrir quand même.
+  Linux, Raspberry Pi : double-clic sur « Installer (Linux, Raspberry Pi) »
+                        (ou : sudo apt install "./Installer (Linux, Raspberry Pi).deb").
+                        Autres distributions : sh fichiers/installer_linux.sh
+  Téléphone           : ouvrir app.angedeleau.com, puis « Ajouter à l’écran d’accueil ».
+                        Pour récupérer un trésor, l’application installée sur un ordinateur
+                        reste la voie la plus sûre.
+
+DÉSINSTALLER
+  Windows : Paramètres > Applications > Applications installées > GodGift Core > Désinstaller.
+  Mac     : mettre GodGift Core à la corbeille.
+  Linux   : logithèque, ou sudo apt remove godgift-core.
+  GodGift Core ne conserve aucune clé.
+
+LA RÈGLE JAMAIS
+  Personne, pas même l’auteur, ne vous demandera jamais vos 24 mots, ni de payer pour une énigme,
+  un indice ou une réponse, ni vos réponses. L’édition numérique certifiée ne s’achète que sur
+  angedeleau.com ; GodGift Core ne se télécharge que sur angedeleau.com, ou s’ouvre sur
+  app.angedeleau.com. Quiconque vous le demande, même au nom de l’auteur, est un escroc.
+
+------------------------------------------------------------------------------------------
+GodGift Core, the node of the hunt of The Angel of the Water (trial version)
+
+  1. Extract the archive.  2. Double-click "Commencer ici" (Start here).
+  3. Choose your device; the page detects yours and shows the steps.
+The installer checks every file against fichiers/SHA256SUMS, copies only the files of that list and
+shows the PROGRAM FINGERPRINT: compare it with the one the author publishes, or drop the downloaded
+file on angedeleau.com/verifier-installateur. No personal data; no key kept.
+The treasure leaves by itself in the window of the installed app, opened from its icon. Elsewhere (your
+browser, the web version, a reloaded window), GodGift Core first has you retype 16 characters of your
+receiving address, in two pieces drawn at random and hidden on screen, read in your own wallet; without
+installing, it recovers no treasure.
+Windows: Installer (Windows). Mac: drag GodGift Core to Applications. Linux / Raspberry Pi: the .deb.
+Phone: open app.angedeleau.com; to recover a treasure, the app installed on a computer remains the safest way.
+Uninstall: Settings > Apps; Trash; apt remove godgift-core. Licence AGPL-3.0 (fichiers/LICENSE).
+
+Nobody, not even the author, will ever ask for your 24 words, for payment for a riddle, a hint or an answer,
+or for your answers. The certified digital edition is sold only on angedeleau.com; GodGift Core is downloaded
+only from angedeleau.com, or opened at app.angedeleau.com. Anyone who asks, even in the author’s name, is a scammer.

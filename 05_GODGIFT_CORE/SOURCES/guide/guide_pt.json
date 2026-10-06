@@ -1,0 +1,606 @@
+{
+  "titre": "Guia e glossário",
+  "sur": "Compreender a caçada",
+  "intro": "Tudo o que o GodGift Core lhe mostra, explicado com palavras simples. Comece por um percurso, ou procure diretamente uma palavra.",
+  "recherche": "Procurar uma palavra: grito, acaso, COFFRET, impressão digital…",
+  "aucun": "Nenhuma palavra corresponde. Tente uma palavra mais curta, ou percorra a lista.",
+  "t_parcours": "Primeiros passos",
+  "t_glossaire": "O glossário",
+  "t_faq": "Perguntas frequentes",
+  "voir_aussi": "Ver também",
+  "en_savoir_plus": "Saber mais",
+  "carte_titre": "Guia e glossário",
+  "carte_texte": "As palavras da caçada explicadas de forma simples, cinco percursos para começar bem e as perguntas mais frequentes.",
+  "ouvrir": "Abrir o guia",
+  "parcours": [
+    {
+      "titre": "Estou a descobrir",
+      "etapes": [
+        "Abra «O quadro»: os 24 cofres da caçada, um por mês, de janeiro de 2027 a dezembro de 2028. A cor de cada um indica o seu estado.",
+        "Toque num cofre: vê o montante, os dois enigmas quando aparecem, o grito e, mais tarde, as duas pistas.",
+        "Para ver uma caçada em curso antes de ela começar, marque «Modo demonstração» em Definições e depois «Guardar». Tudo aí é fictício.",
+        "Volte à caçada real desmarcando esse modo e depois «Guardar»."
+      ]
+    },
+    {
+      "titre": "Estou a caçar",
+      "etapes": [
+        "Antes de tudo, com calma: guarde em Definições «O meu endereço de receção», o da sua própria carteira, e assine-o com ela: a assinatura é obrigatória. É para lá que o tesouro irá.",
+        "No dia 3 do mês às 18:15:05 UTC (19:15:05 em Paris no inverno, 20:15:05 no verão) sai o primeiro enigma do cofre; no dia 17, à mesma hora, o segundo. Leia-os em «Enigmas».",
+        "Cada resposta é feita de palavras francesas da lista das cinco mil: três palavras para a maioria dos cofres, quatro para os maiores. Verifique as suas palavras em «Caçar», no fundo da página.",
+        "Uma hora depois do segundo enigma sai o grito: traz o acaso, a última peça da chave. O GodGift Core lê-o sozinho.",
+        "Em «Caçar», escolha o cofre: o GodGift Core prepara-o e mostra «Armado». Desligue a internet, escreva as suas duas respostas e depois «Calcular a chave».",
+        "Se for a chave certa, volte a ligar a internet. Na janela da aplicação instalada, aberta pelo seu ícone, o GodGift Core assina logo a transação na sua máquina e envia-a sozinha para o seu endereço, com uma oferta forte (cerca de 10 % do tesouro em taxas); noutro sítio (navegador, versão web, janela recarregada), faz-lhe primeiro voltar a escrever 16 caracteres do seu endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua carteira; em «Sem instalar», não envia nada. Se outra pessoa encontrou ao mesmo tempo, é a corrida: «Acelerar» duplica de uma vez as taxas.",
+        "Treine primeiro nos cofres de treino A e B: são falsos, públicos, e mostram-lhe exatamente o que aconteceria."
+      ]
+    },
+    {
+      "titre": "Levo o livro",
+      "etapes": [
+        "Só o proprietário de um exemplar oficial pode ser companheiro ativo, e um exemplar só faz um companheiro. Compre o seu em angedeleau.com indicando um endereço bc1q… da sua carteira: é o seu endereço de propriedade, impresso na página de título. A caçada, essa, continua gratuita.",
+        "Abra «Os livros», deposite o EPUB ou o PDF do seu exemplar e depois «Tornar-se companheiro com este exemplar»: a página Companheiro retoma o seu endereço de propriedade; é aí que chegarão as suas partes.",
+        "Assine a mensagem apresentada com esse endereço (no Sparrow: Ferramentas, Assinar mensagem), cole a assinatura e envie-a: a livraria dá-lhe uma ligação pessoal.",
+        "A ligação fica «em espera» enquanto a venda do seu exemplar não estiver paga, e depois passa a «ativa»: cada livro comprado por uma ligação ativa rende-lhe 40 % do seu preço.",
+        "As suas partes são pagas todos os trimestres, numa transação pública que qualquer pessoa pode verificar."
+      ]
+    },
+    {
+      "titre": "Verifico o meu livro",
+      "etapes": [
+        "Abra «Os livros».",
+        "Largue o seu EPUB ou o seu PDF, ou escreva a impressão digital impressa na folha de rosto.",
+        "O GodGift Core encontra o exemplar no registo e recalcula a raiz gravada na cadeia: se for oficial, di-lo, com o seu número."
+      ]
+    },
+    {
+      "titre": "Torno-me testemunha",
+      "etapes": [
+        "Em Definições, marque «Torno-me testemunha» (ou responda sim nas boas-vindas).",
+        "Em cada «Verificar tudo», e uma vez por dia sozinho, o seu GodGift Core publica o seu relatório: bloco, impressões digitais, resultado. Nada de pessoal.",
+        "O separador «Rede» conta as testemunhas da semana e assinala o mínimo desacordo: um manifesto diferente, uma versão não publicada, um controlo falhado.",
+        "Todos os dias, os relatórios são datados no Bitcoin: uma prova datada que qualquer pessoa pode verificar."
+      ]
+    }
+  ],
+  "mots": [
+    {
+      "id": "adresse",
+      "mot": "Endereço Bitcoin",
+      "texte": "Uma sequência de caracteres que aqui começa por bc1q… e que pode receber bitcoins, como um número de conta público. Cada cofre é um endereço; a sua carteira também tem endereços.",
+      "voir": [
+        "coffre",
+        "portefeuille"
+      ]
+    },
+    {
+      "id": "alea",
+      "mot": "Acaso",
+      "texte": "64 caracteres tirados à sorte na Caverna para cada cofre. Entra na chave do cofre juntamente com as palavras das respostas: sem ele, nem as respostas certas bastam. É revelado pelo grito, uma hora depois do segundo enigma.",
+      "voir": [
+        "cri",
+        "cle",
+        "cave"
+      ]
+    },
+    {
+      "id": "amorce",
+      "mot": "Transação de sementeira",
+      "texte": "A transação da sementeira, em dezembro de 2026, que enche os 24 cofres e prepara os 24 gritos. É paga a partir do balcão do autor; o manifesto gravado anuncia o endereço que assina as suas mensagens.",
+      "voir": [
+        "semis",
+        "cri",
+        "message"
+      ]
+    },
+    {
+      "id": "balayer",
+      "mot": "Varrer",
+      "texte": "Esvaziar um endereço para o seu. O GodGift Core fá-lo ele próprio quando encontra a chave de um cofre: assina na sua máquina e envia tudo para o seu endereço de receção. O cofre pertence à primeira transação confirmada que o esvazia.",
+      "voir": [
+        "recuperer",
+        "reception",
+        "pris"
+      ]
+    },
+    {
+      "id": "cave",
+      "mot": "Caverna",
+      "texte": "O computador do autor, que nunca esteve nem estará ligado a nenhuma rede. Aí são escritos os enigmas, tirados os acasos, calculados os endereços e assinadas as mensagens. Nenhum segredo sai de lá em claro.",
+      "voir": [
+        "alea",
+        "coffret"
+      ]
+    },
+    {
+      "id": "chasse",
+      "mot": "Caçada",
+      "texte": "Um tesouro completo: os seus cofres, os seus enigmas, a sua Pedra e o seu COFFRET. O Anjo da Água é a caçada n.º 1; as seguintes aparecerão sozinhas em «As caçadas». Cada caçada tem as suas próprias chaves: nenhuma pode abrir a outra.",
+      "voir": [
+        "chasse_zero",
+        "annonce",
+        "pierre"
+      ]
+    },
+    {
+      "id": "chasse_zero",
+      "mot": "Caçada zero",
+      "texte": "O ensaio geral: três cofres de 100 €, jogados em paralelo. Cada cofre tem dois enigmas: os três primeiros a 3 de novembro de 2026 às 18:15:05 UTC (19:15:05 em Paris), os três segundos a 17 de novembro à mesma hora; os três gritos a 17 de novembro às 19:15:05 UTC (20:15:05 em Paris). As pistas fortes abrem-se a 17 de dezembro de 2026 (se restar algum cofre), as segundas seis meses após o grito. As mesmas regras da grande caçada, com chaves próprias, distintas de um cofre para outro.",
+      "voir": [
+        "chasse"
+      ]
+    },
+    {
+      "id": "annonce",
+      "mot": "Anúncio de uma caçada",
+      "texte": "O texto exato AEDE:chasse:<n.º>:<impressão digital do manifesto>, gravado na cadeia com o troco da transação semente dessa caçada, antes do primeiro enigma e assinado pelo endereço de mensagens do autor. Uma caçada seguinte (n.º 2 a 999) só existe por ele. O GodGift Core fica a conhecê-lo pela livraria ou pelo seu servidor de reserva, verifica sozinho a assinatura, a gravação e o manifesto, e depois segue a caçada; se dois anúncios do mesmo número designam dois manifestos, vale o primeiro gravado e o segundo é recusado.",
+      "voir": [
+        "chasse",
+        "gravure",
+        "manifeste"
+      ]
+    },
+    {
+      "id": "cle",
+      "mot": "Chave do cofre",
+      "texte": "A chave privada que permite gastar o cofre. Calcula-se em sua casa a partir das palavras das duas respostas e do acaso (scrypt: cerca de dez segundos e um gigabyte de memória; uma tentativa não incomoda ninguém, milhares de milhões custariam uma fortuna). Nunca é escrita, nem mostrada a não ser que o peça («Especialista: mostrar a chave privada», um minuto): o GodGift Core usa-a para esvaziar o cofre para o seu endereço e depois esquece-a.",
+      "voir": [
+        "alea",
+        "recuperer",
+        "wif"
+      ]
+    },
+    {
+      "id": "coffre",
+      "mot": "Cofre",
+      "texte": "Um endereço Bitcoin enchido na sementeira. Há 24, um por mês, de 60 € a 1 300 € no início; uma parte das vendas do livro junta-se-lhes todos os trimestres. Dois enigmas abrem cada cofre.",
+      "voir": [
+        "etats",
+        "semis",
+        "versement"
+      ]
+    },
+    {
+      "id": "coffret",
+      "mot": "COFFRET",
+      "texte": "O ficheiro público em que a Caverna trancou antecipadamente cada enigma, cada grito e as duas pistas de cada cofre, até ao seu segundo exato. Não contém nenhuma solução. O seu GodGift Core guarda-o, lê-o segundo a regra da Caverna (nenhum cadeado repetido, cada um à hora da Pedra) e abre-o ele próprio à hora certa, mesmo que o site caia. Ninguém, nem mesmo o autor, o pode abrir mais cedo.",
+      "voir": [
+        "verrou",
+        "drand",
+        "manifeste"
+      ]
+    },
+    {
+      "id": "compagnon",
+      "mot": "Companheiro",
+      "texte": "O proprietário de um exemplar oficial que dá a conhecer o romance com a sua ligação pessoal. Declara-se com o endereço de propriedade do seu exemplar: um exemplar, um companheiro. A sua ligação fica «em espera» enquanto a venda desse exemplar não estiver paga, e depois passa a «ativa». Cada livro vendido por uma ligação ativa rende-lhe 40 % do preço, pagos todos os trimestres para esse endereço. Sem conta, sem chave a confiar.",
+      "voir": [
+        "versement",
+        "adresse"
+      ]
+    },
+    {
+      "id": "cri",
+      "mot": "Grito",
+      "texte": "A transação que publica na cadeia o acaso de um cofre, uma hora depois do seu segundo enigma. Foi assinada de antemão na Caverna e parte sozinha: a partir do grito, os caçadores têm tudo para calcular a chave.",
+      "voir": [
+        "alea",
+        "coffret"
+      ]
+    },
+    {
+      "id": "demo",
+      "mot": "Modo demonstração",
+      "texte": "Uma caçada imaginada a 10 de junho de 2027, com valores ilustrativos e endereços fictícios, para ver como é o GodGift Core em plena caçada. Nenhum enigma real. Definições: marque ou desmarque «Modo demonstração» e depois «Guardar».",
+      "voir": []
+    },
+    {
+      "id": "drand",
+      "mot": "drand",
+      "texte": "Uma rede pública, mantida por universidades e empresas de todo o mundo, que publica uma assinatura de três em três segundos. Cada assinatura abre os bloqueios do seu instante: é o relógio do COFFRET.",
+      "voir": [
+        "verrou",
+        "coffret"
+      ]
+    },
+    {
+      "id": "empreinte",
+      "mot": "Impressão digital",
+      "texte": "Uma sequência de 64 caracteres (0-9 a-f) calculada a partir de um ficheiro ou de um texto (SHA-256). Mudar uma única letra muda toda a impressão digital: comparar duas impressões digitais basta para saber se dois ficheiros são idênticos.",
+      "voir": [
+        "gravure",
+        "verifier",
+        "exemplaire"
+      ]
+    },
+    {
+      "id": "enigme",
+      "mot": "Enigma",
+      "texte": "Um texto cuja resposta é feita de palavras da lista das cinco mil. Dois por mês: nos dias 3 e 17 às 18:15:05 UTC (19:15:05 em Paris no inverno, 20:15:05 no verão). O enigma do dia 3 e o do dia 17 do mesmo mês abrem juntos o cofre desse mês. Os enigmas são publicados em francês, único texto que faz fé, por vezes com uma tradução inglesa não oficial; gratuitos, para todos no mesmo instante.",
+      "voir": [
+        "liste",
+        "utc",
+        "coffre"
+      ]
+    },
+    {
+      "id": "etats",
+      "mot": "Estados de um cofre",
+      "texte": "POR SEMEAR: ainda não enchido (antes de dezembro de 2026). SELADO: enchido, nenhum enigma saiu. EM CAÇA: o primeiro enigma saiu, o segundo chega no dia 17. POR PEGAR: os dois enigmas saíram, a chave pode ser encontrada. PEGO: alguém esvaziou-o.",
+      "voir": [
+        "coffre",
+        "pris"
+      ]
+    },
+    {
+      "id": "exemplaire",
+      "mot": "Exemplar oficial",
+      "texte": "Um livro digital vendido pela livraria. Traz o seu número e a sua impressão digital na folha de rosto; todos os trimestres, o pagamento grava na cadeia a raiz de todos os exemplares. Largue-o em «Os livros» para o verificar.",
+      "voir": [
+        "empreinte",
+        "racine"
+      ]
+    },
+    {
+      "id": "explorateur",
+      "mot": "Explorador",
+      "texte": "O serviço que lê a cadeia Bitcoin para o GodGift Core. Há dois, independentes (mempool.space e blockstream.info por omissão, ou o seu próprio nó): cada leitura importante é comparada, e um desacordo é assinalado. O GodGift Core nunca lhes envia nada de secreto.",
+      "voir": [
+        "sources",
+        "noeud"
+      ]
+    },
+    {
+      "id": "gravure",
+      "mot": "Gravação",
+      "texte": "Inscrever uma impressão digital numa transação Bitcoin. Depois de confirmada, ninguém a pode alterar: é a prova pública e datada de que um ficheiro existia tal e qual nesse momento.",
+      "voir": [
+        "empreinte",
+        "manifeste"
+      ]
+    },
+    {
+      "id": "indice",
+      "mot": "Pistas",
+      "texte": "Duas por cofre, escritas pelo autor e trancadas no COFFRET. Trinta dias após o seu grito, um cofre não levado recebe uma pista forte; seis meses depois, uma segunda pista. Não mudam nada na chave.",
+      "voir": [
+        "coffret",
+        "solution"
+      ]
+    },
+    {
+      "id": "librairie",
+      "mot": "Livraria",
+      "texte": "O servidor que vende o livro digital em bitcoin e publica os enigmas, o quadro e os pagamentos. O GodGift Core reconta tudo o que ela publica; se ela cair, ele abre o COFFRET por si e o botão «Comprar» passa para o servidor de reserva que o autor designou por uma mensagem assinada.",
+      "voir": [
+        "coffret",
+        "secours"
+      ]
+    },
+    {
+      "id": "liste",
+      "mot": "Lista das cinco mil",
+      "texte": "As 5 000 palavras francesas, numeradas de 0001 a 5000, de entre as quais são tiradas todas as respostas. Pode escrever uma palavra ou o seu número. A sua impressão digital está inscrita na Pedra: não pode mudar.",
+      "voir": [
+        "enigme",
+        "pierre"
+      ]
+    },
+    {
+      "id": "manifeste",
+      "mot": "Manifesto",
+      "texte": "O ficheiro público da caçada: os endereços dos cofres, os montantes, a impressão de cada aleatório, o compromisso de cada cofre (as suas respostas, fixadas sem serem reveladas) e a impressão do COFFRET. A sua impressão é gravada na cadeia na sementeira: tudo o que se segue tem de lhe corresponder. O GodGift Core volta a provar esta gravação em cada arranque.",
+      "voir": [
+        "gravure",
+        "coffret",
+        "semis"
+      ]
+    },
+    {
+      "id": "message",
+      "mot": "Mensagem assinada",
+      "texte": "Uma mensagem pública do autor, assinada na Caverna (norma BIP-322), datada AAAA-MM-DD. O GodGift Core verifica a assinatura, a forma da mensagem e que o endereço que assina é o do autor: fixado no programa, ou anunciado por um manifesto gravado. Uma mensagem falsa fica dobrada. Ninguém pode falar em nome do autor.",
+      "voir": [
+        "amorce",
+        "cave"
+      ]
+    },
+    {
+      "id": "noeud",
+      "mot": "Nó",
+      "texte": "Cada GodGift Core verifica; os voluntários testemunham. Cada um lê a cadeia e a livraria, e reconta. Ninguém precisa de acreditar no site: se a livraria mentisse, cada nó veria, e as testemunhas voluntárias publicá-lo-iam.",
+      "voir": [
+        "verifier",
+        "temoin",
+        "sources"
+      ]
+    },
+    {
+      "id": "pierre",
+      "mot": "Pedra do programa",
+      "texte": "O regulamento completo da caçada, em francês, gravado na cadeia antes da abertura. Nada se pode afastar dele. Legível em Definições, «Ler a Pedra (em francês)»; as condições gerais dizem-no em linguagem corrente.",
+      "voir": [
+        "gravure",
+        "chasse"
+      ]
+    },
+    {
+      "id": "portefeuille",
+      "mot": "Carteira",
+      "texte": "O programa que guarda os seus bitcoins e os seus endereços (por exemplo Sparrow ou Electrum). Serve para receber as suas partes de companheiro, assinar uma mensagem e varrer um cofre encontrado.",
+      "voir": [
+        "adresse",
+        "balayer"
+      ]
+    },
+    {
+      "id": "pris",
+      "mot": "Pego",
+      "texte": "Um cofre está pego assim que a primeira transação que o esvazia é confirmada na cadeia. Não há nada a declarar nem a reclamar: a cadeia faz fé. Um cofre não encontrado continua por pegar, sem limite de tempo.",
+      "voir": [
+        "balayer",
+        "etats"
+      ]
+    },
+    {
+      "id": "racine",
+      "mot": "Raiz e registo",
+      "texte": "O registo lista as impressões de todos os exemplares vendidos. Em cada trimestre, são combinadas numa só impressão, a raiz (árvore de Merkle segundo a RFC 6962), gravada na cadeia. O GodGift Core refaz este cálculo: um exemplar está certificado quando faz parte de uma raiz gravada.",
+      "voir": [
+        "exemplaire",
+        "versement"
+      ]
+    },
+    {
+      "id": "sats",
+      "mot": "Sats",
+      "texte": "O satoshi, a mais pequena unidade do bitcoin: 1 bitcoin = 100 000 000 sats. O livro custa 21 000 sats no lançamento e depois o preço que a livraria publica (um reajuste é anunciado com sete dias de antecedência e gravado: Pedra, artigo 1); os montantes dos cofres são gravados ao satoshi.",
+      "voir": []
+    },
+    {
+      "id": "secours",
+      "mot": "Servidor de reserva",
+      "texte": "Uma segunda livraria, pronta a retomar a venda se a primeira cair. É designada antecipadamente por uma mensagem assinada do autor cuja última linha é AEDE:secours:https://… (Pedra, artigo 10), ou fixada no programa: o GodGift Core só muda para ela, nunca para um endereço simplesmente anunciado pela livraria. Nunca há duas caixas ativas ao mesmo tempo. Sem servidor de reserva designado, «Comprar» leva a angedeleau.com e diz que a venda está momentaneamente indisponível; a caçada continua.",
+      "voir": [
+        "librairie"
+      ]
+    },
+    {
+      "id": "semis",
+      "mot": "Sementeira",
+      "texte": "A sessão de dezembro de 2026 em que a Caverna enche os 24 cofres (4 000 € no total, convertidos em bitcoin à cotação do dia), tranca o COFFRET e publica o manifesto, que é gravado.",
+      "voir": [
+        "amorce",
+        "manifeste",
+        "coffret"
+      ]
+    },
+    {
+      "id": "solution",
+      "mot": "Solução assinada",
+      "texte": "A solução de um cofre só é publicada depois de o cofre ser levado, por uma mensagem assinada do autor cuja última linha é AEDE:solution:… Verifica-se contra o compromisso salgado gravado na sementeira: o GodGift Core mostra «compromisso da sementeira cumprido» ou «compromisso FALSO». Nunca copia estas palavras para as suas respostas e não envia nada.",
+      "voir": [
+        "message",
+        "manifeste",
+        "indice"
+      ]
+    },
+    {
+      "id": "utc",
+      "mot": "UTC",
+      "texte": "A hora universal. 18:15:05 UTC são 19:15:05 em Paris no inverno e 20:15:05 no verão; em Lisboa, 18:15:05 no inverno e 19:15:05 no verão. O GodGift Core mostra também uma contagem decrescente até ao próximo enigma.",
+      "voir": [
+        "enigme"
+      ]
+    },
+    {
+      "id": "verifier",
+      "mot": "Verificar tudo",
+      "texte": "As verificações feitas no seu computador, sem confiar em ninguém: a Pedra, a lista, o calendário, o manifesto e a sua gravação, a sementeira, os gritos, os pagamentos, os cofres, o COFFRET, cada caçada seguida (a caçada zero incluída), as mensagens e as soluções assinadas, o registo, este programa e o acordo das duas fontes. «Pendente» é normal antes da sementeira.",
+      "voir": [
+        "noeud",
+        "empreinte",
+        "temoin"
+      ]
+    },
+    {
+      "id": "verrou",
+      "mot": "Bloqueio temporal",
+      "texte": "Uma cifragem que torna um texto ilegível até um segundo preciso: só se abre com a assinatura que a drand publicará nesse momento. Nem quem fechou o bloqueio o pode abrir antes.",
+      "voir": [
+        "drand",
+        "coffret"
+      ]
+    },
+    {
+      "id": "versement",
+      "mot": "Pagamento trimestral",
+      "texte": "Em cada trimestre (com data de 1 de março, junho, setembro e dezembro), uma transação pública paga as partes dos companheiros, junta a parte do tesouro aos cofres ainda fechados (depois do último enigma, à reserva do tesouro, o endereço de temporada) e grava a raiz do registo.",
+      "voir": [
+        "compagnon",
+        "racine",
+        "coffre"
+      ]
+    },
+    {
+      "id": "wif",
+      "mot": "Chave privada (WIF)",
+      "texte": "A forma de uma chave privada que as carteiras aceitam. O GodGift Core só a mostra na secção «Especialista», fechada: ele próprio esvazia o cofre. Não a mostre a ninguém: quem a vir pode esvaziar o cofre antes de si.",
+      "voir": [
+        "cle",
+        "recuperer"
+      ]
+    },
+    {
+      "id": "reception",
+      "mot": "Endereço de receção",
+      "texte": "O endereço da sua própria carteira (mesmo uma carteira fria), guardado antecipadamente em Definições. No dia em que encontrar, o tesouro parte sozinho para lá. Tem de ser assinado pela sua carteira (endereço bc1q…, 3… ou 1…): a assinatura prova que é seu e desmascara um vírus que tivesse trocado o endereço copiado. O GodGift Core volta a verificá-lo mesmo antes do envio, mostra a sua data de registo e avisa-o se mudou desde a sua última visita. Fora da janela própria da aplicação instalada, faz-lhe também voltar a escrever, antes de cada envio, 16 caracteres deste endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua própria carteira.",
+      "voir": [
+        "recuperer",
+        "portefeuille",
+        "message"
+      ]
+    },
+    {
+      "id": "recuperer",
+      "mot": "Recuperar o tesouro",
+      "texte": "Quando a chave de um cofre real é encontrada, o GodGift Core assina, na sua máquina, a transação que envia todo o cofre para o seu endereço de receção assinado, e difunde-a pelas duas fontes. Na janela própria da aplicação instalada (aberta pelo seu ícone), fá-lo logo; noutro sítio (navegador, versão web, janela recarregada), só depois de ter voltado a escrever 16 caracteres do seu endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua própria carteira: se uma página armadilhada tivesse mudado o endereço guardado, não coincidiriam, nem sequer com um endereço fabricado que acabasse igual. A janela própria só guarda o seu código na memória: recarregada, já não envia sozinha; abra-a de novo pelo seu ícone. Em «Sem instalar», não envia nada. Sem ligação, a transação espera que a rede volte. Taxas: desde logo, mesmo sem concorrente, uma oferta forte de cerca de 10 % do tesouro (no máximo 300 sat/vB), sem lhe perguntar; acima disso, pergunta-lhe; nunca mais de metade do tesouro. No telemóvel, a versão web verifica tudo; para recuperar um tesouro, a aplicação instalada num computador continua a ser a via mais segura.",
+      "voir": [
+        "reception",
+        "accelerer",
+        "pris"
+      ]
+    },
+    {
+      "id": "accelerer",
+      "mot": "Acelerar",
+      "texte": "Se outra pessoa encontrou ao mesmo tempo, a transação dela talvez espere antes da sua. «Acelerar» reenvia a mesma transação duplicando de uma vez as taxas, nunca além de metade do tesouro: os mineradores ficam em geral com a que paga mais. É a corrida, igual para todos.",
+      "voir": [
+        "recuperer",
+        "pris",
+        "course"
+      ]
+    },
+    {
+      "id": "officiel",
+      "mot": "Versão publicada",
+      "texte": "O seu GodGift Core procura a sua impressão nas mensagens assinadas do autor. «Versão publicada»: o autor publicou esta impressão. Este distintivo não prova que a sua cópia está intacta (uma cópia armadilhada poderia mentir sobre si própria): para ter a certeza, recompile o programa com recompiler_et_comparer.py, ou verifique o instalador em angedeleau.com/verifier-installateur. «Versão desconhecida» ou «retirada»: descarregue a certa em angedeleau.com.",
+      "voir": [
+        "installateur",
+        "empreinte",
+        "jamais"
+      ]
+    },
+    {
+      "id": "installateur",
+      "mot": "Verificar o meu instalador",
+      "texte": "Em angedeleau.com/verifier-installateur, deposite o ficheiro descarregado: o seu navegador calcula a impressão no próprio local e compara-a com os instaladores publicados. No Windows, o instalador terá também a assinatura do autor, depois de assinado (Certum); a versão beta ainda não está.",
+      "voir": [
+        "officiel",
+        "jamais"
+      ]
+    },
+    {
+      "id": "jamais",
+      "mot": "A regra NUNCA",
+      "texte": "Ninguém, nem mesmo o autor, lhe pedirá alguma vez as suas 24 palavras, nem que pague por um enigma, uma pista ou uma resposta, nem as suas respostas. A edição digital certificada só se compra em angedeleau.com; o GodGift Core só se descarrega em angedeleau.com, ou se abre em app.angedeleau.com. Quem lho pedir, mesmo em nome do autor, é um burlão.",
+      "voir": [
+        "officiel",
+        "installateur",
+        "recuperer"
+      ]
+    },
+    {
+      "id": "sources",
+      "mot": "Duas fontes",
+      "texte": "O GodGift Core lê a cadeia em duas fontes independentes e compara tudo o que está confirmado: uma transação, um endereço, uma gravação. Se não disserem o mesmo, recusa concluir e di-lo. Se uma cair, a outra assume.",
+      "voir": [
+        "explorateur",
+        "verifier"
+      ]
+    },
+    {
+      "id": "temoin",
+      "mot": "Testemunha",
+      "texte": "Um GodGift Core voluntário que publica, depois de cada verificação, um relatório assinado por uma chave anónima renovada todas as semanas: o bloco, as impressões digitais do manifesto, do COFFRET e do programa, e o resultado. Se a livraria, o site ou uma fonte mentisse, testemunhas independentes teriam publicado o contrário. Nada de pessoal é publicado; o relé vê apenas o endereço IP da ligação.",
+      "voir": [
+        "nostr",
+        "horodatage",
+        "noeud"
+      ]
+    },
+    {
+      "id": "nostr",
+      "mot": "Nostr",
+      "texte": "Uma rede aberta de mensagens assinadas, sem conta nem dono, sustentada por centenas de relés independentes. As testemunhas publicam lá os seus relatórios; qualquer pessoa pode relê-los e verificar as assinaturas.",
+      "voir": [
+        "temoin",
+        "horodatage"
+      ]
+    },
+    {
+      "id": "horodatage",
+      "mot": "Datação (OpenTimestamps)",
+      "texte": "Todos os dias, os relatórios das testemunhas são reunidos e a sua impressão digital é ancorada gratuitamente no Bitcoin pelo OpenTimestamps. É a prova datada de que esses relatórios existiam tal e qual nesse dia. Qualquer pessoa pode refazer a ancoragem e verificar a prova.",
+      "voir": [
+        "temoin",
+        "gravure"
+      ]
+    },
+    {
+      "id": "course",
+      "mot": "A corrida",
+      "texte": "Todos os que encontram as respostas certas obtêm a mesma chave: o cofre fica para a primeira transação confirmada, em geral a que paga mais taxas aos mineradores. É a regra do jogo, e nenhum programa o pode impedir. O GodGift Core paga desde logo, mesmo sem concorrente, uma oferta forte (cerca de 10 % do tesouro, no máximo 300 sat/vB) e duplica de uma vez com «Acelerar», nunca além de metade do tesouro; um concorrente que aposte mais, ou que entupa a fila com transações ligadas, pode ganhar.",
+      "voir": [
+        "accelerer",
+        "recuperer",
+        "pris"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "A caçada é paga?",
+      "r": "Não. Os enigmas são públicos e gratuitos, para todos. O romance acompanha a caçada sem fazer parte dela: não contém nenhum enigma da caçada, nem nenhuma informação útil para uma resposta que não seja também publicada gratuitamente. Uma parte de cada venda alimenta simplesmente os cofres."
+    },
+    {
+      "q": "Porque é que o cálculo da chave demora dez segundos?",
+      "r": "É de propósito. Para si, uma tentativa não custa nada. Para quem quisesse experimentar todas as combinações, milhares de milhões de tentativas de um gigabyte cada custariam muito mais do que um cofre."
+    },
+    {
+      "q": "Quem pode abrir o COFFRET antes da hora?",
+      "r": "Ninguém, nem mesmo o autor. Cada bloqueio só se abre com a assinatura que a rede drand publicará nesse segundo."
+    },
+    {
+      "q": "E se o site cair?",
+      "r": "O GodGift Core guarda o COFFRET e abre-o ele próprio à hora certa; os gritos partem para a cadeia; o botão «Comprar» passa para o servidor de reserva que o autor designou por uma mensagem assinada (sem ele, a venda está momentaneamente indisponível). A caçada continua."
+    },
+    {
+      "q": "Encontrei a chave: o que devo fazer?",
+      "r": "Na janela da aplicação instalada, nada a fazer: se o seu endereço de receção assinado estiver guardado, o GodGift Core envia logo todo o cofre para lá. Noutro sítio (navegador, versão web, janela recarregada), volte primeiro a escrever os 16 caracteres pedidos do seu endereço, em dois pedaços ocultos no ecrã, lidos na sua carteira; em «Sem instalar», instale o GodGift Core e volte a calcular a chave. Volte a ligar a internet se a tinha desligado. Se aparecer «Acelerar», outra pessoa encontrou ao mesmo tempo: é a corrida, clique."
+    },
+    {
+      "q": "Falta-me uma única palavra: posso experimentar tudo?",
+      "r": "Sim, é permitido. Uma palavra em falta são cinco mil tentativas, algumas horas de cálculo. A lentidão protege contra a força bruta, não contra um caçador que quase encontrou."
+    },
+    {
+      "q": "Porque é que aparece «Pendente» em Verificar?",
+      "r": "Antes da sementeira de dezembro de 2026, ou quando a livraria ainda não abriu, ainda não há nada a recontar. Não é um erro. Um controlo a vermelho, esse sim, assinala um problema real."
+    },
+    {
+      "q": "As minhas respostas seguem para a internet?",
+      "r": "Nunca. O cálculo faz-se na sua máquina; o GodGift Core não envia nenhuma resposta. Para um cofre real, desligue mesmo assim a internet antes de escrever."
+    },
+    {
+      "q": "Um cofre não encontrado volta para o autor?",
+      "r": "Não. Fica por levar, sem limite de tempo. Trinta dias após o seu grito, um cofre não levado recebe uma pista forte; seis meses depois, uma segunda pista. A solução só é publicada depois de o cofre ser levado, por uma mensagem assinada do autor, que se verifica contra o compromisso gravado na sementeira."
+    },
+    {
+      "q": "Como sei que este programa é o certo?",
+      "r": "O distintivo no topo do ecrã diz «versão publicada» quando o autor assinou esta impressão; não prova que a sua cópia está intacta. Antes de instalar, verifique o ficheiro em angedeleau.com/verifier-installateur; pode também recompilar tudo você mesmo (recompiler_et_comparer.py). No Windows, o instalador terá a assinatura do autor depois de assinado (Certum)."
+    },
+    {
+      "q": "É preciso ser testemunha?",
+      "r": "Não, é uma escolha, que pode mudar a qualquer momento em Definições. Ser testemunha torna a caçada verificável por todos; não publica nada de pessoal, mas o relé Nostr vê o endereço IP da ligação."
+    },
+    {
+      "q": "A minha carteira não sabe assinar uma mensagem: o que fazer?",
+      "r": "Use uma carteira que saiba assinar (Sparrow, Electrum, Trezor Suite, Coldcard…) com um endereço bc1q…, 3… ou 1…: a assinatura é obrigatória. Prova que o endereço é seu, e o GodGift Core volta a verificá-la mesmo antes de cada envio; sem ela, nenhum endereço é guardado."
+    },
+    {
+      "q": "E se duas pessoas encontrarem ao mesmo tempo?",
+      "r": "É a corrida, a regra do jogo: todos os que encontram têm a mesma chave, e o cofre fica para a primeira transação confirmada, em geral a que paga mais taxas. O GodGift Core paga desde logo, mesmo sem concorrente, uma oferta forte de cerca de 10 % do tesouro (no máximo 300 sat/vB, sem lhe perguntar) e «Acelerar» duplica de uma vez, nunca mais de metade do tesouro. Um concorrente que aposte mais pode ganhar: nenhum programa o pode impedir."
+    },
+    {
+      "q": "Alguém me propõe outra versão do GodGift Core, ou ajuda para recuperar um cofre",
+      "r": "Recuse. Ninguém, nem mesmo o autor, lhe pedirá alguma vez as suas 24 palavras, nem que pague por um enigma, uma pista ou uma resposta, nem as suas respostas. A edição digital certificada só se compra em angedeleau.com; o GodGift Core só se descarrega em angedeleau.com, ou se abre em app.angedeleau.com. Quem lho pedir, mesmo em nome do autor, é um burlão. O verdadeiro GodGift Core nunca envia as suas respostas nem a chave de um cofre a quem quer que seja: ele próprio esvazia o cofre para o seu endereço de receção assinado."
+    },
+    {
+      "q": "O autor é Satoshi Nakamoto?",
+      "r": "Não. Não é e não pretende sê-lo; o Ferreiro do romance é uma personagem."
+    },
+    {
+      "q": "Posso usar o GodGift Core no meu telemóvel?",
+      "r": "Sim: abra app.angedeleau.com (um alojamento à parte, cada ficheiro verificado pela sua impressão) e adicione-o ao ecrã inicial. Segue e verifica tudo; antes de cada envio de um tesouro, faz-lhe voltar a escrever 16 caracteres do seu endereço (dois pedaços tirados ao acaso, ocultos no ecrã). Para recuperar um tesouro, a aplicação instalada num computador continua a ser a via mais segura: não depende de nenhum site."
+    }
+  ]
+}

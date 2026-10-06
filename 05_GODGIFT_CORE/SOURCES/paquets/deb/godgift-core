@@ -1,0 +1,64 @@
+#!/bin/sh
+# GodGift Core pour Linux et Raspberry Pi : ouvre le programme dans une fenetre dediee de Chromium, Chrome, Edge ou Brave.
+# La fenetre dediee (contre-audit godgift N1) : un profil a elle seule, et un jeton de 32 octets tire au hasard au premier demarrage,
+# garde dans un fichier lisible par vous seul et passe dans l'adresse de la fenetre ; a cote du programme, son empreinte seule
+# (gg_fenetre.js). Seule cette fenetre envoie un tresor sans retape. Le programme de /usr/share etant commun a tous, il est recopie
+# dans votre dossier (une fois par version) pour y poser gg_fenetre.js. Un navigateur installe en « snap » (Ubuntu) ne lit que son
+# propre dossier : la copie va alors dans celui-ci.
+# La copie est REVERIFIEE A CHAQUE LANCEMENT (contre-verification V4) : chaque fichier contre la liste SHA256SUMS du paquet (sous
+# /usr/share, que seul root peut ecrire et que dpkg a verifiee), aucun fichier en plus, et l'empreinte affichee (gg_empreinte.js) egale
+# au SHA-256 de cette liste. Au moindre ecart, rien n'est lance, et un message dit quoi faire.
+# Sans navigateur de cette famille, le programme s'ouvre dans le navigateur principal, sans jeton : pour recuperer un tresor, il fait
+# alors retaper 16 caracteres de l'adresse de reception (deux morceaux tires au hasard, masques a l'ecran), lus dans le portefeuille.
+RACINE=/usr/share/godgift-core
+SRC=$RACINE/app
+SOMMES=$RACINE/SHA256SUMS
+alerte() {   # $1 : le message ; dans une fenetre si le bureau en offre une, et toujours sur la sortie d'erreur
+  printf '%s\n' "$1" >&2
+  if command -v zenity >/dev/null 2>&1; then zenity --error --title="GodGift Core" --text="$1" >/dev/null 2>&1
+  elif command -v kdialog >/dev/null 2>&1; then kdialog --title "GodGift Core" --error "$1" >/dev/null 2>&1
+  elif command -v xmessage >/dev/null 2>&1; then xmessage -center "$1" >/dev/null 2>&1
+  elif command -v notify-send >/dev/null 2>&1; then notify-send -u critical "GodGift Core" "$1" >/dev/null 2>&1
+  fi
+}
+copie() {   # $1 : le dossier de l'utilisateur ; la copie est refaite quand le programme installe change
+  if ! cmp -s "$SRC/gg_empreinte.js" "$1/app/gg_empreinte.js" 2>/dev/null; then
+    rm -rf "$1/app"; mkdir -p "$1"; cp -r "$SRC" "$1/app"; chmod -R u+w "$1/app"; rm -f "$1/app/gg_fenetre.js"
+  fi
+}
+verifier() {   # $1 : le dossier qui contient app/ ; vrai si la copie est exactement le programme du paquet
+  E=$(sha256sum "$SOMMES" 2>/dev/null | cut -d' ' -f1)
+  [ -f "$SOMMES" ] && cmp -s "$SRC/gg_empreinte.js" "$1/app/gg_empreinte.js" && grep -q "\"empreinte\": \"$E\"" "$1/app/gg_empreinte.js" &&
+    [ "$(cd "$1" && find app -type f ! -name gg_empreinte.js ! -name gg_fenetre.js | LC_ALL=C sort)" = "$(cut -c67- "$SOMMES" | LC_ALL=C sort)" ] &&
+    (cd "$1" && sha256sum --quiet --strict -c "$SOMMES" >/dev/null 2>&1)
+}
+refuser() {   # $1 : le dossier de la copie
+  alerte "GodGift Core refuse de s’ouvrir : sa copie dans $1/app a été modifiée (elle ne correspond plus à la liste SHA256SUMS du paquet). Rien n’a été lancé.
+Supprimez le dossier $1/app (il sera refait depuis le paquet au prochain lancement), puis faites vérifier cet ordinateur : quelqu’un, ou un programme, a changé GodGift Core.
+
+GodGift Core refuses to open: its copy in $1/app was modified (it no longer matches the package’s SHA256SUMS list). Nothing was launched.
+Delete the folder $1/app (it will be rebuilt from the package at the next launch), then have this computer checked: someone, or some program, changed GodGift Core."
+  exit 1
+}
+jeton() {   # $1 : le dossier de l'utilisateur ; ecrit gg_fenetre.js et rend le jeton
+  ( umask 077
+    if ! grep -qE '^[0-9a-f]{64}$' "$1/jeton" 2>/dev/null; then od -An -N32 -tx1 /dev/urandom | tr -d ' \n' > "$1/jeton"; fi
+    E=$(tr -d '\n' < "$1/jeton" | sha256sum | cut -d' ' -f1)
+    printf '/* Ecrit par le lanceur : l empreinte du jeton de la fenetre dediee (le jeton n est que dans %s/jeton). */\nthis.GG_FENETRE = {"empreinte": "%s"};\n' "$1" "$E" > "$1/app/gg_fenetre.js" )
+  tr -d '\n' < "$1/jeton"
+}
+for b in chromium chromium-browser google-chrome google-chrome-stable microsoft-edge microsoft-edge-stable brave-browser; do
+  C=$(command -v "$b" 2>/dev/null) || continue
+  case "$(readlink -f "$C")" in
+    */snap/*|/usr/bin/snap) D="$HOME/snap/$b/common/godgift-core" ;;
+    *) D="${XDG_DATA_HOME:-$HOME/.local/share}/godgift-core" ;;
+  esac
+  copie "$D"; verifier "$D" || refuser "$D"
+  J=$(jeton "$D"); mkdir -p "$D/profil"
+  exec "$C" --app="file://$D/app/godgift.html?fenetre=$J" --user-data-dir="$D/profil" --window-size=1360,880 --no-first-run --no-default-browser-check
+done
+APP=$SRC
+if [ -x /snap/bin/firefox ]; then
+  D="$HOME/snap/firefox/common/godgift-core"; copie "$D"; verifier "$D" || refuser "$D"; APP="$D/app"
+fi
+exec xdg-open "file://$APP/godgift.html"

@@ -1,0 +1,8 @@
+# Produits de la construction (construire.py, recompiler_et_comparer.py)
+05_GODGIFT_CORE/SOURCES/dist/
+05_GODGIFT_CORE/SOURCES/build_nsis/
+05_GODGIFT_CORE/SOURCES/build_mac/
+05_GODGIFT_CORE/SOURCES/build_deb/
+05_GODGIFT_CORE/SOURCES/bundle/node_modules/
+__pycache__/
+*.pyc

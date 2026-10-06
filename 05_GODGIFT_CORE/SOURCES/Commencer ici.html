@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installer GodGift Core</title>
+<link rel="icon" href="fichiers/app/img/icone.png">
+<style>
+@font-face{font-family:CZ;src:url(fichiers/app/fonts/cinzel-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:CG;src:url(fichiers/app/fonts/cormorant-garamond-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:CG;src:url(fichiers/app/fonts/cormorant-garamond-latin-600-italic.woff2);font-weight:600;font-style:italic}
+@font-face{font-family:DM;src:url(fichiers/app/fonts/dm-sans-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:DM;src:url(fichiers/app/fonts/dm-sans-latin-600-normal.woff2);font-weight:600}
+:root{--nuit:#0b0f15;--or:#e9c572;--or2:#c99a3e;--or3:#a8772a;--texte:#efe6d2;--doux:#cdbf9f;--gris:#a99d84}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--nuit);color:var(--texte);font:14.5px/1.55 DM,system-ui,sans-serif}
+.fond{position:fixed;inset:-3%;background:url(fichiers/app/img/fond_accueil_vouivre.jpg) center/cover;animation:lent 30s ease-in-out infinite alternate}
+@keyframes lent{from{transform:scale(1.02)}to{transform:scale(1.1) translate(-1.5%,-1%)}}
+.voile{position:fixed;inset:0;background:linear-gradient(90deg,rgba(8,11,16,.92) 0%,rgba(8,11,16,.7) 55%,rgba(8,11,16,.3) 100%)}
+.page{position:relative;max-width:820px;padding:5vh 6vw 40px}
+.tete{display:flex;align-items:center;gap:14px}
+.tete img{width:48px;height:48px}
+.tete .n{font:700 24px CZ,serif;color:var(--or);letter-spacing:2px;text-shadow:0 1px 0 #7a5418,0 0 18px rgba(226,184,92,.35)}
+.tete small{display:block;font:600 italic 16px CG,serif;color:var(--doux)}
+.tete select{margin-left:auto;background:rgba(10,12,16,.8);border:1px solid rgba(201,154,62,.45);color:var(--doux);border-radius:3px;padding:4px 6px;font:inherit}
+h1{font:700 32px/1.15 CG,serif;color:#fbf1d6;margin:26px 0 4px}
+.sous{color:var(--gris);margin:0 0 18px}
+.tuiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tuile{position:relative;border:1px solid rgba(201,154,62,.35);border-radius:6px;background:rgba(16,20,28,.78);padding:14px 12px 12px;cursor:pointer;text-align:center;transition:border-color .2s,transform .15s,background .2s;user-select:none;color:inherit;font:inherit}
+.tuile:hover{border-color:rgba(244,217,142,.8);transform:translateY(-2px)}
+.tuile.sel{border-color:var(--or);background:linear-gradient(180deg,rgba(201,154,62,.3),rgba(201,154,62,.06));box-shadow:0 0 20px rgba(226,184,92,.28)}
+.tuile svg{width:34px;height:34px;stroke:var(--or);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tuile b{display:block;font-weight:600;margin-top:6px;color:#fbf1d6}
+.tuile .vous{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#f4d98e,#c99a3e);color:#1a1206;font:700 9.5px DM;letter-spacing:1px;text-transform:uppercase;border-radius:9px;padding:2px 8px;white-space:nowrap}
+.detail{margin-top:18px;background:rgba(12,16,23,.8);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(201,154,62,.6);outline:1px solid rgba(201,154,62,.2);outline-offset:4px;border-radius:6px;padding:20px 24px;animation:entre .4s ease both}
+@keyframes entre{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.detail h2{font:700 24px CG,serif;color:var(--or);margin:0 0 12px}
+.detail ol{margin:0;padding:0;list-style:none;counter-reset:e}
+.detail li{counter-increment:e;position:relative;padding:0 0 12px 40px;color:var(--texte)}
+.detail li::before{content:counter(e);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;border:1px solid var(--or2);color:var(--or);font:700 13px CZ,serif;display:flex;align-items:center;justify-content:center}
+.detail em{font-style:normal;color:#f4d98e;font-weight:600}
+.cmd{display:flex;gap:8px;align-items:center;margin-top:6px;background:rgba(8,10,14,.9);border:1px solid rgba(201,154,62,.45);border-radius:4px;padding:8px 10px;font:13px Consolas,'DejaVu Sans Mono',monospace;color:#f4d98e;word-break:break-all}
+.cmd button{margin-left:auto;flex-shrink:0;background:transparent;border:1px solid rgba(201,154,62,.45);color:var(--doux);border-radius:3px;padding:3px 10px;cursor:pointer;font:12px DM}
+.note{font-size:12.5px;color:var(--gris);border-left:2px solid rgba(201,154,62,.4);padding-left:10px;margin:6px 0 0}
+.bouton{display:inline-block;background:linear-gradient(180deg,#f4d98e,#c99a3e);color:#1a1206;font:700 13px CZ,serif;letter-spacing:1px;border:0;border-radius:3px;padding:11px 22px;box-shadow:0 0 18px rgba(226,184,92,.35);cursor:pointer;text-decoration:none;margin-top:4px}
+.pied{margin-top:22px;font-size:12px;color:#8f8672}
+@media (max-width:640px){.page{padding:24px 16px}.tuiles{grid-template-columns:repeat(2,1fr)}h1{font-size:26px}.voile{background:rgba(8,11,16,.78)}}
+@media (prefers-reduced-motion:reduce){.fond,.detail{animation:none}}
+</style>
+</head>
+<body>
+<div class="fond"></div><div class="voile"></div>
+<div class="page">
+  <div class="tete"><img src="fichiers/app/img/icone.png" alt=""><div><div class="n">GodGift Core</div><small id="sous-titre"></small></div>
+    <select id="langue" aria-label="Langue"><option value="fr">Français</option><option value="en">English</option><option value="es">Español</option><option value="de">Deutsch</option><option value="pt">Português</option></select></div>
+  <h1 id="titre"></h1>
+  <p class="sous" id="chapeau"></p>
+  <div class="tuiles" id="tuiles"></div>
+  <div class="detail" id="detail"></div>
+  <p class="pied" id="pied"></p>
+  <p class="pied" id="jamais" style="color:var(--doux)"></p>
+</div>
+<script>
+(function () {
+  "use strict";
+  var ICONES = {
+    win: '<svg viewBox="0 0 24 24"><rect x="2.5" y="3.5" width="19" height="13" rx="1.5"/><path d="M8 20.5h8M12 16.5v4"/></svg>',
+    mac: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M2 18.5h20l-1.5 2h-17z"/></svg>',
+    linux: '<svg viewBox="0 0 24 24"><rect x="2.5" y="3.5" width="19" height="17" rx="1.5"/><path d="M6.5 9l3 2.5-3 2.5M11.5 15h5"/></svg>',
+    rpi: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><rect x="7" y="9" width="6" height="6"/><path d="M5 3v2M9 3v2M13 3v2M17 3v2M16 10h2M16 14h2"/></svg>',
+    tel: '<svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg>',
+    web: '<svg viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'
+  };
+  var ORDRE = ["win", "mac", "linux", "rpi", "tel", "web"];
+  var CMD = 'sudo apt install "./Installer (Linux, Raspberry Pi).deb"';
+  var T = {
+    fr: { sous: "la chasse de L’Ange de l’Eau", titre: "Sur quel appareil ?", chapeau: "Choisissez votre système : les étapes s’affichent. Le vôtre est déjà sélectionné.", vous: "Votre système", copier: "Copier", copie: "Copié", essayer: "Ouvrir maintenant",
+      pied: "Au premier lancement, GodGift Core vous montre son empreinte : comparez-la à celle que publie l’auteur, ou déposez ce fichier sur angedeleau.com/verifier-installateur. Aucune donnée personnelle ; aucune clé conservée. Licence AGPL-3.0.",
+      noms: { win: "Windows", mac: "Mac", linux: "Linux", rpi: "Raspberry Pi", tel: "Téléphone", web: "Sans installer" },
+      win: ["Dans ce même dossier, double-cliquez sur <em>Installer (Windows)</em>.", "Si Windows affiche « Windows a protégé votre ordinateur » : <em>Informations complémentaires</em>, puis <em>Exécuter quand même</em>. La version bêta n’est pas encore signée ; une fois signé (Certum), l’installateur portera la signature de l’auteur. D’ici là, vérifiez-le sur angedeleau.com/verifier-installateur.", "L’assistant s’ouvre : votre langue, puis <em>Installer</em>. GodGift Core s’ouvre et une icône arrive sur le Bureau."],
+      win_n: "Pour le retirer : Paramètres > Applications > Applications installées > GodGift Core.",
+      mac: ["Glissez <em>GodGift Core</em> (dans ce même dossier) dans votre dossier <em>Applications</em>.", "Ouvrez-le. La première fois seulement, macOS dit qu’il ne peut pas le vérifier : <em>Réglages Système > Confidentialité et sécurité > Ouvrir quand même</em>.", "Il s’ouvre dans Chrome, Edge ou Brave s’ils sont là, sinon dans Safari."],
+      mac_n: "Pour le retirer : mettez GodGift Core à la corbeille.",
+      linux: ["Double-cliquez sur <em>Installer (Linux, Raspberry Pi)</em> : la logithèque s’ouvre, cliquez sur <em>Installer</em>.", "Ou, dans un terminal ouvert dans ce dossier :", "GodGift Core apparaît dans le menu des applications. Chromium est conseillé."],
+      linux_n: "Pour le retirer : logithèque, ou sudo apt remove godgift-core. Fedora, Arch… : sh fichiers/installer_linux.sh",
+      rpi: ["Raspberry Pi 4 ou 5 avec Raspberry Pi OS (bureau). Chromium y est déjà.", "Ouvrez un terminal dans ce dossier et collez :", "GodGift Core apparaît dans le menu, rubrique Jeux."],
+      rpi_n: "Pour calculer la clé d’un coffre, il faut 2 Go de mémoire au moins (le calcul en demande 1). Un Raspberry Pi sans internet est une excellente machine de chasse. Pour le retirer : sudo apt remove godgift-core",
+      tel: ["Ouvrez <em>app.angedeleau.com</em> dans le navigateur du téléphone, puis « Ajouter à l’écran d’accueil ».", "Il suit les coffres, ouvre les énigmes et vérifie tout. Chaque fichier y est vérifié par son empreinte.", "Pour calculer la clé d’un coffre et récupérer un trésor, l’application installée sur un ordinateur reste la voie la plus sûre : elle ne dépend d’aucun site, et le calcul demande 1 Gio de mémoire. Ailleurs, avant chaque envoi, vous retapez 16 caractères de votre adresse de réception, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre portefeuille."],
+      tel_n: "GodGift Core ne s’ouvre que sur app.angedeleau.com. Installez-le aussi sur un ordinateur : Windows, Mac, Linux ou Raspberry Pi.",
+      web: ["GodGift Core s’ouvre tout de suite dans ce navigateur, sans rien copier sur l’ordinateur.", "Vos réglages restent dans ce navigateur. Pour une fenêtre dédiée et une icône, choisissez plutôt votre système.", "Ainsi ouvert, il ne récupère aucun trésor : pour vider un coffre vers votre adresse, installez-le sur votre système."],
+      web_n: "Idéal pour essayer, ou sur un ordinateur qui n’est pas le vôtre.",
+      jamais: "Personne, pas même l’auteur, ne vous demandera jamais vos 24 mots, ni de payer pour une énigme, un indice ou une réponse, ni vos réponses. L’édition numérique certifiée ne s’achète que sur angedeleau.com ; GodGift Core ne se télécharge que sur angedeleau.com, ou s’ouvre sur app.angedeleau.com. Quiconque vous le demande, même au nom de l’auteur, est un escroc." },
+    en: { sous: "the hunt of The Angel of the Water", titre: "Which device?", chapeau: "Choose your system and the steps appear. Yours is already selected.", vous: "Your system", copier: "Copy", copie: "Copied", essayer: "Open now",
+      pied: "On first launch, GodGift Core shows you its fingerprint: compare it with the one the author publishes, or drop this file on angedeleau.com/verifier-installateur. No personal data; no key kept. AGPL-3.0 licence.",
+      noms: { win: "Windows", mac: "Mac", linux: "Linux", rpi: "Raspberry Pi", tel: "Phone", web: "No install" },
+      win: ["In this same folder, double-click <em>Installer (Windows)</em>.", "If Windows says \"Windows protected your PC\": <em>More info</em>, then <em>Run anyway</em>. The beta is not signed yet; once signed (Certum), the installer will carry the author’s signature. Until then, check it on angedeleau.com/verifier-installateur.", "The wizard opens: your language, then <em>Install</em>. GodGift Core opens and an icon appears on the Desktop."],
+      win_n: "To remove it: Settings > Apps > Installed apps > GodGift Core.",
+      mac: ["Drag <em>GodGift Core</em> (in this same folder) into your <em>Applications</em> folder.", "Open it. The first time only, macOS says it cannot verify it: <em>System Settings > Privacy & Security > Open Anyway</em>.", "It opens in Chrome, Edge or Brave if present, otherwise in Safari."],
+      mac_n: "To remove it: move GodGift Core to the Trash.",
+      linux: ["Double-click <em>Installer (Linux, Raspberry Pi)</em>: the software centre opens, click <em>Install</em>.", "Or, in a terminal opened in this folder:", "GodGift Core appears in the applications menu. Chromium is recommended."],
+      linux_n: "To remove it: software centre, or sudo apt remove godgift-core. Fedora, Arch…: sh fichiers/installer_linux.sh",
+      rpi: ["Raspberry Pi 4 or 5 with Raspberry Pi OS (desktop). Chromium is already there.", "Open a terminal in this folder and paste:", "GodGift Core appears in the menu, under Games."],
+      rpi_n: "Computing a chest key needs at least 2 GB of memory (the computation uses 1). An offline Raspberry Pi is an excellent hunting machine. To remove it: sudo apt remove godgift-core",
+      tel: ["Open <em>app.angedeleau.com</em> in your phone’s browser, then \"Add to Home Screen\".", "It follows the chests, opens the riddles and checks everything. Each file there is checked by its fingerprint.", "To compute a chest key and recover a treasure, the app installed on a computer remains the safest way: it depends on no website, and the computation needs 1 GiB of memory. Anywhere else, before each sending, you retype 16 characters of your receiving address, in two pieces drawn at random and hidden on screen, read in your own wallet."],
+      tel_n: "GodGift Core opens only at app.angedeleau.com. Install it on a computer as well: Windows, Mac, Linux or Raspberry Pi.",
+      web: ["GodGift Core opens right now in this browser, without copying anything to the computer.", "Your settings stay in this browser. For a dedicated window and an icon, choose your system instead.", "Opened this way, it recovers no treasure: to empty a chest to your address, install it on your system."],
+      web_n: "Ideal for a first look, or on a computer that is not yours.",
+      jamais: "Nobody, not even the author, will ever ask for your 24 words, for payment for a riddle, a hint or an answer, or for your answers. The certified digital edition is sold only on angedeleau.com; GodGift Core is downloaded only from angedeleau.com, or opened at app.angedeleau.com. Anyone who asks, even in the author’s name, is a scammer." },
+    es: { sous: "la búsqueda de El Ángel del Agua", titre: "¿En qué dispositivo?", chapeau: "Elija su sistema y aparecerán los pasos. El suyo ya está seleccionado.", vous: "Su sistema", copier: "Copiar", copie: "Copiado", essayer: "Abrir ahora",
+      pied: "Al abrirlo por primera vez, GodGift Core le muestra su huella: compárela con la que publica el autor, o deposite este archivo en angedeleau.com/verifier-installateur. Ningún dato personal; ninguna clave guardada. Licencia AGPL-3.0.",
+      noms: { win: "Windows", mac: "Mac", linux: "Linux", rpi: "Raspberry Pi", tel: "Teléfono", web: "Sin instalar" },
+      win: ["En esta misma carpeta, haga doble clic en <em>Installer (Windows)</em>.", "Si Windows muestra «Windows protegió su PC»: <em>Más información</em> y luego <em>Ejecutar de todas formas</em>. La versión beta aún no está firmada; una vez firmado (Certum), el instalador llevará la firma del autor. Mientras tanto, verifíquelo en angedeleau.com/verifier-installateur.", "Se abre el asistente: su idioma y luego <em>Instalar</em>. GodGift Core se abre y aparece un icono en el Escritorio."],
+      win_n: "Para quitarlo: Configuración > Aplicaciones > Aplicaciones instaladas > GodGift Core.",
+      mac: ["Arrastre <em>GodGift Core</em> (en esta misma carpeta) a su carpeta <em>Aplicaciones</em>.", "Ábralo. Solo la primera vez, macOS dice que no puede verificarlo: <em>Ajustes del Sistema > Privacidad y seguridad > Abrir igualmente</em>.", "Se abre en Chrome, Edge o Brave si están, si no en Safari."],
+      mac_n: "Para quitarlo: mueva GodGift Core a la Papelera.",
+      linux: ["Haga doble clic en <em>Installer (Linux, Raspberry Pi)</em>: se abre el centro de software, pulse <em>Instalar</em>.", "O, en un terminal abierto en esta carpeta:", "GodGift Core aparece en el menú de aplicaciones. Se recomienda Chromium."],
+      linux_n: "Para quitarlo: centro de software, o sudo apt remove godgift-core. Fedora, Arch…: sh fichiers/installer_linux.sh",
+      rpi: ["Raspberry Pi 4 o 5 con Raspberry Pi OS (escritorio). Chromium ya está incluido.", "Abra un terminal en esta carpeta y pegue:", "GodGift Core aparece en el menú, en Juegos."],
+      rpi_n: "Para calcular la clave de un cofre se necesitan al menos 2 GB de memoria (el cálculo usa 1). Una Raspberry Pi sin internet es una excelente máquina de búsqueda. Para quitarlo: sudo apt remove godgift-core",
+      tel: ["Abra <em>app.angedeleau.com</em> en el navegador del teléfono y luego «Añadir a pantalla de inicio».", "Sigue los cofres, abre los enigmas y lo verifica todo. Cada archivo se verifica por su huella.", "Para calcular la clave de un cofre y recuperar un tesoro, la aplicación instalada en un ordenador sigue siendo la vía más segura: no depende de ningún sitio, y el cálculo necesita 1 GiB de memoria. En otro lugar, antes de cada envío, vuelva a escribir 16 caracteres de su dirección de recepción, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su monedero."],
+      tel_n: "GodGift Core solo se abre en app.angedeleau.com. Instálelo también en un ordenador: Windows, Mac, Linux o Raspberry Pi.",
+      web: ["GodGift Core se abre ahora mismo en este navegador, sin copiar nada en el ordenador.", "Sus ajustes se quedan en este navegador. Para una ventana propia y un icono, elija mejor su sistema.", "Abierto así, no recupera ningún tesoro: para vaciar un cofre hacia su dirección, instálelo en su sistema."],
+      web_n: "Ideal para probar, o en un ordenador que no es el suyo.",
+      jamais: "Nadie, ni siquiera el autor, le pedirá nunca sus 24 palabras, ni que pague por un enigma, un indicio o una respuesta, ni sus respuestas. La edición digital certificada solo se vende en angedeleau.com; GodGift Core solo se descarga en angedeleau.com, o se abre en app.angedeleau.com. Quien se lo pida, incluso en nombre del autor, es un estafador." },
+    de: { sous: "die Schatzsuche des Wasserengels", titre: "Auf welchem Gerät?", chapeau: "Wählen Sie Ihr System, und die Schritte erscheinen. Ihres ist bereits ausgewählt.", vous: "Ihr System", copier: "Kopieren", copie: "Kopiert", essayer: "Jetzt öffnen",
+      pied: "Beim ersten Start zeigt Ihnen GodGift Core seinen Fingerabdruck: vergleichen Sie ihn mit dem des Autors, oder legen Sie diese Datei auf angedeleau.com/verifier-installateur ab. Keine persönlichen Daten; kein Schlüssel gespeichert. Lizenz AGPL-3.0.",
+      noms: { win: "Windows", mac: "Mac", linux: "Linux", rpi: "Raspberry Pi", tel: "Telefon", web: "Ohne Installation" },
+      win: ["Doppelklicken Sie in diesem Ordner auf <em>Installer (Windows)</em>.", "Wenn Windows „Der Computer wurde durch Windows geschützt“ meldet: <em>Weitere Informationen</em>, dann <em>Trotzdem ausführen</em>. Die Beta ist noch nicht signiert; einmal signiert (Certum), trägt das Installationsprogramm die Signatur des Autors. Bis dahin prüfen Sie es auf angedeleau.com/verifier-installateur.", "Der Assistent öffnet sich: Ihre Sprache, dann <em>Installieren</em>. GodGift Core öffnet sich, ein Symbol erscheint auf dem Desktop."],
+      win_n: "Zum Entfernen: Einstellungen > Apps > Installierte Apps > GodGift Core.",
+      mac: ["Ziehen Sie <em>GodGift Core</em> (in diesem Ordner) in Ihren Ordner <em>Programme</em>.", "Öffnen Sie es. Nur beim ersten Mal meldet macOS, dass es nicht geprüft werden kann: <em>Systemeinstellungen > Datenschutz & Sicherheit > Dennoch öffnen</em>.", "Es öffnet sich in Chrome, Edge oder Brave, sonst in Safari."],
+      mac_n: "Zum Entfernen: GodGift Core in den Papierkorb legen.",
+      linux: ["Doppelklicken Sie auf <em>Installer (Linux, Raspberry Pi)</em>: die Softwareverwaltung öffnet sich, klicken Sie auf <em>Installieren</em>.", "Oder in einem Terminal in diesem Ordner:", "GodGift Core erscheint im Anwendungsmenü. Chromium wird empfohlen."],
+      linux_n: "Zum Entfernen: Softwareverwaltung oder sudo apt remove godgift-core. Fedora, Arch…: sh fichiers/installer_linux.sh",
+      rpi: ["Raspberry Pi 4 oder 5 mit Raspberry Pi OS (Desktop). Chromium ist bereits vorhanden.", "Öffnen Sie ein Terminal in diesem Ordner und fügen Sie ein:", "GodGift Core erscheint im Menü unter Spiele."],
+      rpi_n: "Für den Schlüssel einer Truhe braucht es mindestens 2 GB Speicher (die Berechnung nutzt 1). Ein Raspberry Pi ohne Internet ist eine hervorragende Suchmaschine. Zum Entfernen: sudo apt remove godgift-core",
+      tel: ["Öffnen Sie <em>app.angedeleau.com</em> im Browser des Telefons, dann „Zum Startbildschirm hinzufügen“.", "Es verfolgt die Truhen, öffnet die Rätsel und prüft alles. Jede Datei wird dort über ihren Fingerabdruck geprüft.", "Um den Schlüssel einer Truhe zu berechnen und einen Schatz zu bergen, bleibt die auf einem Computer installierte Anwendung der sicherste Weg: sie hängt von keiner Website ab, und die Berechnung braucht 1 GiB Speicher. Anderswo tippen Sie vor jedem Versand 16 Zeichen Ihrer Empfangsadresse erneut ein, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer eigenen Wallet."],
+      tel_n: "GodGift Core öffnet sich nur auf app.angedeleau.com. Installieren Sie es auch auf einem Computer: Windows, Mac, Linux oder Raspberry Pi.",
+      web: ["GodGift Core öffnet sich sofort in diesem Browser, ohne etwas auf den Computer zu kopieren.", "Ihre Einstellungen bleiben in diesem Browser. Für ein eigenes Fenster und ein Symbol wählen Sie besser Ihr System.", "So geöffnet, holt es keinen Schatz: Um eine Truhe an Ihre Adresse zu leeren, installieren Sie es auf Ihrem System."],
+      web_n: "Ideal zum Ausprobieren oder auf einem fremden Computer.",
+      jamais: "Niemand, nicht einmal der Autor, wird Sie jemals nach Ihren 24 Wörtern fragen, Sie für ein Rätsel, einen Hinweis oder eine Antwort zahlen lassen oder Ihre Antworten verlangen. Die zertifizierte digitale Ausgabe wird nur auf angedeleau.com verkauft; GodGift Core wird nur von angedeleau.com heruntergeladen oder auf app.angedeleau.com geöffnet. Wer es von Ihnen verlangt, auch im Namen des Autors, ist ein Betrüger." },
+    pt: { sous: "a caça de O Anjo da Água", titre: "Em que aparelho?", chapeau: "Escolha o seu sistema e os passos aparecem. O seu já está selecionado.", vous: "O seu sistema", copier: "Copiar", copie: "Copiado", essayer: "Abrir agora",
+      pied: "Na primeira abertura, o GodGift Core mostra-lhe a sua impressão: compare-a com a publicada pelo autor, ou deposite este ficheiro em angedeleau.com/verifier-installateur. Nenhum dado pessoal; nenhuma chave guardada. Licença AGPL-3.0.",
+      noms: { win: "Windows", mac: "Mac", linux: "Linux", rpi: "Raspberry Pi", tel: "Telemóvel", web: "Sem instalar" },
+      win: ["Nesta mesma pasta, faça duplo clique em <em>Installer (Windows)</em>.", "Se o Windows mostrar «O Windows protegeu o computador»: <em>Mais informações</em> e depois <em>Executar mesmo assim</em>. A versão beta ainda não está assinada; uma vez assinado (Certum), o instalador terá a assinatura do autor. Até lá, verifique-o em angedeleau.com/verifier-installateur.", "Abre-se o assistente: a sua língua e depois <em>Instalar</em>. O GodGift Core abre e surge um ícone no Ambiente de trabalho."],
+      win_n: "Para o remover: Definições > Aplicações > Aplicações instaladas > GodGift Core.",
+      mac: ["Arraste o <em>GodGift Core</em> (nesta mesma pasta) para a sua pasta <em>Aplicações</em>.", "Abra-o. Só da primeira vez, o macOS diz que não o pode verificar: <em>Definições do Sistema > Privacidade e segurança > Abrir mesmo assim</em>.", "Abre no Chrome, Edge ou Brave se existirem, senão no Safari."],
+      mac_n: "Para o remover: mova o GodGift Core para o Lixo.",
+      linux: ["Faça duplo clique em <em>Installer (Linux, Raspberry Pi)</em>: abre-se o centro de software, clique em <em>Instalar</em>.", "Ou, num terminal aberto nesta pasta:", "O GodGift Core aparece no menu de aplicações. Recomenda-se o Chromium."],
+      linux_n: "Para o remover: centro de software, ou sudo apt remove godgift-core. Fedora, Arch…: sh fichiers/installer_linux.sh",
+      rpi: ["Raspberry Pi 4 ou 5 com Raspberry Pi OS (ambiente gráfico). O Chromium já lá está.", "Abra um terminal nesta pasta e cole:", "O GodGift Core aparece no menu, em Jogos."],
+      rpi_n: "Para calcular a chave de um cofre são precisos pelo menos 2 GB de memória (o cálculo usa 1). Um Raspberry Pi sem internet é uma excelente máquina de caça. Para o remover: sudo apt remove godgift-core",
+      tel: ["Abra <em>app.angedeleau.com</em> no navegador do telemóvel e depois «Adicionar ao ecrã principal».", "Segue os cofres, abre os enigmas e verifica tudo. Cada ficheiro é verificado pela sua impressão.", "Para calcular a chave de um cofre e recuperar um tesouro, a aplicação instalada num computador continua a ser a via mais segura: não depende de nenhum site, e o cálculo precisa de 1 GiB de memória. Noutro sítio, antes de cada envio, volte a escrever 16 caracteres do seu endereço de receção, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua carteira."],
+      tel_n: "O GodGift Core só se abre em app.angedeleau.com. Instale-o também num computador: Windows, Mac, Linux ou Raspberry Pi.",
+      web: ["O GodGift Core abre já neste navegador, sem copiar nada para o computador.", "As suas definições ficam neste navegador. Para uma janela própria e um ícone, escolha antes o seu sistema.", "Aberto assim, não recupera nenhum tesouro: para esvaziar um cofre para o seu endereço, instale-o no seu sistema."],
+      web_n: "Ideal para experimentar, ou num computador que não é o seu.",
+      jamais: "Ninguém, nem mesmo o autor, lhe pedirá alguma vez as suas 24 palavras, nem que pague por um enigma, uma pista ou uma resposta, nem as suas respostas. A edição digital certificada só se compra em angedeleau.com; o GodGift Core só se descarrega em angedeleau.com, ou se abre em app.angedeleau.com. Quem lho pedir, mesmo em nome do autor, é um burlão." }
+  };
+  function detecter() {
+    var ua = navigator.userAgent || "", pf = navigator.platform || "";
+    if (/Android|iPhone|iPad|iPod/i.test(ua) || (/Mac/.test(pf) && navigator.maxTouchPoints > 1)) return "tel";
+    if (/Win/i.test(pf) || /Windows/i.test(ua)) return "win";
+    if (/Mac/i.test(pf)) return "mac";
+    if (/Linux/i.test(pf) && /arm|aarch64/i.test(pf + ua)) return "rpi";
+    if (/Linux|X11|CrOS/i.test(pf + ua)) return "linux";
+    return "web";
+  }
+  var q = new URLSearchParams(location.search);
+  var lang = q.get("lang") || (navigator.language || "fr").slice(0, 2); if (!T[lang]) lang = "en";
+  var ici = detecter(), choix = q.get("os") || ici;
+  function $(id) { return document.getElementById(id); }
+  function rendre() {
+    var t = T[lang];
+    document.documentElement.lang = lang; $("langue").value = lang;
+    $("sous-titre").textContent = t.sous; $("titre").textContent = t.titre; $("chapeau").textContent = t.chapeau; $("pied").textContent = t.pied; $("jamais").textContent = t.jamais;
+    $("tuiles").innerHTML = ORDRE.map(function (k) {
+      return '<button class="tuile' + (k === choix ? " sel" : "") + '" data-os="' + k + '">' + (k === ici ? '<span class="vous">' + t.vous + "</span>" : "") + ICONES[k] + "<b>" + t.noms[k] + "</b></button>";
+    }).join("");
+    var etapes = t[choix].map(function (e, i) {
+      var cmd = (choix === "linux" || choix === "rpi") && i === 1 ? '<div class="cmd"><span>' + CMD.replace(/"/g, "&quot;") + '</span><button id="copier">' + t.copier + "</button></div>" : "";
+      return "<li>" + e + cmd + "</li>";
+    }).join("");
+    $("detail").innerHTML = "<h2>" + t.noms[choix] + "</h2><ol>" + etapes + "</ol>" +
+      (choix === "web" ? '<a class="bouton" href="fichiers/app/godgift.html?lang=' + lang + '&amp;sans_installer=1">' + t.essayer + " →</a>" : "") +
+      '<p class="note">' + t[choix + "_n"] + "</p>";
+    $("detail").style.animation = "none"; void $("detail").offsetWidth; $("detail").style.animation = "";
+  }
+  document.addEventListener("click", function (ev) {
+    var x = ev.target.closest("[data-os],#copier"); if (!x) return;
+    if (x.id === "copier") { var f = function () { x.textContent = "✓ " + T[lang].copie; }; try { navigator.clipboard.writeText(CMD).then(f, f); } catch (e) { f(); } return; }
+    choix = x.dataset.os; rendre();
+  });
+  $("langue").addEventListener("change", function (ev) { lang = ev.target.value; rendre(); });
+  rendre();
+})();
+</script>
+</body>
+</html>

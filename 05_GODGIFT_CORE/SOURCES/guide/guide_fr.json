@@ -1,0 +1,606 @@
+{
+  "titre": "Guide et glossaire",
+  "sur": "Comprendre la chasse",
+  "intro": "Tout ce que GodGift Core vous montre, expliqué avec des mots simples. Commencez par un parcours, ou cherchez directement un mot.",
+  "recherche": "Chercher un mot : cri, aléa, COFFRET, empreinte…",
+  "aucun": "Aucun mot ne correspond. Essayez un mot plus court, ou parcourez la liste.",
+  "t_parcours": "Premiers pas",
+  "t_glossaire": "Le glossaire",
+  "t_faq": "Questions fréquentes",
+  "voir_aussi": "Voir aussi",
+  "en_savoir_plus": "En savoir plus",
+  "carte_titre": "Guide et glossaire",
+  "carte_texte": "Les mots de la chasse expliqués simplement, cinq parcours pour bien commencer et les questions les plus fréquentes.",
+  "ouvrir": "Ouvrir le guide",
+  "parcours": [
+    {
+      "titre": "Je découvre",
+      "etapes": [
+        "Ouvrez « Le tableau » : les 24 coffres de la chasse, un par mois, de janvier 2027 à décembre 2028. Leur couleur dit leur état.",
+        "Touchez un coffre : vous voyez son montant, ses deux énigmes quand elles sont parues, son cri et, plus tard, ses deux indices.",
+        "Pour voir une chasse en cours avant qu’elle commence, cochez « Mode démonstration » dans Réglages, puis « Enregistrer ». Tout y est factice.",
+        "Revenez à la vraie chasse en décochant ce mode, puis « Enregistrer »."
+      ]
+    },
+    {
+      "titre": "Je chasse",
+      "etapes": [
+        "Avant tout, tranquillement : enregistrez dans Réglages « Mon adresse de réception », celle de votre propre portefeuille, et signez-la avec lui : la signature est obligatoire. C’est là que partira le trésor.",
+        "Le 3 du mois à 18:15:05 UTC (19:15:05 à Paris en hiver, 20:15:05 en été) paraît la première énigme du coffre ; le 17 à la même heure, la seconde. Lisez-les dans « Énigmes ».",
+        "Chaque réponse est faite de mots français de la liste des cinq mille : trois mots pour la plupart des coffres, quatre pour les plus gros. Vérifiez vos mots dans « Chasser », en bas de la page.",
+        "Une heure après la seconde énigme paraît le cri : il apporte l’aléa, la dernière pièce de la clé. GodGift Core le lit tout seul.",
+        "Dans « Chasser », choisissez le coffre : GodGift Core le prépare et affiche « Armé ». Coupez internet, tapez vos deux réponses, puis « Calculer la clé ».",
+        "Si c’est la bonne clé, rebranchez internet. Dans la fenêtre de l’application installée, ouverte par son icône, GodGift Core signe aussitôt la transaction sur votre machine et l’envoie toute seule vers votre adresse, avec une offre forte (environ 10 % du trésor en frais) ; ailleurs (navigateur, version web, fenêtre rechargée), il vous fait d’abord retaper 16 caractères de votre adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre portefeuille ; « Sans installer », il n’envoie rien. Si quelqu’un d’autre a trouvé en même temps, c’est la course : « Accélérer » double d’un coup les frais.",
+        "Entraînez-vous d’abord sur les coffres d’essai A et B : ils sont faux, publics, et vous montrent exactement ce qui se passerait."
+      ]
+    },
+    {
+      "titre": "Je porte le livre",
+      "etapes": [
+        "Seul le propriétaire d’un exemplaire officiel peut être compagnon actif, et un exemplaire ne fait qu’un compagnon. Achetez le vôtre sur angedeleau.com en donnant une adresse bc1q… de votre portefeuille : c’est son adresse de propriété, imprimée sur sa page de titre. La chasse, elle, reste gratuite.",
+        "Ouvrez « Les livres », déposez l’EPUB ou le PDF de votre exemplaire, puis « Devenir compagnon avec cet exemplaire » : la page Compagnon reprend son adresse de propriété ; c’est là que vos parts arriveront.",
+        "Signez le message affiché avec cette adresse (dans Sparrow : Outils, Signer un message), collez la signature, puis envoyez-la : la librairie vous donne un lien personnel.",
+        "Le lien reste « en attente » tant que la vente de votre exemplaire n’est pas réglée, puis devient « actif » : chaque livre acheté par un lien actif vous rapporte 40 % de son prix.",
+        "Vos parts sont versées chaque trimestre, dans une transaction publique que chacun peut vérifier."
+      ]
+    },
+    {
+      "titre": "Je vérifie mon livre",
+      "etapes": [
+        "Ouvrez « Les livres ».",
+        "Déposez votre EPUB ou votre PDF, ou tapez l’empreinte imprimée sur sa page de titre.",
+        "GodGift Core retrouve l’exemplaire dans le registre et recompte la racine gravée sur la chaîne : s’il est officiel, il vous le dit, avec son numéro."
+      ]
+    },
+    {
+      "titre": "Je deviens témoin",
+      "etapes": [
+        "Dans Réglages, cochez « Je deviens témoin » (ou répondez oui à l’accueil).",
+        "À chaque « Tout vérifier », et une fois par jour tout seul, votre GodGift Core publie son constat : bloc, empreintes, résultat. Rien de personnel.",
+        "L’onglet « Réseau » compte les témoins de la semaine et signale le moindre désaccord : un manifeste différent, une version non publiée, un contrôle en échec.",
+        "Chaque jour, les constats sont horodatés dans Bitcoin : une preuve datée que chacun peut vérifier."
+      ]
+    }
+  ],
+  "mots": [
+    {
+      "id": "adresse",
+      "mot": "Adresse Bitcoin",
+      "texte": "Une suite de caractères qui commence ici par bc1q… et qui peut recevoir des bitcoins, comme un numéro de compte public. Chaque coffre est une adresse ; votre portefeuille en a aussi.",
+      "voir": [
+        "coffre",
+        "portefeuille"
+      ]
+    },
+    {
+      "id": "alea",
+      "mot": "Aléa",
+      "texte": "64 caractères tirés au hasard dans la Cave pour chaque coffre. Il entre dans la clé du coffre avec les mots des réponses : sans lui, même les bonnes réponses ne suffisent pas. Il est révélé par le cri, une heure après la seconde énigme.",
+      "voir": [
+        "cri",
+        "cle",
+        "cave"
+      ]
+    },
+    {
+      "id": "amorce",
+      "mot": "Amorce",
+      "texte": "La transaction du semis, en décembre 2026, qui remplit les 24 coffres et prépare les 24 cris. Elle est payée depuis le guichet de l’auteur ; c’est le manifeste gravé qui annonce l’adresse qui signe ses messages.",
+      "voir": [
+        "semis",
+        "cri",
+        "message"
+      ]
+    },
+    {
+      "id": "balayer",
+      "mot": "Balayer",
+      "texte": "Vider une adresse vers la vôtre. GodGift Core le fait lui-même quand vous trouvez la clé d’un coffre : il signe sur votre machine et envoie tout vers votre adresse de réception. Le coffre appartient à la première transaction confirmée qui le vide.",
+      "voir": [
+        "recuperer",
+        "reception",
+        "pris"
+      ]
+    },
+    {
+      "id": "cave",
+      "mot": "Cave",
+      "texte": "L’ordinateur de l’auteur qui n’a jamais été et ne sera jamais connecté à aucun réseau. Les énigmes y sont écrites, les aléas tirés, les adresses calculées et les messages signés. Aucun secret n’en sort en clair.",
+      "voir": [
+        "alea",
+        "coffret"
+      ]
+    },
+    {
+      "id": "chasse",
+      "mot": "Chasse",
+      "texte": "Un trésor complet : ses coffres, ses énigmes, sa Pierre et son COFFRET. L’Ange de l’Eau est la chasse n° 1 ; les suivantes apparaîtront toutes seules dans « Les chasses ». Chaque chasse a ses propres clés : aucune ne peut ouvrir l’autre.",
+      "voir": [
+        "chasse_zero",
+        "annonce",
+        "pierre"
+      ]
+    },
+    {
+      "id": "chasse_zero",
+      "mot": "Chasse zéro",
+      "texte": "Le galop d’essai : trois coffres de 100 €, joués en parallèle. Chaque coffre a deux énigmes : les trois premières le 3 novembre 2026 à 18:15:05 UTC (19:15:05 à Paris), les trois secondes le 17 novembre à la même heure ; les trois cris le 17 novembre à 19:15:05 UTC (20:15:05 à Paris). Les indices forts s’ouvrent le 17 décembre 2026 (s’il reste un coffre), les seconds six mois après le cri. Les mêmes règles que la grande chasse, avec des clés qui lui sont propres, distinctes d’un coffre à l’autre.",
+      "voir": [
+        "chasse"
+      ]
+    },
+    {
+      "id": "annonce",
+      "mot": "Annonce d’une chasse",
+      "texte": "Le texte exact AEDE:chasse:<n°>:<empreinte du manifeste>, gravé sur la chaîne par le rendu de l’amorce de cette chasse, avant la première énigme et signé par l’adresse des messages de l’auteur. Une chasse suivante (n° 2 à 999) n’existe que par lui. GodGift Core l’apprend de la librairie ou de son serveur de secours, vérifie seul la signature, la gravure et le manifeste, puis suit la chasse ; si deux annonces d’un même numéro désignent deux manifestes, la première gravée l’emporte et la seconde est refusée.",
+      "voir": [
+        "chasse",
+        "gravure",
+        "manifeste"
+      ]
+    },
+    {
+      "id": "cle",
+      "mot": "Clé du coffre",
+      "texte": "La clé privée qui permet de dépenser le coffre. Elle se calcule chez vous à partir des mots des deux réponses et de l’aléa (scrypt : environ dix secondes et un gigaoctet de mémoire ; un essai ne gêne personne, des milliards coûteraient une fortune). Elle n’est jamais écrite, ni affichée sauf si vous le demandez (« Expert : afficher la clé privée », une minute) : GodGift Core s’en sert pour vider le coffre vers votre adresse, puis l’oublie.",
+      "voir": [
+        "alea",
+        "recuperer",
+        "wif"
+      ]
+    },
+    {
+      "id": "coffre",
+      "mot": "Coffre",
+      "texte": "Une adresse Bitcoin remplie au semis. Il y en a 24, un par mois, de 60 € à 1 300 € au départ ; une part des ventes du livre s’y ajoute chaque trimestre. Deux énigmes ouvrent chaque coffre.",
+      "voir": [
+        "etats",
+        "semis",
+        "versement"
+      ]
+    },
+    {
+      "id": "coffret",
+      "mot": "COFFRET",
+      "texte": "Le fichier public où la Cave a verrouillé d’avance chaque énigme, chaque cri et les deux indices de chaque coffre, jusqu’à leur seconde exacte. Il ne contient aucune solution. Votre GodGift Core le garde, le lit selon la règle de la Cave (aucun verrou en double, chacun à l’heure de la Pierre) et l’ouvre lui-même à l’heure, même si le site tombe. Personne, pas même l’auteur, ne peut l’ouvrir plus tôt.",
+      "voir": [
+        "verrou",
+        "drand",
+        "manifeste"
+      ]
+    },
+    {
+      "id": "compagnon",
+      "mot": "Compagnon",
+      "texte": "Le propriétaire d’un exemplaire officiel qui fait connaître le roman avec son lien personnel. Il se déclare avec l’adresse de propriété de son exemplaire : un exemplaire, un compagnon. Son lien reste « en attente » tant que la vente de cet exemplaire n’est pas réglée, puis devient « actif ». Chaque livre vendu par un lien actif lui rapporte 40 % du prix, versés chaque trimestre sur cette adresse. Aucun compte, aucune clé à confier.",
+      "voir": [
+        "versement",
+        "adresse"
+      ]
+    },
+    {
+      "id": "cri",
+      "mot": "Cri",
+      "texte": "La transaction qui publie l’aléa d’un coffre sur la chaîne, une heure après sa seconde énigme. Elle a été signée d’avance dans la Cave et part toute seule : dès le cri, les chasseurs ont tout pour calculer la clé.",
+      "voir": [
+        "alea",
+        "coffret"
+      ]
+    },
+    {
+      "id": "demo",
+      "mot": "Mode démonstration",
+      "texte": "Une chasse imaginée au 10 juin 2027, avec des valeurs d’illustration et des adresses factices, pour voir à quoi ressemble GodGift Core en pleine chasse. Aucune vraie énigme. Réglages : cochez ou décochez « Mode démonstration », puis « Enregistrer ».",
+      "voir": []
+    },
+    {
+      "id": "drand",
+      "mot": "drand",
+      "texte": "Un réseau public, tenu par des universités et des entreprises du monde entier, qui publie une signature toutes les trois secondes. Chaque signature ouvre les verrous de son instant : c’est l’horloge du COFFRET.",
+      "voir": [
+        "verrou",
+        "coffret"
+      ]
+    },
+    {
+      "id": "empreinte",
+      "mot": "Empreinte",
+      "texte": "Une suite de 64 caractères (0-9 a-f) calculée à partir d’un fichier ou d’un texte (SHA-256). Changer une seule lettre change toute l’empreinte : comparer deux empreintes suffit à savoir si deux fichiers sont identiques.",
+      "voir": [
+        "gravure",
+        "verifier",
+        "exemplaire"
+      ]
+    },
+    {
+      "id": "enigme",
+      "mot": "Énigme",
+      "texte": "Un texte dont la réponse est faite de mots de la liste des cinq mille. Deux par mois : le 3 et le 17 à 18:15:05 UTC (19:15:05 à Paris en hiver, 20:15:05 en été). L’énigme du 3 et celle du 17 d’un même mois ouvrent ensemble le coffre de ce mois. Les énigmes sont publiées en français, seul texte qui fait foi, avec parfois une traduction anglaise non officielle ; gratuites, pour tous au même instant.",
+      "voir": [
+        "liste",
+        "utc",
+        "coffre"
+      ]
+    },
+    {
+      "id": "etats",
+      "mot": "États d’un coffre",
+      "texte": "À SEMER : pas encore rempli (avant décembre 2026). SCELLÉ : rempli, aucune énigme parue. EN CHASSE : la première énigme est parue, la seconde arrive le 17. À PRENDRE : les deux énigmes sont parues, la clé peut être trouvée. PRIS : quelqu’un l’a vidé.",
+      "voir": [
+        "coffre",
+        "pris"
+      ]
+    },
+    {
+      "id": "exemplaire",
+      "mot": "Exemplaire officiel",
+      "texte": "Un livre numérique vendu par la librairie. Il porte son numéro et son empreinte sur sa page de titre ; chaque trimestre, le versement grave sur la chaîne la racine de tous les exemplaires. Déposez-le dans « Les livres » pour le vérifier.",
+      "voir": [
+        "empreinte",
+        "racine"
+      ]
+    },
+    {
+      "id": "explorateur",
+      "mot": "Explorateur",
+      "texte": "Le service qui lit la chaîne Bitcoin pour GodGift Core. Il y en a deux, indépendants (mempool.space et blockstream.info par défaut, ou votre propre nœud) : chaque lecture importante est comparée, et un désaccord est signalé. GodGift Core n’y envoie jamais rien de secret.",
+      "voir": [
+        "sources",
+        "noeud"
+      ]
+    },
+    {
+      "id": "gravure",
+      "mot": "Gravure",
+      "texte": "Inscrire une empreinte dans une transaction Bitcoin. Une fois confirmée, elle ne peut plus être changée par personne : c’est la preuve publique et datée qu’un fichier existait tel quel à ce moment-là.",
+      "voir": [
+        "empreinte",
+        "manifeste"
+      ]
+    },
+    {
+      "id": "indice",
+      "mot": "Indices",
+      "texte": "Deux par coffre, écrits par l’auteur et verrouillés dans le COFFRET. Trente jours après son cri, un coffre non pris reçoit un indice fort ; six mois après, un second indice. Ils ne changent rien à la clé.",
+      "voir": [
+        "coffret",
+        "solution"
+      ]
+    },
+    {
+      "id": "librairie",
+      "mot": "Librairie",
+      "texte": "Le serveur qui vend le livre numérique en bitcoin et publie les énigmes, le tableau et les versements. GodGift Core recompte tout ce qu’elle publie ; si elle tombe, il ouvre le COFFRET lui-même et le bouton « Acheter » bascule sur le serveur de secours que l’auteur a désigné par un message signé.",
+      "voir": [
+        "coffret",
+        "secours"
+      ]
+    },
+    {
+      "id": "liste",
+      "mot": "Liste des cinq mille",
+      "texte": "Les 5 000 mots français, numérotés de 0001 à 5000, dans lesquels sont prises toutes les réponses. Vous pouvez taper un mot ou son numéro. Son empreinte est inscrite dans la Pierre : elle ne peut pas changer.",
+      "voir": [
+        "enigme",
+        "pierre"
+      ]
+    },
+    {
+      "id": "manifeste",
+      "mot": "Manifeste",
+      "texte": "Le fichier public de la chasse : les adresses des coffres, les montants, l’empreinte de chaque aléa, l’engagement de chaque coffre (ses réponses, fixées sans être révélées) et l’empreinte du COFFRET. Son empreinte est gravée sur la chaîne au semis : tout ce qui suit doit lui correspondre. GodGift Core reprouve cette gravure à chaque ouverture.",
+      "voir": [
+        "gravure",
+        "coffret",
+        "semis"
+      ]
+    },
+    {
+      "id": "message",
+      "mot": "Message signé",
+      "texte": "Un message public de l’auteur, signé dans la Cave (norme BIP-322), daté AAAA-MM-JJ. GodGift Core vérifie la signature, la forme du message, et que l’adresse qui signe est bien celle de l’auteur : épinglée dans le programme, ou annoncée par un manifeste gravé. Un message faux reste replié. Personne ne peut parler au nom de l’auteur.",
+      "voir": [
+        "amorce",
+        "cave"
+      ]
+    },
+    {
+      "id": "noeud",
+      "mot": "Nœud",
+      "texte": "Chaque GodGift Core vérifie ; les volontaires témoignent. Chacun lit la chaîne et la librairie, et recompte. Personne n’a besoin de croire le site : si la librairie mentait, chaque nœud le verrait, et les témoins volontaires le publieraient.",
+      "voir": [
+        "verifier",
+        "temoin",
+        "sources"
+      ]
+    },
+    {
+      "id": "pierre",
+      "mot": "Pierre du programme",
+      "texte": "Le règlement complet de la chasse, en français, gravé sur la chaîne avant l’ouverture. Rien ne peut s’en écarter. Lisible dans Réglages, « Lire la Pierre » ; les conditions générales la disent en langage courant.",
+      "voir": [
+        "gravure",
+        "chasse"
+      ]
+    },
+    {
+      "id": "portefeuille",
+      "mot": "Portefeuille",
+      "texte": "Le logiciel qui garde vos bitcoins et vos adresses (par exemple Sparrow ou Electrum). Il sert à recevoir vos parts de compagnon, à signer un message et à balayer un coffre trouvé.",
+      "voir": [
+        "adresse",
+        "balayer"
+      ]
+    },
+    {
+      "id": "pris",
+      "mot": "Pris",
+      "texte": "Un coffre est pris dès que la première transaction qui le vide est confirmée sur la chaîne. Il n’y a rien à déclarer ni à réclamer : la chaîne fait foi. Un coffre non trouvé reste à prendre, sans limite de temps.",
+      "voir": [
+        "balayer",
+        "etats"
+      ]
+    },
+    {
+      "id": "racine",
+      "mot": "Racine et registre",
+      "texte": "Le registre liste les empreintes de tous les exemplaires vendus. Chaque trimestre, elles sont combinées en une seule empreinte, la racine (arbre de Merkle selon la RFC 6962), gravée sur la chaîne. GodGift Core refait ce calcul : un exemplaire est certifié quand il fait partie d’une racine gravée.",
+      "voir": [
+        "exemplaire",
+        "versement"
+      ]
+    },
+    {
+      "id": "sats",
+      "mot": "Sats",
+      "texte": "Le satoshi, la plus petite unité du bitcoin : 1 bitcoin = 100 000 000 sats. Le livre coûte 21 000 sats à sa parution, puis le prix que la librairie publie (un recalage s’annonce sept jours à l’avance et se grave : Pierre, article 1) ; les montants des coffres sont gravés au satoshi près.",
+      "voir": []
+    },
+    {
+      "id": "secours",
+      "mot": "Serveur de secours",
+      "texte": "Une seconde librairie, prête à reprendre la vente si la première tombe. Elle est désignée à l’avance par un message signé de l’auteur dont la dernière ligne est AEDE:secours:https://… (Pierre, article 10), ou épinglée dans le programme : GodGift Core ne bascule que vers elle, jamais vers une adresse simplement annoncée par la caisse. Il n’y a jamais deux caisses actives en même temps. Sans serveur de secours désigné, « Acheter » renvoie à angedeleau.com et dit que la vente est momentanément indisponible ; la chasse continue.",
+      "voir": [
+        "librairie"
+      ]
+    },
+    {
+      "id": "semis",
+      "mot": "Semis",
+      "texte": "La séance de décembre 2026 où la Cave remplit les 24 coffres (4 000 € au total, convertis en bitcoin au cours du jour), verrouille le COFFRET et publie le manifeste, qui est gravé.",
+      "voir": [
+        "amorce",
+        "manifeste",
+        "coffret"
+      ]
+    },
+    {
+      "id": "solution",
+      "mot": "Solution signée",
+      "texte": "La solution d’un coffre n’est publiée qu’une fois le coffre pris, par un message signé de l’auteur dont la dernière ligne est AEDE:solution:… Elle se vérifie contre l’engagement salé gravé au semis : GodGift Core affiche « engagement du semis tenu » ou « engagement FAUX ». Il ne recopie jamais ces mots dans vos réponses et n’envoie rien.",
+      "voir": [
+        "message",
+        "manifeste",
+        "indice"
+      ]
+    },
+    {
+      "id": "utc",
+      "mot": "UTC",
+      "texte": "L’heure universelle. 18:15:05 UTC, c’est 19:15:05 à Paris en hiver et 20:15:05 en été. GodGift Core affiche aussi un compte à rebours jusqu’à la prochaine énigme.",
+      "voir": [
+        "enigme"
+      ]
+    },
+    {
+      "id": "verifier",
+      "mot": "Tout vérifier",
+      "texte": "Les contrôles faits sur votre machine, sans croire personne : la Pierre, la liste, le calendrier, le manifeste et sa gravure, l’amorce, les cris, les versements, les coffres, le COFFRET, chaque chasse suivie (la chasse zéro comprise), les messages et les solutions signées, le registre, ce programme et l’accord des deux sources. « En attente » est normal avant le semis.",
+      "voir": [
+        "noeud",
+        "empreinte",
+        "temoin"
+      ]
+    },
+    {
+      "id": "verrou",
+      "mot": "Verrou à date",
+      "texte": "Un chiffrement qui rend un texte illisible jusqu’à une seconde précise : il ne s’ouvre qu’avec la signature que drand publiera à ce moment-là. Même celui qui a fermé le verrou ne peut pas l’ouvrir avant.",
+      "voir": [
+        "drand",
+        "coffret"
+      ]
+    },
+    {
+      "id": "versement",
+      "mot": "Versement trimestriel",
+      "texte": "Chaque trimestre (au titre du 1er mars, juin, septembre et décembre), une transaction publique verse les parts des compagnons, ajoute la part du trésor aux coffres encore fermés (après la dernière énigme, à la réserve du trésor, l’adresse de saison) et grave la racine du registre.",
+      "voir": [
+        "compagnon",
+        "racine",
+        "coffre"
+      ]
+    },
+    {
+      "id": "wif",
+      "mot": "Clé privée (WIF)",
+      "texte": "La forme d’une clé privée qu’acceptent les portefeuilles. GodGift Core ne l’affiche plus que dans la section « Expert », repliée : il vide le coffre lui-même. Ne la montrez à personne : qui la voit peut vider le coffre avant vous.",
+      "voir": [
+        "cle",
+        "recuperer"
+      ]
+    },
+    {
+      "id": "reception",
+      "mot": "Adresse de réception",
+      "texte": "L’adresse de votre propre portefeuille (même un portefeuille à froid), enregistrée à l’avance dans Réglages. Le jour où vous trouvez, le trésor y part tout seul. Elle doit être signée par votre portefeuille (adresse bc1q…, 3… ou 1…) : la signature prouve qu’elle est à vous et démasque un virus qui aurait remplacé l’adresse copiée. GodGift Core la revérifie juste avant l’envoi, affiche sa date d’enregistrement et vous alerte si elle a changé depuis votre dernière visite. Hors de la fenêtre dédiée de l’application installée, il vous fait aussi retaper, avant chaque envoi, 16 caractères de cette adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre propre portefeuille.",
+      "voir": [
+        "recuperer",
+        "portefeuille",
+        "message"
+      ]
+    },
+    {
+      "id": "recuperer",
+      "mot": "Récupérer le trésor",
+      "texte": "Quand la clé d’un vrai coffre est trouvée, GodGift Core signe, sur votre machine, la transaction qui envoie tout le coffre vers votre adresse de réception signée, et la diffuse par les deux sources. Dans la fenêtre dédiée de l’application installée (ouverte par son icône), il le fait aussitôt ; ailleurs (navigateur, version web, fenêtre rechargée), seulement après que vous avez retapé 16 caractères de votre adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre propre portefeuille : si une page piégée avait changé l’adresse enregistrée, ils ne correspondraient pas, même pour une adresse fabriquée qui finirait pareil. La fenêtre dédiée ne garde son jeton qu’en mémoire : rechargée, elle n’envoie plus seule ; rouvrez-la par son icône. « Sans installer », il n’envoie rien. Hors ligne, la transaction attend le retour du réseau. Frais : d’emblée, même sans concurrent, une offre forte d’environ 10 % du trésor (au plus 300 sat/vB), sans rien vous demander ; au-delà, il vous demande ; jamais plus de la moitié du trésor. Sur téléphone, la version web vérifie tout ; pour récupérer un trésor, l’application installée sur un ordinateur reste la voie la plus sûre.",
+      "voir": [
+        "reception",
+        "accelerer",
+        "pris"
+      ]
+    },
+    {
+      "id": "accelerer",
+      "mot": "Accélérer",
+      "texte": "Si quelqu’un d’autre a trouvé en même temps, sa transaction attend peut-être avant la vôtre. « Accélérer » renvoie la même transaction en doublant d’un coup les frais, jamais au-delà de la moitié du trésor : les mineurs prennent en général celle qui paie le plus. C’est la course, la même pour tous.",
+      "voir": [
+        "recuperer",
+        "pris",
+        "course"
+      ]
+    },
+    {
+      "id": "officiel",
+      "mot": "Version publiée",
+      "texte": "Votre GodGift Core cherche son empreinte dans les messages signés de l’auteur. « Version publiée » : l’auteur a publié cette empreinte. Ce badge ne prouve pas que votre copie est intacte (une copie piégée pourrait mentir sur elle-même) : pour en être sûr, recompilez le programme avec recompiler_et_comparer.py, ou vérifiez l’installateur sur angedeleau.com/verifier-installateur. « Version inconnue » ou « retirée » : téléchargez la bonne sur angedeleau.com.",
+      "voir": [
+        "installateur",
+        "empreinte",
+        "jamais"
+      ]
+    },
+    {
+      "id": "installateur",
+      "mot": "Vérifier mon installateur",
+      "texte": "Sur angedeleau.com/verifier-installateur, déposez le fichier téléchargé : votre navigateur calcule son empreinte sur place et la compare aux installateurs publiés. Sous Windows, l’installateur portera aussi la signature de l’auteur, une fois signé (Certum) ; la version bêta ne l’est pas encore.",
+      "voir": [
+        "officiel",
+        "jamais"
+      ]
+    },
+    {
+      "id": "jamais",
+      "mot": "La règle JAMAIS",
+      "texte": "Personne, pas même l’auteur, ne vous demandera jamais vos 24 mots, ni de payer pour une énigme, un indice ou une réponse, ni vos réponses. L’édition numérique certifiée ne s’achète que sur angedeleau.com ; GodGift Core ne se télécharge que sur angedeleau.com, ou s’ouvre sur app.angedeleau.com. Quiconque vous le demande, même au nom de l’auteur, est un escroc.",
+      "voir": [
+        "officiel",
+        "installateur",
+        "recuperer"
+      ]
+    },
+    {
+      "id": "sources",
+      "mot": "Deux sources",
+      "texte": "GodGift Core lit la chaîne à deux sources indépendantes et compare tout ce qui est confirmé : une transaction, une adresse, une gravure. Si elles ne disent pas la même chose, il refuse de conclure et le dit. Si l’une tombe, l’autre prend le relais.",
+      "voir": [
+        "explorateur",
+        "verifier"
+      ]
+    },
+    {
+      "id": "temoin",
+      "mot": "Témoin",
+      "texte": "Un GodGift Core volontaire qui publie, après chaque vérification, un constat signé par une clé anonyme renouvelée chaque semaine : le bloc, les empreintes du manifeste, du COFFRET et du programme, et le résultat. Si la librairie, le site ou une source mentait, des témoins indépendants auraient publié le contraire. Rien de personnel n’est publié ; le relais voit seulement l’adresse IP de connexion.",
+      "voir": [
+        "nostr",
+        "horodatage",
+        "noeud"
+      ]
+    },
+    {
+      "id": "nostr",
+      "mot": "Nostr",
+      "texte": "Un réseau ouvert de messages signés, sans compte ni propriétaire, porté par des centaines de relais indépendants. Les témoins y publient leurs constats ; chacun peut les relire et vérifier leurs signatures.",
+      "voir": [
+        "temoin",
+        "horodatage"
+      ]
+    },
+    {
+      "id": "horodatage",
+      "mot": "Horodatage (OpenTimestamps)",
+      "texte": "Chaque jour, les constats des témoins sont rassemblés et leur empreinte est ancrée gratuitement dans Bitcoin par OpenTimestamps. C’est la preuve datée que ces constats existaient tels quels ce jour-là. N’importe qui peut refaire l’ancrage et vérifier la preuve.",
+      "voir": [
+        "temoin",
+        "gravure"
+      ]
+    },
+    {
+      "id": "course",
+      "mot": "La course",
+      "texte": "Tous ceux qui trouvent les bonnes réponses obtiennent la même clé : le coffre revient à la première transaction confirmée, en général celle qui paie le plus de frais aux mineurs. C’est la règle du jeu, et aucun programme ne peut l’empêcher. GodGift Core paie d’emblée, même sans concurrent, une offre forte (environ 10 % du trésor, au plus 300 sat/vB) et double d’un coup avec « Accélérer », jamais au-delà de la moitié du trésor ; un concurrent qui mise davantage, ou qui encombre la file d’attente de transactions liées, peut gagner.",
+      "voir": [
+        "accelerer",
+        "recuperer",
+        "pris"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "La chasse est-elle payante ?",
+      "r": "Non. Les énigmes sont publiques et gratuites, pour tout le monde. Le roman accompagne la chasse sans en faire partie : il ne contient aucune énigme de la chasse, ni aucune information utile à une réponse qui ne soit aussi publiée gratuitement. Une part de chaque vente nourrit simplement les coffres."
+    },
+    {
+      "q": "Pourquoi le calcul de la clé prend-il dix secondes ?",
+      "r": "C’est voulu. Pour vous, un essai ne coûte rien. Pour quelqu’un qui voudrait essayer toutes les combinaisons, des milliards d’essais d’un gigaoctet chacun coûteraient bien plus qu’un coffre."
+    },
+    {
+      "q": "Qui peut ouvrir le COFFRET avant l’heure ?",
+      "r": "Personne, pas même l’auteur. Chaque verrou ne s’ouvre qu’avec la signature que le réseau drand publiera à cette seconde-là."
+    },
+    {
+      "q": "Et si le site tombe ?",
+      "r": "GodGift Core garde le COFFRET et l’ouvre lui-même à l’heure ; les cris partent sur la chaîne ; le bouton « Acheter » bascule sur le serveur de secours que l’auteur a désigné par un message signé (sans lui, la vente est momentanément indisponible). La chasse continue."
+    },
+    {
+      "q": "J’ai trouvé la clé : que faire ?",
+      "r": "Dans la fenêtre de l’application installée, rien à faire : si votre adresse de réception signée est enregistrée, GodGift Core envoie aussitôt tout le coffre vers elle. Ailleurs (navigateur, version web, fenêtre rechargée), retapez d’abord les 16 caractères demandés de votre adresse, en deux morceaux masqués à l’écran, lus dans votre portefeuille ; « Sans installer », installez GodGift Core et recalculez la clé. Rebranchez internet si vous l’aviez coupé. Si « Accélérer » apparaît, quelqu’un d’autre a trouvé en même temps : c’est la course, cliquez."
+    },
+    {
+      "q": "Il me manque un seul mot : puis-je tout essayer ?",
+      "r": "Oui, c’est permis. Un mot manquant, c’est cinq mille essais, quelques heures de calcul. La lenteur protège contre la force brute, pas contre un chasseur qui a presque trouvé."
+    },
+    {
+      "q": "Pourquoi « En attente » dans Vérifier ?",
+      "r": "Avant le semis de décembre 2026, ou quand la librairie n’est pas encore ouverte, il n’y a encore rien à recompter. Ce n’est pas une erreur. Un contrôle en rouge, lui, signale un vrai problème."
+    },
+    {
+      "q": "Mes réponses partent-elles sur internet ?",
+      "r": "Jamais. Le calcul se fait sur votre machine ; GodGift Core n’envoie aucune réponse. Pour un vrai coffre, coupez tout de même internet avant de taper."
+    },
+    {
+      "q": "Un coffre non trouvé revient-il à l’auteur ?",
+      "r": "Non. Il reste à prendre, sans limite de temps. Trente jours après son cri, un coffre non pris reçoit un indice fort ; six mois après, un second indice. La solution n’est publiée qu’une fois le coffre pris, par un message signé de l’auteur, qui se vérifie contre l’engagement gravé au semis."
+    },
+    {
+      "q": "Comment savoir que ce programme est le bon ?",
+      "r": "Le badge en haut de l’écran dit « version publiée » quand l’auteur a signé cette empreinte ; il ne prouve pas que votre copie est intacte. Avant d’installer, vérifiez le fichier sur angedeleau.com/verifier-installateur ; vous pouvez aussi tout recompiler vous-même (recompiler_et_comparer.py). Sous Windows, l’installateur portera la signature de l’auteur une fois signé (Certum)."
+    },
+    {
+      "q": "Faut-il être témoin ?",
+      "r": "Non, c’est un choix, que vous pouvez changer à tout moment dans Réglages. Être témoin rend la chasse vérifiable par tous ; cela ne publie rien de personnel, mais le relais Nostr voit l’adresse IP de connexion."
+    },
+    {
+      "q": "Mon portefeuille ne sait pas signer un message : que faire ?",
+      "r": "Utilisez un portefeuille qui sait signer (Sparrow, Electrum, Trezor Suite, Coldcard…) avec une adresse bc1q…, 3… ou 1… : la signature est obligatoire. Elle prouve que l’adresse est à vous, et GodGift Core la revérifie juste avant chaque envoi ; sans elle, aucune adresse n’est enregistrée."
+    },
+    {
+      "q": "Et si deux personnes trouvent en même temps ?",
+      "r": "C’est la course, la règle du jeu : tous ceux qui trouvent ont la même clé, et le coffre revient à la première transaction confirmée, en général celle qui paie le plus de frais. GodGift Core paie d’emblée, même sans concurrent, une offre forte d’environ 10 % du trésor (au plus 300 sat/vB, sans vous demander) et « Accélérer » double d’un coup, jamais plus de la moitié du trésor. Un concurrent qui mise davantage peut gagner : aucun programme ne peut l’empêcher."
+    },
+    {
+      "q": "Quelqu’un me propose une autre version de GodGift Core, ou de l’aide pour récupérer un coffre",
+      "r": "Refusez. Personne, pas même l’auteur, ne vous demandera jamais vos 24 mots, ni de payer pour une énigme, un indice ou une réponse, ni vos réponses. L’édition numérique certifiée ne s’achète que sur angedeleau.com ; GodGift Core ne se télécharge que sur angedeleau.com, ou s’ouvre sur app.angedeleau.com. Quiconque vous le demande, même au nom de l’auteur, est un escroc. Le vrai GodGift Core n’envoie jamais vos réponses ni la clé d’un coffre à qui que ce soit : il vide le coffre lui-même vers votre adresse de réception signée."
+    },
+    {
+      "q": "L’auteur est-il Satoshi Nakamoto ?",
+      "r": "Non. Il ne l’est pas et ne prétend pas l’être ; le Forgeron du roman est un personnage."
+    },
+    {
+      "q": "Puis-je utiliser GodGift Core sur mon téléphone ?",
+      "r": "Oui : ouvrez app.angedeleau.com (un hébergement à part, chaque fichier vérifié par son empreinte) et ajoutez-le à l’écran d’accueil. Il suit et vérifie tout ; avant chaque envoi d’un trésor, il vous fait retaper 16 caractères de votre adresse (deux morceaux tirés au hasard, masqués à l’écran). Pour récupérer un trésor, l’application installée sur un ordinateur reste la voie la plus sûre : elle ne dépend d’aucun site."
+    }
+  ]
+}

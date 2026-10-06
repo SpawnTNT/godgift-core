@@ -1,0 +1,53 @@
+#!/bin/bash
+# GodGift Core pour Mac : ouvre le programme dans une fenetre dediee de Chrome, Edge, Brave ou Chromium, sinon dans Safari.
+# La fenetre dediee (contre-audit godgift N1) : un profil a elle seule, et un jeton de 32 octets tire au hasard au premier demarrage,
+# garde dans un fichier lisible par vous seul et passe dans l'adresse de la fenetre ; a cote du programme, son empreinte seule
+# (gg_fenetre.js). Seule cette fenetre envoie un tresor sans retape. L'application ne s'ecrit pas elle-meme : le programme est recopie
+# dans votre dossier (une fois par version) pour y poser gg_fenetre.js.
+# Le programme ouvert est REVERIFIE A CHAQUE LANCEMENT (contre-verification V4) : chaque fichier contre la liste SHA256SUMS de
+# l'application (Contents/Resources/SHA256SUMS), aucun fichier en plus, et l'empreinte affichee (gg_empreinte.js) egale au SHA-256 de
+# cette liste ; la copie de votre dossier, et aussi le programme de l'application quand Safari l'ouvre directement. Au moindre ecart,
+# rien n'est lance, et une alerte dit quoi faire.
+# Safari (aucun navigateur de la famille Chromium) : le programme de l'application, sans jeton ; pour recuperer un tresor, il fait
+# alors retaper 16 caracteres de l'adresse de reception (deux morceaux tires au hasard, masques a l'ecran), lus dans le portefeuille.
+RES="$(cd "$(dirname "$0")/../Resources" && pwd)"
+SRC="$RES/app"
+SOMMES="$RES/SHA256SUMS"
+D="$HOME/Library/Application Support/GodGiftCore"
+url() { printf 'file://%s/godgift.html' "$(printf '%s' "$1" | sed 's/%/%25/g; s/ /%20/g')"; }
+verifier() {   # $1 : le dossier qui contient app/ ; vrai si ce programme est exactement celui de l'application
+  local E
+  E=$(shasum -a 256 "$SOMMES" 2>/dev/null | cut -d' ' -f1)
+  [ -f "$SOMMES" ] && cmp -s "$SRC/gg_empreinte.js" "$1/app/gg_empreinte.js" && grep -q "\"empreinte\": \"$E\"" "$1/app/gg_empreinte.js" &&
+    [ "$(cd "$1" && find app -type f ! -name gg_empreinte.js ! -name gg_fenetre.js | LC_ALL=C sort)" = "$(cut -c67- "$SOMMES" | LC_ALL=C sort)" ] &&
+    (cd "$1" && shasum -a 256 -s -c "$SOMMES" >/dev/null 2>&1)
+}
+refuser() {   # $1 : le dossier du programme refuse
+  local M="GodGift Core refuse de s’ouvrir : son programme dans $1/app a été modifié (il ne correspond plus à la liste SHA256SUMS de l’application). Rien n’a été lancé.
+Supprimez le dossier $1/app s’il est dans votre dossier (il sera refait au prochain lancement), sinon réinstallez GodGift Core depuis angedeleau.com, puis faites vérifier ce Mac : quelqu’un, ou un programme, a changé GodGift Core.
+
+GodGift Core refuses to open: its program in $1/app was modified (it no longer matches the app’s SHA256SUMS list). Nothing was launched.
+Delete the folder $1/app if it is in your home folder (it will be rebuilt at the next launch), otherwise reinstall GodGift Core from angedeleau.com, then have this Mac checked: someone, or some program, changed GodGift Core."
+  printf '%s\n' "$M" >&2
+  osascript -e 'on run argv' -e 'display alert "GodGift Core" message (item 1 of argv) as critical' -e 'end run' "$M" >/dev/null 2>&1
+  exit 1
+}
+for n in "Google Chrome" "Microsoft Edge" "Brave Browser" "Chromium"; do
+  for d in "/Applications" "$HOME/Applications"; do
+    if [ -d "$d/$n.app" ]; then
+      if ! cmp -s "$SRC/gg_empreinte.js" "$D/app/gg_empreinte.js" 2>/dev/null; then
+        rm -rf "$D/app"; mkdir -p "$D"; cp -R "$SRC" "$D/app"; chmod -R u+w "$D/app"; rm -f "$D/app/gg_fenetre.js"
+      fi
+      verifier "$D" || refuser "$D"
+      ( umask 077
+        grep -qE '^[0-9a-f]{64}$' "$D/jeton" 2>/dev/null || od -An -N32 -tx1 /dev/urandom | tr -d ' \n' > "$D/jeton"
+        E=$(tr -d '\n' < "$D/jeton" | shasum -a 256 | cut -d' ' -f1)
+        printf '/* Ecrit par le lanceur : l empreinte du jeton de la fenetre dediee (le jeton n est que dans le fichier jeton, a cote). */\nthis.GG_FENETRE = {"empreinte": "%s"};\n' "$E" > "$D/app/gg_fenetre.js" )
+      mkdir -p "$D/profil"
+      open -na "$d/$n.app" --args --app="$(url "$D/app")?fenetre=$(tr -d '\n' < "$D/jeton")" --user-data-dir="$D/profil" --window-size=1360,880 --no-first-run --no-default-browser-check
+      exit 0
+    fi
+  done
+done
+verifier "$RES" || refuser "$RES"
+open -a Safari "$(url "$SRC")"

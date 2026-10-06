@@ -1,0 +1,606 @@
+{
+  "titre": "Leitfaden und Glossar",
+  "sur": "Die Jagd verstehen",
+  "intro": "Alles, was GodGift Core Ihnen zeigt, in einfachen Worten erklärt. Beginnen Sie mit einem Rundgang oder suchen Sie direkt nach einem Wort.",
+  "recherche": "Ein Wort suchen: Ruf, Zufall, COFFRET, Fingerabdruck…",
+  "aucun": "Kein Wort passt. Versuchen Sie ein kürzeres Wort oder blättern Sie durch die Liste.",
+  "t_parcours": "Erste Schritte",
+  "t_glossaire": "Das Glossar",
+  "t_faq": "Häufige Fragen",
+  "voir_aussi": "Siehe auch",
+  "en_savoir_plus": "Mehr erfahren",
+  "carte_titre": "Leitfaden und Glossar",
+  "carte_texte": "Die Wörter der Jagd einfach erklärt, fünf Rundgänge für einen guten Start und die häufigsten Fragen.",
+  "ouvrir": "Leitfaden öffnen",
+  "parcours": [
+    {
+      "titre": "Ich entdecke",
+      "etapes": [
+        "Öffnen Sie „Die Tafel“: die 24 Truhen der Jagd, eine pro Monat, von Januar 2027 bis Dezember 2028. Ihre Farbe zeigt ihren Zustand.",
+        "Tippen Sie auf eine Truhe: Sie sehen ihren Betrag, ihre beiden Rätsel, sobald sie erschienen sind, ihren Ruf und später ihre zwei Hinweise.",
+        "Um eine laufende Jagd zu sehen, bevor sie beginnt, wählen Sie in den Einstellungen „Demonstrationsmodus“ und dann „Speichern“. Alles darin ist fiktiv.",
+        "Zur echten Jagd kehren Sie zurück, indem Sie diesen Modus abwählen und dann „Speichern“ wählen."
+      ]
+    },
+    {
+      "titre": "Ich jage",
+      "etapes": [
+        "Vor allem in aller Ruhe: Speichern Sie in den Einstellungen „Meine Empfangsadresse“, die Adresse Ihrer eigenen Wallet, und signieren Sie sie mit ihr: Die Signatur ist erforderlich. Dorthin geht der Schatz.",
+        "Am 3. des Monats um 18:15:05 UTC (19:15:05 in Paris im Winter, 20:15:05 im Sommer) erscheint das erste Rätsel der Truhe, am 17. zur gleichen Uhrzeit das zweite. Lesen Sie sie unter „Rätsel“.",
+        "Jede Antwort besteht aus französischen Wörtern der Liste der Fünftausend: drei Wörter bei den meisten Truhen, vier bei den größten. Prüfen Sie Ihre Wörter unter „Jagen“, unten auf der Seite.",
+        "Eine Stunde nach dem zweiten Rätsel erscheint der Ruf: Er bringt den Zufall, das letzte Teil des Schlüssels. GodGift Core liest ihn ganz allein.",
+        "Wählen Sie unter „Jagen“ die Truhe: GodGift Core bereitet sie vor und zeigt „Bereit“ an. Trennen Sie das Internet, tippen Sie Ihre beiden Antworten und dann „Schlüssel berechnen“.",
+        "Ist es der richtige Schlüssel, verbinden Sie das Internet wieder. Im Fenster der installierten Anwendung, über ihr Symbol geöffnet, signiert GodGift Core sofort die Transaktion auf Ihrem Rechner und sendet sie von selbst an Ihre Adresse, mit einem starken Angebot (etwa 10 % des Schatzes als Gebühren); anderswo (Browser, Webversion, neu geladenes Fenster) lässt es Sie zuerst 16 Zeichen Ihrer Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer Wallet; „Ohne Installation“ sendet es nichts. Hat jemand anderes gleichzeitig gefunden, ist es das Rennen: „Beschleunigen“ verdoppelt die Gebühren auf einen Schlag.",
+        "Üben Sie zuerst an den Übungstruhen A und B: Sie sind falsch, öffentlich und funktionieren genau wie die echten."
+      ]
+    },
+    {
+      "titre": "Ich trage das Buch weiter",
+      "etapes": [
+        "Nur der Eigentümer eines offiziellen Exemplars kann aktiver Gefährte sein, und ein Exemplar macht nur einen Gefährten. Kaufen Sie Ihres auf angedeleau.com und geben Sie dabei eine bc1q…-Adresse Ihrer Wallet an: Das ist seine Eigentumsadresse, auf seiner Titelseite gedruckt. Die Jagd selbst bleibt kostenlos.",
+        "Öffnen Sie „Die Bücher“, legen Sie das EPUB oder PDF Ihres Exemplars ab, dann „Mit diesem Exemplar Gefährte werden“: Die Seite Gefährte übernimmt seine Eigentumsadresse; dorthin gehen Ihre Anteile.",
+        "Signieren Sie die angezeigte Nachricht mit dieser Adresse (in Sparrow: Werkzeuge, Nachricht signieren), fügen Sie die Signatur ein und senden Sie sie: Die Buchhandlung gibt Ihnen einen persönlichen Link.",
+        "Der Link bleibt „wartend“, solange der Kauf Ihres Exemplars nicht bezahlt ist, und wird dann „aktiv“: Jedes über einen aktiven Link gekaufte Buch bringt Ihnen 40 % seines Preises.",
+        "Ihre Anteile werden jedes Quartal ausgezahlt, in einer öffentlichen Transaktion, die jeder überprüfen kann."
+      ]
+    },
+    {
+      "titre": "Ich prüfe mein Buch",
+      "etapes": [
+        "Öffnen Sie „Die Bücher“.",
+        "Legen Sie Ihr EPUB oder Ihr PDF ab oder geben Sie den Fingerabdruck ein, der auf seiner Titelseite steht.",
+        "GodGift Core findet das Exemplar im Register und rechnet die in die Kette gravierte Wurzel nach: Ist es offiziell, sagt es Ihnen das, mit seiner Nummer."
+      ]
+    },
+    {
+      "titre": "Ich werde Zeuge",
+      "etapes": [
+        "Wählen Sie in den Einstellungen „Ich werde Zeuge“ (oder antworten Sie bei der Begrüßung mit Ja).",
+        "Bei jedem „Alles prüfen“ und einmal täglich von allein veröffentlicht Ihr GodGift Core seinen Befund: Block, Fingerabdrücke, Ergebnis. Nichts Persönliches.",
+        "Der Reiter „Netz“ zählt die Zeugen der Woche und meldet jede Abweichung: ein anderes Manifest, eine nicht veröffentlichte Version, eine fehlgeschlagene Prüfung.",
+        "Jeden Tag werden die Befunde in Bitcoin mit einem Zeitstempel versehen: ein datierter Beweis, den jeder überprüfen kann."
+      ]
+    }
+  ],
+  "mots": [
+    {
+      "id": "adresse",
+      "mot": "Bitcoin-Adresse",
+      "texte": "Eine Zeichenfolge, die hier mit bc1q… beginnt und Bitcoins empfangen kann, wie eine öffentliche Kontonummer. Jede Truhe ist eine Adresse; auch Ihre Wallet hat welche.",
+      "voir": [
+        "coffre",
+        "portefeuille"
+      ]
+    },
+    {
+      "id": "alea",
+      "mot": "Zufall",
+      "texte": "64 zufällig gezogene Zeichen, in der Höhle für jede Truhe gezogen. Er fließt zusammen mit den Wörtern der Antworten in den Schlüssel der Truhe ein: Ohne ihn genügen selbst die richtigen Antworten nicht. Er wird durch den Ruf enthüllt, eine Stunde nach dem zweiten Rätsel.",
+      "voir": [
+        "cri",
+        "cle",
+        "cave"
+      ]
+    },
+    {
+      "id": "amorce",
+      "mot": "Saat-Transaktion",
+      "texte": "Die Transaktion der Saat im Dezember 2026, die die 24 Truhen füllt und die 24 Rufe vorbereitet. Sie wird vom Schalter des Autors bezahlt; das gravierte Manifest kündigt die Adresse an, die seine Nachrichten signiert.",
+      "voir": [
+        "semis",
+        "cri",
+        "message"
+      ]
+    },
+    {
+      "id": "balayer",
+      "mot": "Fegen",
+      "texte": "Eine Adresse in Ihre eigene leeren. GodGift Core erledigt das selbst, wenn Sie den Schlüssel einer Truhe finden: Es signiert auf Ihrem Rechner und sendet alles an Ihre Empfangsadresse. Die Truhe gehört der ersten bestätigten Transaktion, die sie leert.",
+      "voir": [
+        "recuperer",
+        "reception",
+        "pris"
+      ]
+    },
+    {
+      "id": "cave",
+      "mot": "Höhle",
+      "texte": "Der Computer des Autors, der nie mit einem Netz verbunden war und es nie sein wird. Dort werden die Rätsel geschrieben, die Zufallswerte gezogen, die Adressen berechnet und die Nachrichten signiert. Kein Geheimnis verlässt ihn im Klartext.",
+      "voir": [
+        "alea",
+        "coffret"
+      ]
+    },
+    {
+      "id": "chasse",
+      "mot": "Jagd",
+      "texte": "Ein vollständiger Schatz: seine Truhen, seine Rätsel, sein Stein und sein COFFRET. L'Ange de l'Eau ist Jagd Nr. 1; die folgenden erscheinen von selbst unter „Die Jagden“. Jede Jagd hat ihre eigenen Schlüssel: Keine kann eine andere öffnen.",
+      "voir": [
+        "chasse_zero",
+        "annonce",
+        "pierre"
+      ]
+    },
+    {
+      "id": "chasse_zero",
+      "mot": "Jagd null",
+      "texte": "Der Probelauf: drei Truhen zu 100 €, parallel gespielt. Jede Truhe hat zwei Rätsel: die ersten drei am 3. November 2026 um 18:15:05 UTC (19:15:05 in Paris), die zweiten drei am 17. November zur selben Zeit; die drei Rufe am 17. November um 19:15:05 UTC (20:15:05 in Paris). Die starken Hinweise öffnen sich am 17. Dezember 2026 (falls noch eine Truhe übrig ist), die zweiten sechs Monate nach dem Ruf. Dieselben Regeln wie die große Jagd, mit eigenen Schlüsseln, von Truhe zu Truhe verschieden.",
+      "voir": [
+        "chasse"
+      ]
+    },
+    {
+      "id": "annonce",
+      "mot": "Ankündigung einer Jagd",
+      "texte": "Der genaue Text AEDE:chasse:<Nr.>:<Fingerabdruck des Manifests>, mit dem Wechselgeld der Starttransaktion dieser Jagd vor dem ersten Rätsel in die Kette graviert und von der Nachrichtenadresse des Autors signiert. Eine weitere Jagd (Nr. 2 bis 999) existiert nur durch ihn. GodGift Core erfährt ihn von der Buchhandlung oder ihrem Ersatzserver, prüft Signatur, Gravur und Manifest selbst und verfolgt dann die Jagd; zeigen zwei Ankündigungen derselben Nummer auf zwei Manifeste, gilt die zuerst gravierte, die zweite wird abgelehnt.",
+      "voir": [
+        "chasse",
+        "gravure",
+        "manifeste"
+      ]
+    },
+    {
+      "id": "cle",
+      "mot": "Schlüssel der Truhe",
+      "texte": "Der private Schlüssel, mit dem die Truhe ausgegeben werden kann. Er wird bei Ihnen aus den Wörtern der beiden Antworten und dem Zufall berechnet (scrypt: etwa zehn Sekunden und ein Gigabyte Speicher; ein Versuch stört niemanden, Milliarden würden ein Vermögen kosten). Er wird nie aufgeschrieben und nur angezeigt, wenn Sie es verlangen („Experte: privaten Schlüssel anzeigen“, eine Minute): GodGift Core nutzt ihn, um die Truhe an Ihre Adresse zu leeren, und vergisst ihn dann.",
+      "voir": [
+        "alea",
+        "recuperer",
+        "wif"
+      ]
+    },
+    {
+      "id": "coffre",
+      "mot": "Truhe",
+      "texte": "Eine Bitcoin-Adresse, die bei der Saat gefüllt wird. Es gibt 24, eine pro Monat, anfangs von 60 € bis 1 300 €; ein Teil der Buchverkäufe kommt jedes Quartal dazu. Zwei Rätsel öffnen jede Truhe.",
+      "voir": [
+        "etats",
+        "semis",
+        "versement"
+      ]
+    },
+    {
+      "id": "coffret",
+      "mot": "COFFRET",
+      "texte": "Die öffentliche Datei, in der die Höhle jedes Rätsel, jeden Ruf und die zwei Hinweise jeder Truhe im Voraus bis zu ihrer genauen Sekunde verschlossen hat. Sie enthält keine Lösung. Ihr GodGift Core bewahrt sie, liest sie nach der Regel der Höhle (kein Schloss doppelt, jedes zur Zeit des Steins) und öffnet sie selbst pünktlich, auch wenn die Website ausfällt. Niemand, nicht einmal der Autor, kann sie früher öffnen.",
+      "voir": [
+        "verrou",
+        "drand",
+        "manifeste"
+      ]
+    },
+    {
+      "id": "compagnon",
+      "mot": "Gefährte",
+      "texte": "Der Eigentümer eines offiziellen Exemplars, der den Roman mit seinem persönlichen Link bekannt macht. Er meldet sich mit der Eigentumsadresse seines Exemplars an: ein Exemplar, ein Gefährte. Sein Link bleibt „wartend“, solange der Kauf dieses Exemplars nicht bezahlt ist, und wird dann „aktiv“. Jedes über einen aktiven Link verkaufte Buch bringt ihm 40 % des Preises, jedes Quartal an diese Adresse ausgezahlt. Kein Konto, kein Schlüssel anzuvertrauen.",
+      "voir": [
+        "versement",
+        "adresse"
+      ]
+    },
+    {
+      "id": "cri",
+      "mot": "Ruf",
+      "texte": "Die Transaktion, die den Zufall einer Truhe in der Kette veröffentlicht, eine Stunde nach ihrem zweiten Rätsel. Sie wurde in der Höhle im Voraus signiert und geht von selbst hinaus: Ab dem Ruf haben die Jäger alles, um den Schlüssel zu berechnen.",
+      "voir": [
+        "alea",
+        "coffret"
+      ]
+    },
+    {
+      "id": "demo",
+      "mot": "Demonstrationsmodus",
+      "texte": "Eine Jagd, wie sie am 10. Juni 2027 aussehen könnte, mit Beispielwerten und fiktiven Adressen, um zu sehen, wie GodGift Core mitten in der Jagd aussieht. Kein echtes Rätsel. Einstellungen: an- oder abwählen, dann „Speichern“.",
+      "voir": []
+    },
+    {
+      "id": "drand",
+      "mot": "drand",
+      "texte": "Ein öffentliches Netz, betrieben von Universitäten und Unternehmen aus aller Welt, das alle drei Sekunden eine Signatur veröffentlicht. Jede Signatur öffnet die Schlösser ihres Augenblicks: Sie ist die Uhr des COFFRET.",
+      "voir": [
+        "verrou",
+        "coffret"
+      ]
+    },
+    {
+      "id": "empreinte",
+      "mot": "Fingerabdruck",
+      "texte": "Eine Folge von 64 Zeichen (0-9 a-f), berechnet aus einer Datei oder einem Text (SHA-256). Schon ein einziger geänderter Buchstabe verändert den ganzen Fingerabdruck: Zwei Fingerabdrücke zu vergleichen genügt, um zu wissen, ob zwei Dateien identisch sind.",
+      "voir": [
+        "gravure",
+        "verifier",
+        "exemplaire"
+      ]
+    },
+    {
+      "id": "enigme",
+      "mot": "Rätsel",
+      "texte": "Ein Text, dessen Antwort aus Wörtern der Liste der Fünftausend besteht. Zwei pro Monat: am 3. und 17. um 18:15:05 UTC (19:15:05 in Paris im Winter, 20:15:05 im Sommer). Das Rätsel vom 3. und das vom 17. desselben Monats öffnen gemeinsam die Truhe dieses Monats. Die Rätsel werden auf Französisch veröffentlicht, dem einzigen maßgeblichen Text, manchmal mit einer inoffiziellen englischen Übersetzung; kostenlos, für alle im selben Augenblick.",
+      "voir": [
+        "liste",
+        "utc",
+        "coffre"
+      ]
+    },
+    {
+      "id": "etats",
+      "mot": "Zustände einer Truhe",
+      "texte": "ZU FÜLLEN: noch nicht gefüllt (vor Dezember 2026). VERSIEGELT: gefüllt, noch kein Rätsel erschienen. IN DER JAGD: Das erste Rätsel ist erschienen, das zweite kommt am 17. ZU HOLEN: Beide Rätsel sind erschienen, der Schlüssel kann gefunden werden. GEHOLT: Jemand hat sie geleert.",
+      "voir": [
+        "coffre",
+        "pris"
+      ]
+    },
+    {
+      "id": "exemplaire",
+      "mot": "Offizielles Exemplar",
+      "texte": "Ein digitales Buch, das die Buchhandlung verkauft. Es trägt seine Nummer und seinen Fingerabdruck auf der Titelseite; jedes Quartal graviert die Auszahlung die Wurzel aller Exemplare in die Kette. Legen Sie es unter „Die Bücher“ ab, um es zu prüfen.",
+      "voir": [
+        "empreinte",
+        "racine"
+      ]
+    },
+    {
+      "id": "explorateur",
+      "mot": "Explorer",
+      "texte": "Der Dienst, der die Bitcoin-Kette für GodGift Core liest. Es gibt zwei unabhängige (standardmäßig mempool.space und blockstream.info, oder Ihr eigener Knoten): Jede wichtige Lesung wird verglichen, und eine Abweichung wird gemeldet. GodGift Core sendet dorthin nie etwas Geheimes.",
+      "voir": [
+        "sources",
+        "noeud"
+      ]
+    },
+    {
+      "id": "gravure",
+      "mot": "Gravur",
+      "texte": "Einen Fingerabdruck in eine Bitcoin-Transaktion einschreiben. Sobald sie bestätigt ist, kann sie von niemandem mehr geändert werden: Sie ist der öffentliche, datierte Beweis, dass eine Datei zu diesem Zeitpunkt genau so existierte.",
+      "voir": [
+        "empreinte",
+        "manifeste"
+      ]
+    },
+    {
+      "id": "indice",
+      "mot": "Hinweise",
+      "texte": "Zwei pro Truhe, vom Autor geschrieben und im COFFRET verschlossen. Dreißig Tage nach ihrem Ruf erhält eine nicht genommene Truhe einen starken Hinweis; sechs Monate danach einen zweiten Hinweis. Sie ändern nichts am Schlüssel.",
+      "voir": [
+        "coffret",
+        "solution"
+      ]
+    },
+    {
+      "id": "librairie",
+      "mot": "Buchhandlung",
+      "texte": "Der Server, der das digitale Buch in Bitcoin verkauft und die Rätsel, die Tafel und die Auszahlungen veröffentlicht. GodGift Core zählt alles nach, was sie veröffentlicht; fällt sie aus, öffnet er den COFFRET selbst, und die Schaltfläche „Kaufen“ wechselt zum Ersatzserver, den der Autor durch eine signierte Nachricht bestimmt hat.",
+      "voir": [
+        "coffret",
+        "secours"
+      ]
+    },
+    {
+      "id": "liste",
+      "mot": "Liste der Fünftausend",
+      "texte": "Die 5 000 französischen Wörter, nummeriert von 0001 bis 5000, aus denen alle Antworten stammen. Sie können ein Wort oder seine Nummer tippen. Ihr Fingerabdruck ist im Stein eingeschrieben: Sie kann sich nicht ändern.",
+      "voir": [
+        "enigme",
+        "pierre"
+      ]
+    },
+    {
+      "id": "manifeste",
+      "mot": "Manifest",
+      "texte": "Die öffentliche Datei der Jagd: die Adressen der Truhen, die Beträge, der Fingerabdruck jedes Zufalls, die Verpflichtung jeder Truhe (ihre Antworten, festgelegt, ohne verraten zu werden) und der Fingerabdruck des COFFRET. Sein Fingerabdruck wird bei der Saat in die Kette graviert: Alles Weitere muss ihm entsprechen. GodGift Core beweist diese Gravur bei jedem Start erneut.",
+      "voir": [
+        "gravure",
+        "coffret",
+        "semis"
+      ]
+    },
+    {
+      "id": "message",
+      "mot": "Signierte Nachricht",
+      "texte": "Eine öffentliche Nachricht des Autors, in der Höhle signiert (Standard BIP-322), datiert JJJJ-MM-TT. GodGift Core prüft die Signatur, die Form der Nachricht und ob die signierende Adresse die des Autors ist: im Programm festgelegt oder durch ein graviertes Manifest angekündigt. Eine falsche Nachricht bleibt eingeklappt. Niemand kann im Namen des Autors sprechen.",
+      "voir": [
+        "amorce",
+        "cave"
+      ]
+    },
+    {
+      "id": "noeud",
+      "mot": "Knoten",
+      "texte": "Jeder GodGift Core prüft; die Freiwilligen bezeugen. Jeder liest die Kette und die Buchhandlung und zählt nach. Niemand muss der Website glauben: Würde die Buchhandlung lügen, sähe es jeder Knoten, und die freiwilligen Zeugen würden es veröffentlichen.",
+      "voir": [
+        "verifier",
+        "temoin",
+        "sources"
+      ]
+    },
+    {
+      "id": "pierre",
+      "mot": "Stein des Programms",
+      "texte": "Das vollständige Regelwerk der Jagd, auf Französisch, vor der Eröffnung in die Kette graviert. Nichts kann davon abweichen. Lesbar in den Einstellungen unter „Den Stein lesen (Französisch)“; die Allgemeinen Bedingungen sagen es in Alltagssprache.",
+      "voir": [
+        "gravure",
+        "chasse"
+      ]
+    },
+    {
+      "id": "portefeuille",
+      "mot": "Wallet",
+      "texte": "Die Software, die Ihre Bitcoins und Ihre Adressen verwahrt (zum Beispiel Sparrow oder Electrum). Sie dient dazu, Ihre Gefährten-Anteile zu empfangen, eine Nachricht zu signieren und eine gefundene Truhe zu fegen.",
+      "voir": [
+        "adresse",
+        "balayer"
+      ]
+    },
+    {
+      "id": "pris",
+      "mot": "Geholt",
+      "texte": "Eine Truhe gilt als geholt, sobald die erste Transaktion, die sie leert, in der Kette bestätigt ist. Es gibt nichts anzumelden oder einzufordern: Die Kette ist maßgeblich. Eine nicht gefundene Truhe bleibt zu holen, ohne zeitliche Grenze.",
+      "voir": [
+        "balayer",
+        "etats"
+      ]
+    },
+    {
+      "id": "racine",
+      "mot": "Wurzel und Register",
+      "texte": "Das Register listet die Fingerabdrücke aller verkauften Exemplare. Jedes Quartal werden sie zu einem einzigen Fingerabdruck verbunden, der Wurzel (Merkle-Baum nach RFC 6962), die in die Kette graviert wird. GodGift Core rechnet sie nach: Ein Exemplar ist zertifiziert, wenn es Teil einer gravierten Wurzel ist.",
+      "voir": [
+        "exemplaire",
+        "versement"
+      ]
+    },
+    {
+      "id": "sats",
+      "mot": "Sats",
+      "texte": "Der Satoshi, die kleinste Einheit des Bitcoins: 1 Bitcoin = 100 000 000 Sats. Das Buch kostet bei Erscheinen 21 000 Sats, danach den Preis, den die Buchhandlung veröffentlicht (eine Anpassung wird sieben Tage vorher angekündigt und eingraviert: Stein, Artikel 1); die Beträge der Truhen sind auf den Satoshi genau eingraviert.",
+      "voir": []
+    },
+    {
+      "id": "secours",
+      "mot": "Ersatzserver",
+      "texte": "Eine zweite Buchhandlung, bereit, den Verkauf zu übernehmen, falls die erste ausfällt. Sie wird im Voraus durch eine signierte Nachricht des Autors bestimmt, deren letzte Zeile AEDE:secours:https://… lautet (Stein, Artikel 10), oder im Programm festgelegt: GodGift Core wechselt nur zu ihr, nie zu einer von der Buchhandlung bloß angekündigten Adresse. Es gibt nie zwei aktive Kassen gleichzeitig. Ohne bestimmten Ersatzserver führt „Kaufen“ zu angedeleau.com und sagt, dass der Verkauf vorübergehend nicht möglich ist; die Jagd geht weiter.",
+      "voir": [
+        "librairie"
+      ]
+    },
+    {
+      "id": "semis",
+      "mot": "Saat",
+      "texte": "Die Sitzung im Dezember 2026, in der die Höhle die 24 Truhen füllt (insgesamt 4 000 €, zum Tageskurs in Bitcoin umgerechnet), den COFFRET verschließt und das Manifest veröffentlicht, das graviert wird.",
+      "voir": [
+        "amorce",
+        "manifeste",
+        "coffret"
+      ]
+    },
+    {
+      "id": "solution",
+      "mot": "Signierte Lösung",
+      "texte": "Die Lösung einer Truhe wird erst veröffentlicht, wenn die Truhe genommen ist, durch eine signierte Nachricht des Autors, deren letzte Zeile AEDE:solution:… lautet. Sie wird gegen die bei der Aussaat gravierte gesalzene Verpflichtung geprüft: GodGift Core zeigt „Verpflichtung der Aussaat eingehalten“ oder „Verpflichtung FALSCH“. Es übernimmt diese Wörter nie in Ihre Antworten und sendet nichts.",
+      "voir": [
+        "message",
+        "manifeste",
+        "indice"
+      ]
+    },
+    {
+      "id": "utc",
+      "mot": "UTC",
+      "texte": "Die Weltzeit. 18:15:05 UTC entspricht 19:15:05 in Paris (und Berlin) im Winter und 20:15:05 im Sommer. GodGift Core zeigt auch einen Countdown bis zum nächsten Rätsel an.",
+      "voir": [
+        "enigme"
+      ]
+    },
+    {
+      "id": "verifier",
+      "mot": "Alles prüfen",
+      "texte": "Die Prüfungen auf Ihrem Rechner, ohne jemandem zu vertrauen: der Stein, die Liste, der Kalender, das Manifest und seine Gravur, die Saat-Transaktion, die Rufe, die Auszahlungen, die Truhen, der COFFRET, jede verfolgte Jagd (die Jagd null eingeschlossen), die Nachrichten und die signierten Lösungen, das Register, dieses Programm und die Übereinstimmung der beiden Quellen. „Ausstehend“ ist vor der Saat normal.",
+      "voir": [
+        "noeud",
+        "empreinte",
+        "temoin"
+      ]
+    },
+    {
+      "id": "verrou",
+      "mot": "Zeitschloss",
+      "texte": "Eine Verschlüsselung, die einen Text bis zu einer genauen Sekunde unlesbar macht: Er öffnet sich nur mit der Signatur, die drand in diesem Augenblick veröffentlichen wird. Selbst wer das Schloss verschlossen hat, kann es nicht früher öffnen.",
+      "voir": [
+        "drand",
+        "coffret"
+      ]
+    },
+    {
+      "id": "versement",
+      "mot": "Vierteljährliche Auszahlung",
+      "texte": "Jedes Quartal (zum 1. März, Juni, September und Dezember) zahlt eine öffentliche Transaktion die Anteile der Gefährten aus, fügt den Anteil des Schatzes zu den noch verschlossenen Truhen hinzu (nach dem letzten Rätsel zur Reserve des Schatzes, der Saisonadresse) und graviert die Wurzel des Registers.",
+      "voir": [
+        "compagnon",
+        "racine",
+        "coffre"
+      ]
+    },
+    {
+      "id": "wif",
+      "mot": "Privater Schlüssel (WIF)",
+      "texte": "Die Form eines privaten Schlüssels, die Wallets akzeptieren. GodGift Core zeigt ihn nur noch im eingeklappten Bereich „Experte“: Es leert die Truhe selbst. Zeigen Sie ihn niemandem: Wer ihn sieht, kann die Truhe vor Ihnen leeren.",
+      "voir": [
+        "cle",
+        "recuperer"
+      ]
+    },
+    {
+      "id": "reception",
+      "mot": "Empfangsadresse",
+      "texte": "Die Adresse Ihrer eigenen Wallet (auch einer Cold Wallet), vorab in den Einstellungen gespeichert. An dem Tag, an dem Sie fündig werden, geht der Schatz von allein dorthin. Sie muss von Ihrer Wallet signiert sein (Adresse bc1q…, 3… oder 1…): Die Signatur beweist, dass sie Ihnen gehört, und entlarvt einen Virus, der die kopierte Adresse ausgetauscht hätte. GodGift Core prüft sie unmittelbar vor dem Versand erneut, zeigt ihr Speicherdatum und warnt Sie, wenn sie sich seit Ihrem letzten Besuch geändert hat. Außerhalb des eigenen Fensters der installierten Anwendung lässt es Sie außerdem vor jedem Versand 16 Zeichen dieser Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer eigenen Wallet.",
+      "voir": [
+        "recuperer",
+        "portefeuille",
+        "message"
+      ]
+    },
+    {
+      "id": "recuperer",
+      "mot": "Den Schatz holen",
+      "texte": "Wird der Schlüssel einer echten Truhe gefunden, signiert GodGift Core auf Ihrem Rechner die Transaktion, die die ganze Truhe an Ihre signierte Empfangsadresse sendet, und verbreitet sie über beide Quellen. Im eigenen Fenster der installierten Anwendung (über ihr Symbol geöffnet) tut es das sofort; anderswo (Browser, Webversion, neu geladenes Fenster) erst, nachdem Sie 16 Zeichen Ihrer Adresse erneut eingetippt haben, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer eigenen Wallet: Hätte eine präparierte Seite die gespeicherte Adresse verändert, würden sie nicht übereinstimmen, auch nicht bei einer gefälschten Adresse mit demselben Ende. Das eigene Fenster hält sein Token nur im Speicher: Neu geladen, sendet es nicht mehr von selbst; öffnen Sie es erneut über sein Symbol. „Ohne Installation“ sendet es nichts. Offline wartet die Transaktion, bis das Netz zurück ist. Gebühren: sofort, auch ohne Konkurrenten, ein starkes Angebot von etwa 10 % des Schatzes (höchstens 300 sat/vB), ohne Sie zu fragen; darüber hinaus fragt es Sie; nie mehr als die Hälfte des Schatzes. Auf dem Telefon prüft die Webversion alles; um einen Schatz zu holen, bleibt die auf einem Computer installierte Anwendung der sicherste Weg.",
+      "voir": [
+        "reception",
+        "accelerer",
+        "pris"
+      ]
+    },
+    {
+      "id": "accelerer",
+      "mot": "Beschleunigen",
+      "texte": "Hat jemand anderes gleichzeitig gefunden, wartet seine Transaktion vielleicht vor Ihrer. „Beschleunigen“ sendet dieselbe Transaktion erneut und verdoppelt die Gebühren auf einen Schlag, nie über die Hälfte des Schatzes hinaus: Die Miner nehmen in der Regel die, die am meisten zahlt. Das ist das Rennen, für alle gleich.",
+      "voir": [
+        "recuperer",
+        "pris",
+        "course"
+      ]
+    },
+    {
+      "id": "officiel",
+      "mot": "Veröffentlichte Version",
+      "texte": "Ihr GodGift Core sucht seinen Fingerabdruck in den signierten Nachrichten des Autors. „Veröffentlichte Version“: Der Autor hat diesen Fingerabdruck veröffentlicht. Dieses Abzeichen beweist nicht, dass Ihre Kopie unversehrt ist (eine manipulierte Kopie könnte über sich selbst lügen): Um sicherzugehen, kompilieren Sie das Programm mit recompiler_et_comparer.py neu oder prüfen Sie das Installationsprogramm auf angedeleau.com/verifier-installateur. „Unbekannte Version“ oder „zurückgezogen“: Laden Sie die richtige von angedeleau.com herunter.",
+      "voir": [
+        "installateur",
+        "empreinte",
+        "jamais"
+      ]
+    },
+    {
+      "id": "installateur",
+      "mot": "Mein Installationsprogramm prüfen",
+      "texte": "Legen Sie auf angedeleau.com/verifier-installateur die heruntergeladene Datei ab: Ihr Browser berechnet ihren Fingerabdruck an Ort und Stelle und vergleicht ihn mit den veröffentlichten Installationsprogrammen. Unter Windows wird das Installationsprogramm auch die Signatur des Autors tragen, sobald es signiert ist (Certum); die Beta-Version ist es noch nicht.",
+      "voir": [
+        "officiel",
+        "jamais"
+      ]
+    },
+    {
+      "id": "jamais",
+      "mot": "Die NIEMALS-Regel",
+      "texte": "Niemand, nicht einmal der Autor, wird Sie jemals nach Ihren 24 Wörtern fragen, Sie für ein Rätsel, einen Hinweis oder eine Antwort zahlen lassen oder Ihre Antworten verlangen. Die zertifizierte digitale Ausgabe wird nur auf angedeleau.com verkauft; GodGift Core wird nur von angedeleau.com heruntergeladen oder auf app.angedeleau.com geöffnet. Wer es von Ihnen verlangt, auch im Namen des Autors, ist ein Betrüger.",
+      "voir": [
+        "officiel",
+        "installateur",
+        "recuperer"
+      ]
+    },
+    {
+      "id": "sources",
+      "mot": "Zwei Quellen",
+      "texte": "GodGift Core liest die Kette aus zwei unabhängigen Quellen und vergleicht alles Bestätigte: eine Transaktion, eine Adresse, eine Gravur. Sagen sie nicht dasselbe, weigert es sich, ein Urteil zu fällen, und sagt das. Fällt eine aus, übernimmt die andere.",
+      "voir": [
+        "explorateur",
+        "verifier"
+      ]
+    },
+    {
+      "id": "temoin",
+      "mot": "Zeuge",
+      "texte": "Ein freiwilliger GodGift Core, der nach jeder Prüfung einen mit einem anonymen, wöchentlich erneuerten Schlüssel signierten Befund veröffentlicht: den Block, die Fingerabdrücke von Manifest, COFFRET und Programm und das Ergebnis. Würden die Buchhandlung, die Website oder eine Quelle lügen, hätten unabhängige Zeugen das Gegenteil veröffentlicht. Nichts Persönliches wird veröffentlicht; das Relay sieht nur die IP-Adresse der Verbindung.",
+      "voir": [
+        "nostr",
+        "horodatage",
+        "noeud"
+      ]
+    },
+    {
+      "id": "nostr",
+      "mot": "Nostr",
+      "texte": "Ein offenes Netz signierter Nachrichten, ohne Konto und ohne Eigentümer, getragen von Hunderten unabhängiger Relays. Die Zeugen veröffentlichen dort ihre Befunde; jeder kann sie nachlesen und ihre Signaturen prüfen.",
+      "voir": [
+        "temoin",
+        "horodatage"
+      ]
+    },
+    {
+      "id": "horodatage",
+      "mot": "Zeitstempel (OpenTimestamps)",
+      "texte": "Jeden Tag werden die Befunde der Zeugen gesammelt und ihr Fingerabdruck wird von OpenTimestamps kostenlos in Bitcoin verankert. Das ist der datierte Beweis, dass diese Befunde an diesem Tag genau so existierten. Jeder kann die Verankerung wiederholen und den Beweis prüfen.",
+      "voir": [
+        "temoin",
+        "gravure"
+      ]
+    },
+    {
+      "id": "course",
+      "mot": "Das Rennen",
+      "texte": "Alle, die die richtigen Antworten finden, erhalten denselben Schlüssel: Die Truhe gehört der ersten bestätigten Transaktion, in der Regel der, die den Minern die höchsten Gebühren zahlt. Das ist die Spielregel, und kein Programm kann es verhindern. GodGift Core zahlt sofort, auch ohne Konkurrenten, ein starkes Angebot (etwa 10 % des Schatzes, höchstens 300 sat/vB) und verdoppelt mit „Beschleunigen“ auf einen Schlag, nie über die Hälfte des Schatzes hinaus; ein Konkurrent, der mehr bietet oder die Warteschlange mit verketteten Transaktionen verstopft, kann gewinnen.",
+      "voir": [
+        "accelerer",
+        "recuperer",
+        "pris"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Kostet die Jagd etwas?",
+      "r": "Nein. Die Rätsel sind öffentlich und für alle kostenlos. Der Roman begleitet die Jagd, ohne Teil von ihr zu sein: Er enthält kein Rätsel der Jagd und keine für eine Antwort nützliche Information, die nicht auch kostenlos veröffentlicht wird. Ein Teil jedes Verkaufs füllt lediglich die Truhen."
+    },
+    {
+      "q": "Warum dauert die Berechnung des Schlüssels zehn Sekunden?",
+      "r": "Das ist gewollt. Für Sie kostet ein Versuch nichts. Für jemanden, der alle Kombinationen ausprobieren wollte, würden Milliarden Versuche von je einem Gigabyte weit mehr kosten als eine Truhe."
+    },
+    {
+      "q": "Wer kann den COFFRET vor der Zeit öffnen?",
+      "r": "Niemand, nicht einmal der Autor. Jedes Schloss öffnet sich nur mit der Signatur, die das drand-Netz in genau dieser Sekunde veröffentlichen wird."
+    },
+    {
+      "q": "Und wenn die Website ausfällt?",
+      "r": "GodGift Core bewahrt den COFFRET auf und öffnet ihn selbst zur richtigen Zeit; die Rufe gehen in die Kette hinaus; die Schaltfläche „Kaufen“ wechselt zum Ersatzserver, den der Autor durch eine signierte Nachricht bestimmt hat (ohne ihn ist der Verkauf vorübergehend nicht möglich). Die Jagd geht weiter."
+    },
+    {
+      "q": "Ich habe den Schlüssel gefunden: Was tun?",
+      "r": "Im Fenster der installierten Anwendung nichts zu tun: Ist Ihre signierte Empfangsadresse gespeichert, sendet GodGift Core sofort die ganze Truhe dorthin. Anderswo (Browser, Webversion, neu geladenes Fenster) tippen Sie zuerst die 16 verlangten Zeichen Ihrer Adresse erneut ein, in zwei auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer Wallet; „Ohne Installation“ installieren Sie GodGift Core und berechnen den Schlüssel erneut. Verbinden Sie das Internet wieder, falls Sie es getrennt hatten. Erscheint „Beschleunigen“, hat jemand anderes gleichzeitig gefunden: Das ist das Rennen, klicken Sie darauf."
+    },
+    {
+      "q": "Mir fehlt nur ein einziges Wort: Darf ich alles ausprobieren?",
+      "r": "Ja, das ist erlaubt. Ein fehlendes Wort bedeutet fünftausend Versuche, einige Stunden Rechenzeit. Die Langsamkeit schützt vor roher Gewalt, nicht vor einem Jäger, der fast fündig geworden ist."
+    },
+    {
+      "q": "Warum steht bei „Prüfen“ „Ausstehend“?",
+      "r": "Vor der Saat im Dezember 2026 oder wenn die Buchhandlung noch nicht geöffnet ist, gibt es noch nichts nachzuzählen. Das ist kein Fehler. Eine rote Prüfung dagegen zeigt ein echtes Problem an."
+    },
+    {
+      "q": "Gehen meine Antworten ins Internet?",
+      "r": "Nie. Die Berechnung läuft auf Ihrem Rechner; GodGift Core sendet keine Antwort. Bei einer echten Truhe trennen Sie trotzdem das Internet, bevor Sie tippen."
+    },
+    {
+      "q": "Fällt eine nicht gefundene Truhe an den Autor zurück?",
+      "r": "Nein. Sie bleibt zu holen, ohne zeitliche Grenze. Dreißig Tage nach ihrem Ruf erhält eine nicht genommene Truhe einen starken Hinweis; sechs Monate danach einen zweiten Hinweis. Die Lösung wird erst veröffentlicht, wenn die Truhe genommen ist, durch eine signierte Nachricht des Autors, die gegen die bei der Aussaat gravierte Verpflichtung geprüft wird."
+    },
+    {
+      "q": "Woher weiß ich, dass dieses Programm das richtige ist?",
+      "r": "Das Abzeichen oben auf dem Bildschirm zeigt „veröffentlichte Version“, wenn der Autor diesen Fingerabdruck signiert hat; es beweist nicht, dass Ihre Kopie unversehrt ist. Prüfen Sie vor der Installation die Datei auf angedeleau.com/verifier-installateur; Sie können auch alles selbst neu kompilieren (recompiler_et_comparer.py). Unter Windows wird das Installationsprogramm die Signatur des Autors tragen, sobald es signiert ist (Certum)."
+    },
+    {
+      "q": "Muss ich Zeuge sein?",
+      "r": "Nein, das ist eine Wahl, die Sie jederzeit in den Einstellungen ändern können. Als Zeuge machen Sie die Jagd für alle überprüfbar; es wird nichts Persönliches veröffentlicht, aber das Nostr-Relay sieht die IP-Adresse der Verbindung."
+    },
+    {
+      "q": "Meine Wallet kann keine Nachricht signieren: Was tun?",
+      "r": "Verwenden Sie eine Wallet, die signieren kann (Sparrow, Electrum, Trezor Suite, Coldcard…), mit einer Adresse bc1q…, 3… oder 1…: Die Signatur ist erforderlich. Sie beweist, dass die Adresse Ihnen gehört, und GodGift Core prüft sie unmittelbar vor jedem Versand erneut; ohne sie wird keine Adresse gespeichert."
+    },
+    {
+      "q": "Und wenn zwei Personen gleichzeitig fündig werden?",
+      "r": "Das ist das Rennen, die Spielregel: Alle, die finden, haben denselben Schlüssel, und die Truhe gehört der ersten bestätigten Transaktion, in der Regel der mit den höchsten Gebühren. GodGift Core zahlt sofort, auch ohne Konkurrenten, ein starkes Angebot von etwa 10 % des Schatzes (höchstens 300 sat/vB, ohne Sie zu fragen), und „Beschleunigen“ verdoppelt auf einen Schlag, nie mehr als die Hälfte des Schatzes. Ein Konkurrent, der mehr bietet, kann gewinnen: Kein Programm kann es verhindern."
+    },
+    {
+      "q": "Jemand bietet mir eine andere Version von GodGift Core an, oder Hilfe, eine Truhe zu holen",
+      "r": "Lehnen Sie ab. Niemand, nicht einmal der Autor, wird Sie jemals nach Ihren 24 Wörtern fragen, Sie für ein Rätsel, einen Hinweis oder eine Antwort zahlen lassen oder Ihre Antworten verlangen. Die zertifizierte digitale Ausgabe wird nur auf angedeleau.com verkauft; GodGift Core wird nur von angedeleau.com heruntergeladen oder auf app.angedeleau.com geöffnet. Wer es von Ihnen verlangt, auch im Namen des Autors, ist ein Betrüger. Das echte GodGift Core sendet Ihre Antworten oder den Schlüssel einer Truhe niemals an irgendjemanden: Es leert die Truhe selbst an Ihre signierte Empfangsadresse."
+    },
+    {
+      "q": "Ist der Autor Satoshi Nakamoto?",
+      "r": "Nein. Er ist es nicht und behauptet es auch nicht; der Schmied im Roman ist eine Figur."
+    },
+    {
+      "q": "Kann ich GodGift Core auf meinem Telefon nutzen?",
+      "r": "Ja: Öffnen Sie app.angedeleau.com (eigenes Hosting, jede Datei über ihren Fingerabdruck geprüft) und fügen Sie es zum Startbildschirm hinzu. Es verfolgt und prüft alles; vor jedem Versand eines Schatzes lässt es Sie 16 Zeichen Ihrer Adresse erneut eintippen (zwei zufällig gewählte, auf dem Bildschirm verdeckte Stücke). Um einen Schatz zu holen, bleibt die auf einem Computer installierte Anwendung der sicherste Weg: Sie hängt von keiner Website ab."
+    }
+  ]
+}

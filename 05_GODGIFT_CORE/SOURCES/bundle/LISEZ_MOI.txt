@@ -1,0 +1,8 @@
+Le module gg_tlock.js de GodGift Core, reconstruit a l'identique :
+  npm ci
+  npx esbuild entree.js --bundle --minify --format=iife --target=es2020 --outfile=../app/gg_tlock.js
+Il contient tlock-js 0.9.0 (le verrou a date drand), drand-client 1.2.5 (la verification des balises) et noble-curves 1.9.7
+(secp256k1 : ECDSA et Schnorr), bibliotheques libres et auditees, aux versions figees par package-lock.json.
+Le client drand verifie chaque balise (ronde, alea, signature BLS) avant de s'en servir ; un relais qui ment est saute, un relais muet
+est abandonne apres dix secondes, rien n'est lu dans le cache du navigateur, et une balise gardee sur la machine est reverifiee a chaque usage.
+Banc du module : copier ../app/gg_tlock.js ici, puis node test_bundle.js
