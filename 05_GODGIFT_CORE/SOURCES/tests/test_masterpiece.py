@@ -668,6 +668,7 @@ async def main():
         sauveN = await pgN.evaluate("[localStorage.getItem('gg.reception'), localStorage.getItem('gg.reception_vue')]")
         intrusN = json.dumps({'adresse': ADRX, 'signature': sig137(KX, 'AEDE:reception:' + ADRX + ':' + nN), 'preuve': 'signee', 'date': '2026-12-01'})
         await pgN.evaluate(f"localStorage.setItem('gg.reception', {json.dumps(intrusN)}); localStorage.setItem('gg.reception_vue', JSON.stringify({{adresse: '{ADRX}', date: '2026-12-01'}}))")
+        assert json.loads(await pgN.evaluate("localStorage.getItem('gg.reception')"))['adresse'] == ADRX   # relire force l'ecriture (sinon un rechargement trop tot la perd, et le banc rougit a tort)
         await pgN.wait_for_timeout(700)                                           # le stockage local s'ecrit en differe : on le laisse se poser avant de recharger
         await pgN.reload(); await pgN.wait_for_function("window.GG && GG.M", timeout=60000)
         assert await pgN.evaluate("GG.receptionValide().ok && GG.R.reception.adresse") == ADRX, await pgN.evaluate("[GG.receptionValide(), localStorage.getItem('gg.reception')]")
