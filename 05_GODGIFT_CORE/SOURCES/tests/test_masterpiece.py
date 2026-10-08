@@ -30,7 +30,8 @@ from py_ecc.bls.point_compression import compress_G1
 from embit import bip32
 from playwright.async_api import async_playwright
 
-APP = atelier.copie_app(fenetre=True)            # la fenetre dediee : godgift.html?fenetre=<jeton>, l'empreinte du jeton dans gg_fenetre.js
+SANS_ANCRE = {'chasse0': None, 'chasse1': None, 'adresse_auteur': None, 'secours': []}   # le monde simule a son propre auteur : l'ancre livree (adresse 3/0 reelle, depuis le 8 octobre) le refuserait
+APP = atelier.copie_app(fenetre=True, ancre=SANS_ANCRE)   # la fenetre dediee : godgift.html?fenetre=<jeton>, l'empreinte du jeton dans gg_fenetre.js
 APP_SANS = APP.split('?', 1)[0]                  # la meme copie, ouverte sans le jeton (navigateur principal, repli d'un lanceur)
 JETON = APP.split('fenetre=', 1)[1]
 async def relancer(pgx, url=None):

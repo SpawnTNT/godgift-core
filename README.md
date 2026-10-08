@@ -10,9 +10,10 @@
 
 ## Version publiée
 
-| Version | Empreinte du programme (SHA-256 du fichier `SHA256SUMS`, 42 fichiers) |
+| Version | Empreinte du programme (SHA-256 du fichier `SHA256SUMS`, 43 fichiers) |
 |---|---|
-| 1.1.0-beta | `cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501` |
+| 1.2.0-beta | `529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3` |
+| 1.1.0-beta (remplacée) | `cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501` |
 
 L'empreinte officielle d'une version est celle que l'auteur désigne par un message signé (« GodGift Core <version> : empreinte <64 hex> », Pierre du programme, article 13). Ce dépôt en publie la source. En cas d'écart, c'est le message signé qui fait foi.
 
@@ -22,7 +23,7 @@ Cette commande refait le programme depuis ces sources et compare son empreinte, 
 
 ```
 cd 05_GODGIFT_CORE/SOURCES
-python3 recompiler_et_comparer.py --reconstruire --attendue cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501
+python3 recompiler_et_comparer.py --reconstruire --attendue 529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3
 ```
 
 Il faut Python 3 et Node.js (npm). Les versions du module cryptographique sont figées par `bundle/package-lock.json`. Le résultat attendu est `IDENTIQUE`.
@@ -55,9 +56,10 @@ Les installateurs Windows officiels seront signés au nom d'Arthur Benjamin Myar
 
 ## Published version
 
-| Version | Program fingerprint (SHA-256 of `SHA256SUMS`, 42 files) |
+| Version | Program fingerprint (SHA-256 of `SHA256SUMS`, 43 files) |
 |---|---|
-| 1.1.0-beta | `cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501` |
+| 1.2.0-beta | `529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3` |
+| 1.1.0-beta (superseded) | `cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501` |
 
 The official fingerprint of a version is the one the author designates in a signed message ("GodGift Core <version> : empreinte <64 hex>", Stone of the program, article 13). This repository publishes its source. If they ever differ, the signed message prevails.
 
@@ -65,7 +67,7 @@ The official fingerprint of a version is the one the author designates in a sign
 
 ```
 cd 05_GODGIFT_CORE/SOURCES
-python3 recompiler_et_comparer.py --reconstruire --attendue cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501
+python3 recompiler_et_comparer.py --reconstruire --attendue 529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3
 ```
 
 You need Python 3 and Node.js (npm). The versions of the cryptographic module are pinned by `bundle/package-lock.json`. The expected result is `IDENTIQUE` (identical). The same tool checks an installation (`--dossier`) or the web version (`--site`). The installers are built with `python3 construire.py`, which also needs NSIS and dpkg-deb.

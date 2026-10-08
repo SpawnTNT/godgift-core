@@ -116,7 +116,67 @@ label{display:block;font-size:12px;color:var(--gris);margin:10px 0 4px}
 @media (prefers-reduced-motion:reduce){.ac-fond.on,.ac-corps{animation:none}}
 .qr{background:#fff;padding:8px;display:inline-block;border-radius:4px}
 .cachee{filter:blur(6px);cursor:pointer}
-@media (max-width:760px){.cote{width:64px}.logo,.etat,nav .m span{display:none}nav .m{justify-content:center}.grille{grid-template-columns:repeat(4,1fr)}}
+/* ================================================================ la passe telephone du 8 octobre 2026
+   Sur ordinateur, rien ne change (la colonne de gauche reste). Sous 760 px : la colonne disparait, cinq onglets nommes en bas
+   (a hauteur du pouce), un en-tete d'une ligne qui se deplie, trois coffres par ligne, des cibles de 44 px, les marges de securite. */
+.onglets{display:none}
+.ligne-etat{display:none}
+.etat-panneau{display:none}
+.liste-plus{padding:0;overflow:hidden}
+.ligne-plus{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:10px 14px;border:0;border-bottom:1px solid rgba(201,154,62,.2);background:none;color:var(--texte);text-align:left;cursor:pointer}
+.ligne-plus:last-child{border-bottom:0}
+.ligne-plus:hover{background:rgba(201,154,62,.08)}
+.ligne-plus>b{width:22px;text-align:center;color:var(--or3);font-weight:400;font-size:18px;flex:none}
+.ligne-plus>span{flex:1;min-width:0}
+.ligne-plus .n{display:block;font-size:15px;font-weight:600}
+.ligne-plus small{display:block;color:var(--gris);font-size:12.5px;line-height:1.35}
+.ligne-plus>i{color:var(--or);font-style:normal;font-size:18px}
+.mot{display:inline-block;padding:11px 3px;margin:-11px -3px;border:0;line-height:inherit;background:none;color:#f1d58a;font:inherit;text-decoration:underline dotted;text-underline-offset:4px;cursor:pointer}
+.mot::after{content:"\00a0ⓘ";font-size:.85em;color:var(--or2)}
+.feuille-mot[hidden]{display:none}
+.fm-voile{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.6)}
+.fm-panneau{position:fixed;left:50%;bottom:0;z-index:71;transform:translateX(-50%);width:min(100%,520px);max-height:80vh;overflow:auto;padding:10px 20px calc(20px + env(safe-area-inset-bottom,0px));background:#141c2b;border:1px solid var(--or2);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.6)}
+.fm-poignee{width:40px;height:4px;border-radius:2px;background:rgba(201,154,62,.5);margin:0 auto 12px}
+.fm-fermer{position:absolute;right:8px;top:8px;min-width:44px;min-height:44px;border:0;background:none;color:var(--or);font-size:22px;cursor:pointer}
+.fm-panneau h3{font:700 19px CZ,serif;color:var(--or);margin:0;padding-right:44px}
+.fm-panneau p{font-size:15.5px;line-height:1.55;margin:0}
+.ac-promesse{border:1px solid rgba(201,154,62,.45);border-radius:8px;padding:10px 12px;margin:8px 0;background:rgba(18,22,30,.6)}
+.ac-promesse .sur{margin-bottom:4px}
+.ac-promesse p{margin:0;font-size:14px;color:var(--texte)}
+@media (max-width:760px){
+  .app{flex-direction:column;height:100%}
+  .cote{display:none}
+  .main{flex:1;min-height:0}
+  .statut{display:none}
+  .ligne-etat{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));font-size:13px;color:var(--gris);border-bottom:1px solid rgba(201,154,62,.25);background:rgba(10,13,19,.92)}
+  .ligne-etat .pastille{margin-right:6px}
+  .lien-etat{border:0;background:none;color:var(--or);font:600 13px DM,system-ui,sans-serif;min-height:40px;padding:0 6px;cursor:pointer}
+  .etat-panneau{display:block;position:relative;z-index:3;padding:0 16px;background:rgba(10,13,19,.92);border-bottom:1px solid rgba(201,154,62,.25)}
+  .etat-panneau[hidden]{display:none}
+  .etat-panneau .cadre{margin:8px 0 12px}
+  .dedans{padding:16px 16px calc(84px + env(safe-area-inset-bottom,0px))}
+  .onglets{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:50;padding:6px 0 calc(6px + env(safe-area-inset-bottom,0px));background:rgba(8,13,24,.96);border-top:1px solid rgba(201,154,62,.35)}
+  .onglets .o{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:48px;border:0;background:none;color:var(--doux);font:11px DM,system-ui,sans-serif;cursor:pointer}
+  .onglets .o b{font-size:20px;line-height:1;font-weight:400;color:var(--or3)}
+  .onglets .o.actif{color:var(--or)}.onglets .o.actif b{color:var(--or)}
+  h1{font-size:24px}
+  .grille{grid-template-columns:repeat(3,1fr);gap:8px}
+  .coffre{min-height:96px;padding:10px 4px 8px}
+  .coffre .no{font-size:20px}.coffre .et{font-size:10px}.coffre .mt{font-size:13px}
+  .bouton,.bouton2{min-height:44px;padding:10px 18px;font-size:14px}
+  .champ,input.champ,select.champ,textarea.champ{min-height:44px;font-size:15px;word-break:break-all}
+  input.champ.mono{font-size:13px}
+  .ligne{flex-wrap:wrap}
+  .ligne .v{text-align:left;flex:1 1 100%;word-break:normal;overflow-wrap:anywhere}
+  .accueil{overflow:auto;-webkit-overflow-scrolling:touch;align-items:safe center;padding:12px 4vw calc(12px + env(safe-area-inset-bottom,0px))}
+  .ac-panneau{padding:18px 16px 14px}
+  .ac-pied{flex-wrap:wrap;gap:8px}.ac-pied .bouton{flex:1 1 auto;text-align:center}
+  .accueil .ac-pied .aide{display:none}
+  .accueil .ac-pied{position:sticky;bottom:0;background:rgba(12,16,24,.96);padding:10px 0 calc(4px + env(safe-area-inset-bottom,0px));margin-top:12px}
+  .accueil .ac-pied .bouton{min-height:48px}
+  .accueil .choix{min-height:56px}
+  .verif .t{font-size:15px}.verif .d{font-size:13px}
+}
 /* ================================================================ MASTERPIECE : bulles « ? », animations, COFFRET, livres */
 .bq{display:inline-flex;align-items:center;justify-content:center;position:relative;width:20px;height:20px;border-radius:50%;background:linear-gradient(180deg,#f4d98e,#c99a3e);color:#1a1206;font:700 12px DM,sans-serif;cursor:help;margin-left:10px;vertical-align:middle;text-shadow:none;box-shadow:0 0 10px rgba(226,184,92,.45);transition:transform .2s}
 .bq:hover,.bq:focus{outline:none;box-shadow:0 0 16px rgba(244,217,142,.9)}
@@ -216,3 +276,4 @@ a.chasse-carte:hover{transform:translateY(-3px);box-shadow:0 0 28px rgba(226,184
 .ac-jamais{margin:4px 0 8px;padding-left:18px;font-size:13px;line-height:1.5}
 .accueil .choix.fort b{color:#ffe08a}
 .bouton[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+@media (max-width:360px){.ac-langues{grid-template-columns:1fr}.ac-langues .choix:last-child{grid-column:auto}}

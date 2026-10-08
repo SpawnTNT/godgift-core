@@ -7,6 +7,9 @@
   var SATS_PAR_EURO = 1600;   // illustration : 1 BTC = 62 500 EUR
   function dateEnigme(num) { var n = Math.ceil(num / 2), j = num % 2 ? 3 : 17; return Date.UTC(2027 + Math.floor((n - 1) / 12), (n - 1) % 12, j, 18, 15, 5) / 1000; }
 
+  // le texte d'illustration d'une enigme : identique cote librairie et cote COFFRET (l'ecart entre les deux est un signal de fraude)
+  function TEXTE_DEMO(k) { return { texte_fr: "Énigme d’illustration n°\u00a0" + k + ".\nEn mode démonstration, aucun vrai texte n’est montré\u00a0: les énigmes véritables paraissent le 3 et le 17 de chaque mois, à 18:15:05 UTC (19:15:05 à Paris en hiver, 20:15:05 en été).",
+    texte_en: "Illustration riddle no. " + k + ".\nIn demonstration mode no real text is shown: the true riddles appear on the 3rd and the 17th of each month, at 18:15:05 UTC (19:15:05 in Paris in winter, 20:15:05 in summer)." }; }
   function monde(C) {
     var coffres = [], soldes = {};
     for (var n = 1; n <= 24; n++) {
@@ -20,8 +23,7 @@
     var man = { pierre: "V1g", annee_A: 2027, coffres: coffres, cours_eur_btc: 62500, amorce: { txid: C.sha256hex("amorce factice"), montant_par_cri: 12000 } };
     var texte = JSON.stringify(man, null, 1), enigmes = [];
     for (var k = 1; k <= 48; k++) if (dateEnigme(k) <= MAINTENANT) enigmes.push({ numero: k, coffre: Math.ceil(k / 2), date_utc: dateEnigme(k),
-      texte_fr: "Énigme d’illustration n°\u00a0" + k + ".\nEn mode démonstration, aucun vrai texte n’est montré\u00a0: les énigmes véritables paraissent le 3 et le 17 de chaque mois, à 18:15:05 UTC (19:15:05 à Paris en hiver, 20:15:05 en été).",
-      texte_en: "Illustration riddle no. " + k + ".\nIn demonstration mode no real text is shown: the true riddles appear on the 3rd and the 17th of each month, at 18:15:05 UTC (19:15:05 in Paris in winter, 20:15:05 in summer)." });
+      texte_fr: TEXTE_DEMO(k).texte_fr, texte_en: TEXTE_DEMO(k).texte_en });
     var etat = { programme: "AEDE", pierre: "V1j", version_app: "demo", coffres: coffres.map(function (c) { return { n: c.n, adresse: c.adresse }; }), amorce: man.amorce.txid,
       empreinte_manifeste: C.sha256hex(texte), enigmes: enigmes, livre: { paru: { fr: true, en: true }, prix_sats: 21000 },   // le prix publie par la caisse (illustration)
       versements: [{ trimestre: "2026T4", txid: C.sha256hex("versement 1") }, { trimestre: "2027T1", txid: C.sha256hex("versement 2") }, { trimestre: "2027T2", txid: C.sha256hex("versement 3") }] };
@@ -56,7 +58,7 @@
     c.elements.forEach(function (e) {
       if (e.ouverture_utc > now) return;
       var v;
-      if (e.type === "enigme") v = { numero: e.numero, coffre: e.coffre, texte_fr: "Énigme d’illustration n°\u00a0" + e.numero + " (démonstration).", texte_en: "Illustration riddle no. " + e.numero + " (demonstration)." };
+      if (e.type === "enigme") v = { numero: e.numero, coffre: e.coffre, texte_fr: TEXTE_DEMO(e.numero).texte_fr, texte_en: TEXTE_DEMO(e.numero).texte_en };   // le MEME texte que la librairie de demonstration : sinon l'ecart serait signale en rouge
       else if (e.type === "cri") v = { coffre: e.coffre, hex: "", txid: "(démo)" };
       else v = { coffre: e.coffre, rang: e.rang, texte_fr: (e.rang === 1 ? "Indice fort" : "Second indice") + " d’illustration pour le coffre " + e.coffre + " (démonstration).",
         texte_en: (e.rang === 1 ? "Strong hint" : "Second hint") + " for chest " + e.coffre + " (demonstration)." };

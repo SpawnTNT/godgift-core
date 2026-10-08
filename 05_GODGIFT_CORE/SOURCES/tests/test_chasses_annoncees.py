@@ -36,7 +36,8 @@ from embit import bip32, script as escript
 from embit.transaction import Transaction, TransactionInput, TransactionOutput
 from playwright.async_api import async_playwright
 
-APP = atelier.copie_app()
+SANS_ANCRE = {'chasse0': None, 'chasse1': None, 'adresse_auteur': None, 'secours': []}   # une version qui n'epingle rien (la bêta d'avant le 8 octobre) : le monde simule a son propre auteur
+APP = atelier.copie_app(ancre=SANS_ANCRE)
 def plat(s): return s.replace('\u2019', "'").replace('\xa0', ' ')   # la typographie francaise (apostrophe, espace insecable) des textes
 F = S.F
 F._reseau_actif = lambda *a, **k: (False, '')    # l'atelier a un reseau : le controle de la Cave (audit cave I8) est neutralise ici, comme dans banc_pupitre_v1g.py
@@ -451,7 +452,7 @@ async def main():
                                  "(function(){ var s = localStorage.getItem('atelier.ancre'); if (!s) return; var inj = JSON.parse(s), v = inj;"
                                  " Object.defineProperty(window, 'GG_ANCRE', { configurable: true, get: function () { return v; }, set: function (x) { v = Object.assign({}, x || {}, inj); } }); })();")
         await pg.goto(APP + '#/chasses')
-        # ---- sans ancre de l'adresse de l'auteur (gg_ancre.js d'aujourd'hui) : l'annonce est lue, rien n'est retenu
+        # ---- sans ancre de l'adresse de l'auteur (SANS_ANCRE : depuis le 8 octobre, gg_ancre.js epingle l'adresse 3/0 de l'auteur, etrangere a ce monde simule) : l'annonce est lue, rien n'est retenu
         await pg.wait_for_function("window.GG && GG.M.pret && !GG.ANN.enCours && GG.ANN.lues > 0", timeout=240000); await pg.wait_for_timeout(500)
         r = await pg.evaluate("[GG.ANN.auteur, GG.ANN.refus[2], !!GG.ZS[2], localStorage.getItem('gg.chasses_retenues'), (window.GG_ANCRE || {}).adresse_auteur || null]")
         assert r == [GUICHET0, 'ann_sans_ancre', False, None, None], r
