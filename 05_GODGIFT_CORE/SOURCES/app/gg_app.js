@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   if (window.top !== window.self) { document.body.textContent = ""; return; }   // jamais dans le cadre d'une autre page
-  var VERSION = "1.2.0-beta";
+  var VERSION = "1.2.1-beta";
   var A = 2027;
   // la version web (https://app.angedeleau.com/, hebergement statique a part) lit la librairie sur angedeleau.com ; installe, sur librairie.angedeleau.com
   var WEB = location.protocol === "https:";
@@ -1463,7 +1463,7 @@
       '</span><span class="v mono" style="font-size:12px">' + esc(e.empreinte) + (WEB ? '<br><span class="att" style="font-family:inherit">' + esc(t("prog_web")) + "</span>" : "") + '</span></div><div class="ligne"><span class="doux">' + esc(t("fichiers")) + '</span><span class="v">' + e.fichiers + '</span></div><div class="ligne"><span class="doux">' + esc(t("pierre")) +
       '</span><span class="v"><a href="#/pierre">' + esc(t("lire_pierre")) + '</a> <span class="mono doux" style="font-size:11px">' + esc(window.GG_PIERRE.sha256.slice(0, 16)) + '…</span></span></div><div class="ligne"><span class="doux">' + esc(t("conditions")) +
       '</span><span class="v"><a href="#/conditions">' + esc(t("lire_conditions")) + '</a></span></div><div class="ligne"><span class="doux">' + esc(t("fenetre_titre")) + '</span><span class="v" style="font-size:12.5px">' + esc(t(modeEnvoi())) + '</span></div><div class="ligne"><span class="doux">' + esc(t("licence")) +
-      '</span><span class="v">AGPL-3.0</span></div><div class="ligne"><span class="doux">' + esc(t("desinstaller")) + '</span><span class="v" style="font-size:12.5px">' + esc(t(/Mac/.test(navigator.platform) ? "desinst_mac" : /Linux/.test(navigator.platform) ? "desinst_linux" : "desinst_win")) + '</span></div><p class="doux" style="font-size:12.5px">' + esc(t("apropos_texte")) + "</p></div></div></div>";
+      '</span><span class="v">AGPL-3.0</span></div>' + (WEB ? "" : '<div class="ligne"><span class="doux">' + esc(t("desinstaller")) + '</span><span class="v" style="font-size:12.5px">' + esc(t(/Mac/.test(navigator.platform) ? "desinst_mac" : /Linux/.test(navigator.platform) ? "desinst_linux" : "desinst_win")) + '</span></div>') + '<p class="doux" style="font-size:12.5px">' + esc(t("apropos_texte")) + "</p></div></div></div>";
   }
   // un rendu minimal et sur du Markdown des conditions : tout est echappe d'abord ; titres, listes, gras, italique, filets, tableaux
   // la typographie du rendu (le texte et son empreinte restent ceux du fichier publie) : apostrophe typographique ; en francais, espace
@@ -2613,12 +2613,15 @@
   function placerBulle(bq) {
     var b = bq.querySelector(".bqb"), zone = $("page"); if (!b || !zone) return;
     b.style.marginLeft = "0px";   // une marge, et non la transformation : l'animation d'entree garde la sienne
-    requestAnimationFrame(function () {   // la bulle n'a sa taille qu'une fois affichee
+    function mesurer() {
       var z = zone.getBoundingClientRect(), r = b.getBoundingClientRect(), dx = 0;
       if (r.width && r.left < z.left + 10) dx = z.left + 10 - r.left; else if (r.width && r.right > z.right - 10) dx = z.right - 10 - r.right;
-      b.style.marginLeft = Math.round(dx) + "px";
-    });
+      if (dx) b.style.marginLeft = (Math.round(dx) + (parseFloat(b.style.marginLeft) || 0)) + "px";
+    }
+    requestAnimationFrame(function () { mesurer(); requestAnimationFrame(mesurer); });   // la bulle n'a sa taille qu'une fois affichee ; deux images, le temps de son entree
   }
+  // une page qui se redessine sous la souris (une lecture qui arrive) refait sa bulle : on la replace
+  if (window.MutationObserver && $("page")) new MutationObserver(function () { var h = document.querySelector(".bq:hover"); if (h) placerBulle(h); }).observe($("page"), { childList: true, subtree: true });
   ["mouseover", "focusin"].forEach(function (typ) { document.addEventListener(typ, function (ev) { var bq = ev.target.closest && ev.target.closest(".bq"); if (bq && !bq.contains(ev.relatedTarget)) placerBulle(bq); }); });
   document.addEventListener("change", function (ev) {
     if (ev.target.id === "langue") { R.lang = ev.target.value; ecrireR("lang", R.lang); rendre(); }

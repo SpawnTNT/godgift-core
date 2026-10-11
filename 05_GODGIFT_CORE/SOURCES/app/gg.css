@@ -33,14 +33,14 @@ nav .m.actif{background:linear-gradient(90deg,rgba(201,154,62,.28),transparent);
 .cz{font-family:CZ,serif}.cg{font-family:CG,serif}.mono{font-family:Consolas,'DejaVu Sans Mono',monospace}
 h1{font:700 26px CZ,serif;margin:0 0 4px;color:var(--or);text-shadow:0 1px 0 #7a5418,0 0 18px rgba(226,184,92,.35)}
 h2{font:700 17px CZ,serif;margin:22px 0 10px;color:var(--or)}
-.sur{font-size:11px;letter-spacing:3px;color:var(--or3);text-transform:uppercase}
+.sur{font-size:12px;letter-spacing:3px;color:var(--or3);text-transform:uppercase}
 .doux{color:var(--gris)}.ok{color:var(--vert)}.ko{color:var(--rouge)}.att{color:#e8c46a}.eau{color:var(--eau)}
 .cadre{border:1px solid rgba(201,154,62,.55);outline:1px solid rgba(201,154,62,.18);outline-offset:3px;border-radius:4px;background:rgba(18,22,30,.72);padding:14px 16px;position:relative}
 .grille{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
 @media (max-width:1100px){.grille{grid-template-columns:repeat(6,1fr)}}
 .coffre{border-radius:4px;padding:8px 4px 7px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:118px;cursor:pointer;transition:transform .15s}
 .coffre:hover{transform:translateY(-2px)}
-.coffre .no{font:700 13px CZ,serif}.coffre .et{font-size:9.5px;letter-spacing:1px}.coffre .mt{font-size:11px;font-weight:600}.coffre .dt{font-size:9.5px;opacity:.8}
+.coffre .no{font:700 13px CZ,serif}.coffre .et{font-size:12px;letter-spacing:.5px}.coffre .mt{font-size:12px;font-weight:600}.coffre .dt{font-size:12px;opacity:.8}
 .k-pris{background:rgba(30,31,34,.72);border:1px solid #3d3a33;color:#8a8273}
 .k-a_prendre{background:linear-gradient(180deg,rgba(90,62,18,.95),rgba(38,26,8,.95));border:1px solid #f4d98e;color:#fff2cc;box-shadow:0 0 22px rgba(244,200,110,.7),inset 0 0 18px rgba(244,217,142,.35)}
 .k-en_chasse{background:linear-gradient(180deg,rgba(18,52,72,.95),rgba(8,24,36,.95));border:1px solid var(--eau);color:#e3f6fd;box-shadow:0 0 16px rgba(143,211,234,.5)}
@@ -69,7 +69,7 @@ label{display:block;font-size:12px;color:var(--gris);margin:10px 0 4px}
 .verif .t{font-weight:600}.verif .d{font-size:12px;color:var(--gris);word-break:break-word}
 .enigme{padding:14px 16px;margin-bottom:12px}
 .enigme .txt{font:600 19px/1.45 CG,serif;color:var(--texte);white-space:pre-wrap}
-.tag{display:inline-block;font-size:10px;letter-spacing:1px;padding:2px 8px;border-radius:10px;border:1px solid var(--or2);color:var(--or)}
+.tag{display:inline-block;font-size:12px;letter-spacing:1px;padding:2px 8px;border-radius:10px;border:1px solid var(--or2);color:var(--or)}
 .accueil[hidden]{display:none}
 /* l'accueil : trois ecrans, trois images du livre qui se relaient lentement, un panneau de verre sombre borde d'or */
 .accueil{position:fixed;inset:0;z-index:50;background:var(--nuit2);color:var(--texte);display:flex;align-items:center;padding:0 7vw;overflow:hidden}
@@ -86,7 +86,7 @@ label{display:block;font-size:12px;color:var(--gris);margin:10px 0 4px}
 .ac-pas{display:flex;gap:6px;margin-bottom:14px}
 .ac-pas i{flex:1;height:3px;border-radius:2px;background:rgba(201,154,62,.2);transition:background .4s}
 .ac-pas i.fait{background:linear-gradient(90deg,#c99a3e,#f4d98e);box-shadow:0 0 8px rgba(244,217,142,.5)}
-.accueil .pas{font-size:11px;letter-spacing:3px;color:var(--or3);text-transform:uppercase}
+.accueil .pas{font-size:12px;letter-spacing:3px;color:var(--or3);text-transform:uppercase}
 .accueil h3{font:700 28px/1.15 CG,serif;margin:4px 0 14px;color:#fbf1d6}
 .ac-corps{animation:ac-entre .45s ease both}
 @keyframes ac-entre{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -111,7 +111,7 @@ label{display:block;font-size:12px;color:var(--gris);margin:10px 0 4px}
 .ac-copier:hover{color:#f4d98e;border-color:var(--or)}
 .ac-note{font-size:12.5px!important;color:var(--gris)!important;border-left:2px solid rgba(201,154,62,.4);padding-left:10px}
 .ac-pied{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
-.ac-pied .aide{font-size:11px;color:#8f8672;letter-spacing:.5px}
+.ac-pied .aide{font-size:12px;color:#8f8672;letter-spacing:.5px}
 @media (max-width:760px){.accueil{justify-content:center;padding:0 4vw}.ac-voile{background:rgba(8,11,16,.6)}.ac-legende{display:none}.ac-panneau{padding:20px 18px}.ac-emp{grid-template-columns:repeat(4,auto);gap:4px 10px;font-size:13px}}
 @media (prefers-reduced-motion:reduce){.ac-fond.on,.ac-corps{animation:none}}
 .qr{background:#fff;padding:8px;display:inline-block;border-radius:4px}
@@ -162,7 +162,7 @@ label{display:block;font-size:12px;color:var(--gris);margin:10px 0 4px}
   h1{font-size:24px}
   .grille{grid-template-columns:repeat(3,1fr);gap:8px}
   .coffre{min-height:96px;padding:10px 4px 8px}
-  .coffre .no{font-size:20px}.coffre .et{font-size:10px}.coffre .mt{font-size:13px}
+  .coffre .no{font-size:20px}.coffre .et{font-size:12px}.coffre .mt{font-size:13px}
   .bouton,.bouton2{min-height:44px;padding:10px 18px;font-size:14px}
   .champ,input.champ,select.champ,textarea.champ{min-height:44px;font-size:15px;word-break:break-all}
   input.champ.mono{font-size:13px}
@@ -183,6 +183,9 @@ label{display:block;font-size:12px;color:var(--gris);margin:10px 0 4px}
 .bqb{display:none;position:absolute;z-index:30;left:50%;top:28px;transform:translateX(-50%);width:min(360px,78vw);background:rgba(12,16,23,.97);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--texte);border:1px solid var(--or2);border-radius:6px;padding:12px 14px;font:400 13.5px/1.55 DM,sans-serif;letter-spacing:0;text-transform:none;text-align:left;box-shadow:0 12px 32px rgba(0,0,0,.55),0 0 18px rgba(226,184,92,.18)}
 .bq:hover .bqb,.bq:focus .bqb,.bq:focus-within .bqb{display:block;animation:bulle .18s ease both}
 @keyframes bulle{from{opacity:0;transform:translate(-50%,-4px)}to{opacity:1;transform:translate(-50%,0)}}
+/* la bulle d'un titre s'ancre au titre, pas au « ? » : elle part du bord gauche du titre et reste dans la page, quoi qu'il se redessine */
+h1{position:relative}h1 .bq{position:static}h1 .bqb,h1 .bq:hover .bqb,h1 .bq:focus .bqb,h1 .bq:focus-within .bqb{left:0;top:100%;transform:none;animation-name:bulle_h1}
+@keyframes bulle_h1{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 /* les entrees : chaque bloc arrive, l'un apres l'autre */
 .apparait{animation:apparait .55s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0) * 38ms)}
 @keyframes apparait{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
@@ -229,7 +232,7 @@ nav .m:hover{padding-left:22px}
 @keyframes vient{0%{transform:scale(.6);box-shadow:0 0 0 rgba(244,217,142,0)}35%{transform:scale(1.25);box-shadow:0 0 30px rgba(244,217,142,1)}100%{transform:none;box-shadow:0 0 8px rgba(127,224,160,.4)}}
 .grand-no{font:700 38px CZ,serif;color:var(--or2);opacity:.8;line-height:1}
 /* messages */
-.message{margin-bottom:12px}.message .txt{font:600 19px/1.5 CG,serif;white-space:pre-wrap;margin:10px 0}
+.message{margin-bottom:12px}.message .txt{font:600 19px/1.5 CG,serif;white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0}   /* une empreinte de 64 caracteres se coupe au bord (telephone) */
 /* livres */
 .achat{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:14px;background:linear-gradient(100deg,rgba(90,62,18,.55),rgba(18,22,30,.72) 60%)}
 .depot{position:relative;border:1.5px dashed rgba(201,154,62,.55);border-radius:6px;padding:18px;text-align:center;color:var(--doux);margin:8px 0;transition:background .2s,border-color .2s}

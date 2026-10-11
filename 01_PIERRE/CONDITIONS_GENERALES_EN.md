@@ -1,6 +1,6 @@
 # Terms and conditions · L'Ange de l'Eau
 
-*Version of 3 October 2026, in line with the Stone of the programme V1j. This is a translation: the French text is binding.*
+*Version of 9 October 2026, in line with the Stone of the programme V1j. This is a translation: the French text is binding.*
 
 ## In short
 
@@ -124,7 +124,7 @@
 
 **D4. What is public.** Bitcoin transactions are public by nature. The quarterly register publishes, for each copy, its number, payment transaction and fingerprint, never a name. The public companions page shows, for each companion, their status, bitcoin address and the fingerprint of their copy, never a name.
 
-**D5. IP addresses** are used for a few minutes, in memory, to limit abuse; the till does not store them. The till uses no cookie apart from the organiser's dashboard session, the choice of language (kept one year) and the passage through the site's entrance door (kept one year; the door applies only until 3 January 2027); the site also keeps the choice of language in the browser's local storage ("aede-langue"). None of them holds personal data, and the till uses no advertising or audience-measurement trackers. The angedeleau.com website is served by the till itself: the same rules apply there. Chest amounts are read on chain by the till from a public explorer (mempool.space by default); some pages may also query it from the visitor's browser, and that explorer then sees the visitor's IP address.
+**D5. IP addresses** are used for a few minutes, in memory, to limit abuse; the till does not store them. The till uses no cookie apart from the organiser's dashboard session, the choice of language (kept one year) and the passage through the site's entrance door (kept one year; the door applies only until 3 January 2027); the site also keeps the choice of language in the browser's local storage ("aede-langue"). None of them holds personal data, and the till uses no advertising tracker and no third-party audience-measurement service. To know how the site is used, the till itself counts, at each page it serves, daily totals (page views, language, device type, hour, domain of the referring site or campaign code, downloads): no IP address, no fingerprint and no identifier is written, and no cookie is set for this. Visitors of one day are told apart only in memory, by a salted fingerprint drawn at random each day and forgotten the next day; only numbers remain. The angedeleau.com website is served by the till itself: the same rules apply there. Chest amounts are read on chain by the till from a public explorer (mempool.space by default); some pages may also query it from the visitor's browser, and that explorer then sees the visitor's IP address.
 
 **D6. Processors:** the host (section 1), which also serves the angedeleau.com website. Payment goes through a BTCPay server run by the organiser. GodGift Core online (app.angedeleau.com) is served by a static host separate from the till (section 1), which only delivers its files; like any host, it sees visitors' IP addresses.
 

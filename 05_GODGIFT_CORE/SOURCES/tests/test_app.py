@@ -53,7 +53,7 @@ with sync_playwright() as p:
     vert('scrypt 1 Gio dans Chromium : vecteurs publics de la Pierre retrouves')
     # 4. le mode demonstration, page par page
     pg.evaluate("localStorage.setItem('gg.demo','true')"); pg.goto(URL + '#/tableau'); pg.reload(); pg.wait_for_timeout(1200)
-    t = pg.inner_text('#page'); assert 'DÉMONSTRATION' in pg.inner_text('#statut') and 'PRIS' in t and 'À PRENDRE' in t and 'EN CHASSE' in t and 'SCELLÉ' in t; vert('demo : les quatre etats des coffres')
+    t = pg.inner_text('#page'); assert 'DÉMONSTRATION' in pg.inner_text('#statut') and 'TROUVÉ' in t and 'À PRENDRE' in t and 'EN JEU' in t and 'À VENIR' in t and 'SCELLÉ' not in t and 'EN CHASSE' not in t; vert('demo : les quatre etats des coffres, dans les mots du site (a venir, en jeu, a prendre, trouve)')
     pg.screenshot(path=f'{CAP}/05_demo_tableau.png')
     pg.click('[data-coffre="5"]'); pg.wait_for_timeout(400); assert 'Trésor 5' in pg.inner_text('#page'); pg.screenshot(path=f'{CAP}/06_demo_coffre5.png'); vert('fiche du coffre 5')
     pg.click('[data-p=enigmes]'); pg.wait_for_timeout(400); assert 'Énigme n° 11' in pg.inner_text('#page'); pg.screenshot(path=f'{CAP}/07_demo_enigmes.png'); vert('enigmes parues, compte a rebours')
