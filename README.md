@@ -10,9 +10,10 @@
 
 ## Version publiée
 
-| Version | Empreinte du programme (SHA-256 du fichier `SHA256SUMS`, 43 fichiers) |
+| Version | Empreinte du programme (SHA-256 du fichier `SHA256SUMS`) |
 |---|---|
-| 1.2.1-beta | `d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75` |
+| 1.3.0 (44 fichiers ; en attente du message signé de l’auteur) | `03f6a9640885aae94a692689ce9217f2fde399bf7274b2b91573242afb936d35` |
+| 1.2.1-beta (43 fichiers) | `d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75` |
 | 1.2.0-beta (remplacée) | `529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3` |
 | 1.1.0-beta (remplacée) | `cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501` |
 
@@ -34,7 +35,7 @@ Le même outil vérifie aussi une installation (`--dossier <dossier qui contient
 ## Contenu
 
 - `05_GODGIFT_CORE/SOURCES/` : le programme (`app/`), le module cryptographique (`bundle/`), le guide en cinq langues, les installateurs et les tests.
-- `01_PIERRE/` : la Pierre du programme V1j, c'est-à-dire les règles de la chasse, et les conditions générales. Le programme embarque les deux.
+- `01_PIERRE/` : la Pierre du programme V1k, c'est-à-dire les règles de la chasse, et les conditions générales. Le programme embarque les deux.
 - `03_CAVE_STONE_5/LISTE_DES_CINQ_MILLE.txt` : la liste publique des cinq mille mots (Pierre, annexe B).
 
 Le dépôt reprend la disposition de la trousse de l'auteur, que `construire.py` sait lire. Il ne contient aucun secret : ni clé, ni énigme, ni réponse.
@@ -57,9 +58,10 @@ Les installateurs Windows officiels seront signés au nom d'Arthur Benjamin Myar
 
 ## Published version
 
-| Version | Program fingerprint (SHA-256 of `SHA256SUMS`, 43 files) |
+| Version | Program fingerprint (SHA-256 of `SHA256SUMS`) |
 |---|---|
-| 1.2.1-beta | `d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75` |
+| 1.3.0 (44 files; awaiting the author’s signed message) | `03f6a9640885aae94a692689ce9217f2fde399bf7274b2b91573242afb936d35` |
+| 1.2.1-beta (43 files) | `d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75` |
 | 1.2.0-beta (superseded) | `529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3` |
 | 1.1.0-beta (superseded) | `cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501` |
 

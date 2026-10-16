@@ -1,2 +1,2 @@
 /* L'ancre de GodGift Core : les references epinglees a la construction (nulles en bêta). */
-this.GG_ANCRE = {"adresse_auteur": "bc1qspkwus3zgfdtzkdgjhuhjlv26jph5ny4zc8x4m", "chasse0": null, "chasse1": null, "secours": []};
+this.GG_ANCRE = {"adresse_auteur": "bc1qspkwus3zgfdtzkdgjhuhjlv26jph5ny4zc8x4m", "chasse0": {"adresse_auteur": "bc1qspkwus3zgfdtzkdgjhuhjlv26jph5ny4zc8x4m", "amorce_txid": "9964fed6f37d4f2e7d745b727a5d02dce6a630c14a23ae6c5e9f095ce607255c", "gravure_txid": "3f9adb1672417d7b190c11d045e863b20f008a584fdaab500e40d33aadd0a3dc", "manifeste_sha256": "0ea61bbd9760f5161a12bdf64a2809d4a8f7882185f88da577997d09348f4680"}, "chasse1": null, "secours": []};

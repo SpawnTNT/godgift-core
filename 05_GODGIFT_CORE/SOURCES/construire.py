@@ -53,8 +53,8 @@ def donnees():
     assert len(mots) == 5000
     ecrire(os.path.join(APP, 'gg_liste.js'), '/* La liste publique des cinq mille (Pierre, annexe B). */\nthis.GG_LISTE = {"texte": ' + json.dumps(liste, ensure_ascii=False) +
            ',\n"mots": ' + json.dumps(mots, ensure_ascii=False) + '};\n')
-    pierre = open(trouver('PIERRE_DU_PROGRAMME_V1j.md', [('pierre',), ('01_PIERRE',), ('trousse', '01_PIERRE')]), encoding='utf-8').read()
-    ecrire(os.path.join(APP, 'gg_pierre.js'), '/* La Pierre du programme V1j, texte integral, et son empreinte. */\nthis.GG_PIERRE = {"sha256": "' + hashlib.sha256(pierre.encode()).hexdigest() +
+    pierre = open(trouver('PIERRE_DU_PROGRAMME_V1k.md', [('pierre',), ('01_PIERRE',), ('trousse', '01_PIERRE')]), encoding='utf-8').read()
+    ecrire(os.path.join(APP, 'gg_pierre.js'), '/* La Pierre du programme V1k, texte integral, et son empreinte. */\nthis.GG_PIERRE = {"sha256": "' + hashlib.sha256(pierre.encode()).hexdigest() +
            '", "texte": ' + json.dumps(pierre, ensure_ascii=False) + '};\n')
     conditions()
     # l'ancre : ce que ce programme sait d'avance, epingle a la construction apres le semis (ancre.json, depuis la fiche de la Cave) :
@@ -68,6 +68,7 @@ def donnees():
         v = ancre.get(k)
         if v:
             assert re.fullmatch(r'[0-9a-f]{64}', v.get('manifeste_sha256', '')) and re.fullmatch(r'[0-9a-f]{64}', v.get('amorce_txid', '')) and v.get('adresse_auteur', '').startswith(('bc1q', 'tb1q')), f'ancre {k} invalide'
+            assert v.get('gravure_txid') is None or re.fullmatch(r'[0-9a-f]{64}', v['gravure_txid']), f'ancre {k} : gravure_txid invalide'
     a = ancre['adresse_auteur']
     if a is not None:
         assert isinstance(a, str) and re.fullmatch(r'(bc1q|tb1q)[02-9ac-hj-np-z]{38,58}', a), 'ancre adresse_auteur invalide'

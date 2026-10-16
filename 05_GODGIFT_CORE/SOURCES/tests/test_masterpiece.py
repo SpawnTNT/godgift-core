@@ -194,11 +194,12 @@ def repondre(u, methode='GET', corps=None):
         if ch == '/api/blocks/tip/height': return 200, '900000'
         if ch == '/api/v1/prices': return 200, json.dumps({'EUR': 60000})
         if ch.startswith('/api/address/') and ch.endswith(('/utxo', '/txs/mempool', '/txs')): return 200, '[]'   # les autres coffres (chasse zero, 2 et 3) : vides
+        if ch == f'/api/address/{adrs[0]}' and BETA.get('pris1'): return 200, json.dumps({'chain_stats': {'funded_txo_sum': 1000, 'spent_txo_sum': 1000, 'spent_txo_count': 1}, 'mempool_stats': {'funded_txo_sum': 0, 'spent_txo_sum': 0, 'spent_txo_count': 0}})   # le coffre 1 pris (la solution signee s affiche « tenue » ; avant la prise elle serait en rouge, audit B15)
         if ch.startswith('/api/address/'): return 200, json.dumps({'chain_stats': {'funded_txo_sum': 1000, 'spent_txo_sum': 0, 'spent_txo_count': 0}, 'mempool_stats': {'funded_txo_sum': 0, 'spent_txo_sum': 0, 'spent_txo_count': 0}})
         if ch == f'/api/tx/{ENTREE}': return 200, json.dumps({'vout': [{'scriptpubkey_address': GUICHET, 'value': 500000}]})
-        if ch == '/api/tx/' + 'ef' * 32 + '/outspend/48': return 200, json.dumps({'spent': True, 'txid': GTX})
+        if ch == '/api/tx/' + 'ef' * 32 + '/outspend/48': return 200, json.dumps({'spent': True, 'txid': GTX, 'status': {'confirmed': True, 'block_height': 899990}})
         if ch == f'/api/tx/{GTX}': return 200, json.dumps({'vout': [{'scriptpubkey': GRAV, 'value': 0}], 'status': {'confirmed': True}})
-        if ch == '/api/tx/' + 'aa' * 32 + '/outspend/6': return 200, json.dumps({'spent': True, 'txid': GTX0})   # le rendu de l amorce : sortie 6 (3 cris, 3 coffres, rendu)
+        if ch == '/api/tx/' + 'aa' * 32 + '/outspend/6': return 200, json.dumps({'spent': True, 'txid': GTX0, 'status': {'confirmed': True, 'block_height': 899991}})   # le rendu de l amorce : sortie 6 (3 cris, 3 coffres, rendu)
         if ch == f'/api/tx/{GTX0}': return 200, json.dumps({'vout': [{'scriptpubkey': GRAV0, 'value': 0}], 'status': {'confirmed': True}})
         if ch == f'/api/tx/{VTX}': return 200, json.dumps({'vout': [{'scriptpubkey': OPR, 'value': 0}], 'status': {'confirmed': True, 'block_time': 1775000000}})
         if ch == f'/api/tx/{LTX}': return 200, json.dumps({'vout': [{'scriptpubkey': GRAVL, 'value': 0}], 'status': {'confirmed': True, 'block_time': 1796753704}})
@@ -546,7 +547,7 @@ async def main():
         BETA['messages_extra'] = []
         vert('version publiee : reconnue par le message signe de l auteur ; une autre empreinte, une version retiree, ou un message dont la signature ne tient plus sont refuses')
         # ---- la solution d'un coffre pris : un message signe, recalcule contre l'engagement grave au semis ; jamais rien de rempli ni d'envoye
-        n_posts = len(BETA['posts'])
+        n_posts = len(BETA['posts']); BETA['pris1'] = True
         BETA['messages_extra'] = [signe_brut('2027-02-20', 'Le coffre 1 a été pris : voici sa solution.\n' + HH.ligne_solution(1, 1, SOL3, SOL17, SEL)),
                                   signe_brut('2027-02-21', 'Le coffre 1, une autre solution.\n' + HH.ligne_solution(1, 1, SOL3, SOL17, '6b' * 16)),
                                   signe_brut('2027-02-31', 'Un message date d un jour qui n existe pas.')]

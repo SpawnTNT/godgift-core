@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""LA PIERRE EMBARQUEE : GG_PIERRE.sha256 (app/gg_pierre.js) doit etre le SHA-256 de trousse/01_PIERRE/PIERRE_DU_PROGRAMME_V1j.md.
+"""LA PIERRE EMBARQUEE : GG_PIERRE.sha256 (app/gg_pierre.js) doit etre le SHA-256 de trousse/01_PIERRE/PIERRE_DU_PROGRAMME_V1k.md.
 
 gg_pierre.js est ecrit par construire.py : si ce test echoue, la Pierre a change depuis la derniere construction ; relancer
 construire.py (il regenere gg_pierre.js), puis ce test. Ce test ne corrige rien lui-meme.
@@ -8,7 +8,7 @@ import hashlib, json, os, sys
 
 ICI = os.path.dirname(os.path.abspath(__file__))
 JS = os.path.abspath(os.path.join(ICI, '..', 'app', 'gg_pierre.js'))
-MD = os.path.abspath(os.path.join(ICI, '..', '..', '..', '01_PIERRE', 'PIERRE_DU_PROGRAMME_V1j.md'))
+MD = os.path.abspath(os.path.join(ICI, '..', '..', '..', '01_PIERRE', 'PIERRE_DU_PROGRAMME_V1k.md'))
 
 
 def pierre_embarquee():
@@ -30,7 +30,7 @@ def main():
     if interne != g['sha256']:
         rouges.append('gg_pierre.js incoherent : GG_PIERRE.sha256 n est pas le SHA-256 de GG_PIERRE.texte')
     if g['sha256'] != attendu:
-        rouges.append('GG_PIERRE.sha256 differe du SHA-256 de 01_PIERRE/PIERRE_DU_PROGRAMME_V1j.md : relancer construire.py')
+        rouges.append('GG_PIERRE.sha256 differe du SHA-256 de 01_PIERRE/PIERRE_DU_PROGRAMME_V1k.md : relancer construire.py')
     if rouges:
         for r in rouges:
             print('  ROUGE :', r)

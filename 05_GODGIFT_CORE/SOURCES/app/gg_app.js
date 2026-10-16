@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   if (window.top !== window.self) { document.body.textContent = ""; return; }   // jamais dans le cadre d'une autre page
-  var VERSION = "1.2.1-beta";
+  var VERSION = "1.3.0";
   var A = 2027;
   // la version web (https://app.angedeleau.com/, hebergement statique a part) lit la librairie sur angedeleau.com ; installe, sur librairie.angedeleau.com
   var WEB = location.protocol === "https:";
@@ -127,12 +127,35 @@
 
   // ------------------------------------------------------------------ l'etat du monde
   var M = { pret: false, erreurs: {} };
-  function maintenant() { return R.demo ? window.GG_DEMO.maintenant + (Date.now() - M.t0) / 1000 : Date.now() / 1000; }
+  // l'horloge : celle du telephone, corrigee du decalage mesure sur l'en-tete Date des explorateurs (audit B2 ; jamais la librairie,
+  // qui ne doit pas pouvoir toucher a la course) ; mediane par hote, correction seulement si les hotes s'accordent a 5 s pres et apres
+  // deux mesures ; au-dela de 5 s de derive, on le dit. Les tentatives d'ouverture suivent l'horloge la plus precoce (ouvrirSuite).
+  var HORLOGE = { decalage: 0, mesures: [], hotes: {}, date: 0 };
+  // on ne corrige qu'une derive (moins de 10 minutes) : au-dela, c'est un fuseau, un serveur fou ou un banc, et on avertit seulement
+  function decalageHorloge() { return Math.abs(HORLOGE.decalage) <= 600000 ? HORLOGE.decalage : 0; }
+  function maintenant() { return R.demo ? window.GG_DEMO.maintenant + (Date.now() - M.t0) / 1000 : (Date.now() + decalageHorloge()) / 1000; }
+  function maintenantBrut() { return R.demo ? maintenant() : Date.now() / 1000; }
+  function mediane(l) { var tri = l.slice().sort(function (a, b) { return a - b; }); return tri[Math.floor(tri.length / 2)]; }
+  function mesurerHorloge(r, depart, url) {
+    try {
+      var hote = /^https?:\/\/([^/]+)/.exec(String(url || "")); if (!hote) return;
+      if (!sources().some(function (b) { return String(url).indexOf(b + "/") === 0; })) return;   // seuls les explorateurs comptent
+      var d = r.headers && r.headers.get("date"), aller = Date.now() - depart; if (!d || aller > 4000) return;
+      var serveur = Date.parse(d); if (!isFinite(serveur)) return;
+      var ecart = serveur + Math.min(aller / 2, 1000) + 500 - Date.now();     // la seconde de l'en-tete est tronquee : +500 ms en moyenne
+      HORLOGE.hotes[hote[1]] = (HORLOGE.hotes[hote[1]] || []).concat([ecart]).slice(-5);
+      var meds = Object.keys(HORLOGE.hotes).map(function (h) { return mediane(HORLOGE.hotes[h]); });
+      HORLOGE.mesures = HORLOGE.mesures.concat([ecart]).slice(-10); HORLOGE.date = Date.now();
+      var accord = meds.length < 2 || Math.max.apply(null, meds) - Math.min.apply(null, meds) <= 5000;
+      HORLOGE.decalage = accord && HORLOGE.mesures.length >= 2 ? mediane(meds) : 0;
+    } catch (e) { }
+  }
+  function horlogeDecalee() { return HORLOGE.mesures.length >= 2 && Math.abs(HORLOGE.decalage) > 5000; }
 
   function lire(url, texte) {
-    var ctl = new AbortController(), minuteur = setTimeout(function () { ctl.abort(); }, 15000);
+    var ctl = new AbortController(), minuteur = setTimeout(function () { ctl.abort(); }, 15000), depart = Date.now();
     return fetch(url, { cache: "no-store", signal: ctl.signal }).then(function (r) {
-      clearTimeout(minuteur);
+      clearTimeout(minuteur); mesurerHorloge(r, depart, url);
       if (r.status === 404) return null;
       if (!r.ok) throw new Error("HTTP " + r.status);
       return texte ? r.text() : r.json();
@@ -396,7 +419,7 @@
     }
     var o = officiel(), cls = o.etat === "officiel" ? "ok" : o.etat === "essai" ? "att" : "ko";
     var txt = o.etat === "officiel" ? t("prog_officiel", { v: o.v }) : o.etat === "essai" ? t("prog_beta") : o.etat === "retiree" ? t("prog_retire") : t("prog_inconnu", { v: o.derniere });
-    return court ? '<a href="#/guide/officiel" class="badge-prog ' + cls + '" title="' + esc(txt) + '">' + (cls === "ok" ? "✓ " : cls === "ko" ? "⚠ " : "β ") + esc(o.etat === "officiel" ? t("prog_court_ok") : o.etat === "essai" ? t("prog_court_beta") : t("prog_court_ko")) + "</a>"
+    return court ? '<a href="#/guide/officiel" class="badge-prog ' + cls + '" title="' + esc(txt) + '">' + (cls === "ok" ? "✓ " : cls === "ko" ? "⚠ " : "◌ ") + esc(o.etat === "officiel" ? t("prog_court_ok") : o.etat === "essai" ? t("prog_court_beta") : t("prog_court_ko")) + "</a>"
       : '<span class="' + cls + '">' + esc(txt) + "</span>";
   }
 
@@ -471,7 +494,7 @@
       var c = contenuDe(Z, e), nom = t(e.type === "indice" ? "v_indice_" + e.rang : "v_" + e.type);
       if (!c) { out += '<div class="ligne"><span>' + chipDe(Z, e, nom) + '</span><span class="doux">' + esc(t("s_ouvre_le", { d: fdate(e.ouverture_utc, true) })) + "</span></div>"; return; }
       if (e.type === "cri") out += '<div class="ligne"><span>' + chipDe(Z, e, nom) + '</span><span class="v"><span class="mono" style="font-size:12px">' + esc(String(c.txid).slice(0, 16)) + '…</span>' +
-        (h === 1 ? ' <button class="bouton2" style="padding:3px 10px;font-size:11px" data-diffuser="' + n + '">' + esc(t("diffuser_cri")) + "</button>" : "") + "</span></div>";
+        ' <button class="bouton2" style="padding:3px 10px;font-size:11px" data-diffuser="' + n + '" data-chasse="' + h + '"' + (Z.diffusion && Z.diffusion[n] && Z.diffusion[n].enCours ? " disabled" : "") + ">" + esc(etatDiffusion(Z, n)) + "</button></span></div>";
       if (e.type === "indice") out += '<div class="ligne"><span>' + chipDe(Z, e, nom) + '</span><span class="v cg" style="font-size:17px;white-space:pre-wrap;text-align:left">' + esc(texteEnigme(c)) + "</span></div>";
     });
     solutionsSignees().filter(function (s) { return s.h === h && s.c === n; }).forEach(function (s) {
@@ -509,6 +532,7 @@
       var ic = r.e === "ok" ? '<span class="ok">✓</span>' : r.e === "ko" ? '<span class="ko">✗</span>' : '<span class="att">…</span>';
       return '<div class="verif"><div class="ic">' + ic + '</div><div><div class="t">' + esc(r.t) + '</div><div class="d">' + esc(r.d) + "</div></div></div>";
     }).join("") : '<p class="doux">' + esc(t("verif_intro")) + "</p>";
+    if (horlogeDecalee()) l = '<p class="att">' + esc(t("horloge_decalee", { s: Math.round(HORLOGE.decalage / 1000) })) + "</p>" + l;
     var bilan = "";
     if (V.res && !V.enCours) {
       var ko = V.res.filter(function (r) { return r.e === "ko"; }).length, ok = V.res.filter(function (r) { return r.e === "ok"; }).length, att = V.res.length - ko - ok;
@@ -728,7 +752,7 @@
   function plier(s) { return s.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/œ/g, "oe").replace(/æ/g, "ae"); }
   var INDEX = null;
   function index() {
-    if (INDEX) return INDEX; INDEX = { mot: {}, plie: {} };
+    if (INDEX) return INDEX; INDEX = { mot: Object.create(null), plie: Object.create(null) };   // sans prototype : « constructor » ou « toString » tapes ne sont pas des mots (audit M3)
     window.GG_LISTE.mots.forEach(function (m, i) { INDEX.mot[m] = i + 1; var p = plier(m); (INDEX.plie[p] = INDEX.plie[p] || []).push(i + 1); });
     return INDEX;
   }
@@ -1035,9 +1059,14 @@
     return Promise.allSettled(s.map(function (b) {
       return lire(b + (/blockstream\.info/.test(b) ? "/fee-estimates" : "/v1/fees/recommended")).then(function (j) { var v = Number(j && (j.fastestFee || j["1"] || j["2"])); if (isFinite(v) && v > 0) l.push(v); });
     })).then(function () {
-      if (!l.length) throw new Error(t("injoignable"));
+      if (!l.length) {   // les deux estimateurs muets (audit F2) : le dernier taux vu, sinon un taux de secours eleve ; avec confirmation (ecart = vrai)
+        var dernier = lireR("dernier_taux", null);
+        if (dernier && dernier.taux && Date.now() - dernier.date < 6 * 3600000) return { taux: dernier.taux, ecart: true, secours: true };
+        return { taux: Math.min(AUTO_TAUX_MAX, 100), ecart: true, secours: true };
+      }
       var mn = Math.min.apply(null, l), mx = Math.max.apply(null, l);    // le plus bas des deux : une source qui gonfle les frais ne compte pas
-      return { taux: Math.min(1000, Math.max(3, Math.ceil(mn * 1.5))), ecart: mx > 3 * mn };
+      var taux = Math.min(1000, Math.max(3, Math.ceil(mn * 1.5))); ecrireR("dernier_taux", { taux: taux, date: Date.now() });
+      return { taux: taux, ecart: mx > 3 * mn };
     });
   }
   function concurrence(adr, notre) {   // une transaction d'un autre chasseur, en attente, qui vide deja ce coffre : vue pareil par chaque source
@@ -1067,7 +1096,7 @@
     var p = Promise.all([explo("/address/" + adr + "/utxo"), tauxPrioritaire()]).then(function (r) {
       var ut = choisirSorties(r[0] || [], r[1].taux);
       return (ut.length ? Promise.resolve(null) : concurrence(adr)).then(function (cc) {
-        TR.prep[k] = { utxos: ut.length ? ut : cc ? cc.entrees : [], taux: r[1].taux, ecartFrais: r[1].ecart, concurrent: cc, date: Date.now() };
+        TR.prep[k] = { utxos: ut.length ? ut : cc ? cc.entrees : [], taux: r[1].taux, ecartFrais: r[1].ecart, secours: !!r[1].secours, concurrent: cc, date: Date.now() };
         return TR.prep[k];
       });
     }, function (e) { TR.prep[k] = { erreur: String(e.message || e), date: Date.now() }; return null; });
@@ -1115,7 +1144,7 @@
     TR.retape[kk] = rv.adresse; TR.dest[kk] = rv.adresse;
     if (FENETRE) scellerReception();                                           // dans la fenetre dediee, l'adresse retapee devient celle de la fenetre
     var s = TR.suite[kk] || {}; delete TR.suite[kk]; TR.msg[kk] = null;
-    lancerEnvoi(kk, s.frais || null, !!s.confirme);
+    lancerEnvoi(kk, s.frais || null, s.confirme || false);
   }
   function trouveReel(c, k) {   // la cle reste en memoire ; dans la fenetre dediee, on montre la destination 10 secondes, puis on envoie
     var kk = cleDe(c), rv = receptionValide();
@@ -1165,13 +1194,19 @@
       delete TR.recul[kk];
       if (!p.utxos.length) { TR.msg[kk] = { e: "att", d: t("tr_vide_encore") }; delete TR.prep[kk]; plusTard(30000); return rendreSiChasse(); }
       var vt = window.GGTX.vtaille(p.utxos.length, window.GGTX.decoderAdresse(rv.adresse).script), total = p.utxos.reduce(function (s, u) { return s + u.valeur; }, 0);
-      var f = fraisImpose || offreForte(p.taux, vt, total, p.concurrent);
+      var f = fraisImpose ? Math.max(fraisImpose, p.concurrent ? contreOffre(p.concurrent, vt) : 0) : offreForte(p.taux, vt, total, p.concurrent);   // un concurrent apparu depuis : on monte, jamais une enchere deja battue
       if (f > Math.floor(total / 2)) {                                         // jamais plus de la moitie : on s'arrete au plafond s'il passe encore devant
         if (fraisImpose || (p.concurrent && Math.floor(total / 2) <= p.concurrent.frais + vt)) { TR.msg[kk] = { e: "ko", d: t("tr_frais_max") }; return rendreSiChasse(); }
         f = Math.floor(total / 2);
       }
-      if (!confirme && (f > total * AUTO_PART_MAX || f / vt > AUTO_TAUX_MAX || p.ecartFrais || (p.concurrent && p.concurrent.uneSource))) {   // trop cher pour partir seul : on demande
-        TR.confirmer[kk] = { frais: f, total: total, vt: vt }; TR.msg[kk] = null; return rendreSiChasse();
+      // trop cher pour partir seul : on demande ; et ce qui a ete confirme (frais, taille, total) doit etre ce qui part (audit F1) :
+      // si quelque chose a bouge depuis l'ecran de confirmation, on redemande au lieu de partir avec d'autres frais
+      if (!confirme && (f > total * AUTO_PART_MAX || f / vt > AUTO_TAUX_MAX || p.ecartFrais || (p.concurrent && p.concurrent.uneSource))) {
+        TR.confirmer[kk] = { frais: f, total: total, vt: vt, entrees: p.utxos.length, fraisImpose: f, secours: !!p.secours }; TR.msg[kk] = null; return rendreSiChasse();
+      }
+      // ce qui est compare : les frais, le total et le nombre d'entrees (la taille signee peut differer d'un octet de l'estimation)
+      if (confirme && confirme !== true && (confirme.frais !== f || confirme.total !== total || (confirme.entrees != null && confirme.entrees !== p.utxos.length))) {
+        TR.confirmer[kk] = { frais: f, total: total, vt: vt, entrees: p.utxos.length, fraisImpose: f, secours: !!p.secours }; TR.msg[kk] = { e: "att", d: t("tr_frais_changes") }; return rendreSiChasse();
       }
       delete TR.confirmer[kk];
       var tx;
@@ -1181,7 +1216,7 @@
       delete TR.retape[kk];                                                    // une retape ne vaut que pour cette transaction
       TR.gen[kk] = (TR.gen[kk] || 0) + 1;
       var anciens = (TR.envois[kk] && TR.envois[kk].anciens || []).concat(TR.envois[kk] ? [TR.envois[kk].txid] : []).slice(-10);
-      TR.envois[kk] = { n: c.n, h: c.h, adresse: c.adresse, dest: rv.adresse, txid: tx.txid, hex: tx.hex, frais: tx.frais, montant: tx.montant, vt: tx.vtaille, total: total, etat: "a_diffuser", date: Date.now(), gen: TR.gen[kk], anciens: anciens };
+      TR.envois[kk] = { n: c.n, h: c.h, adresse: c.adresse, dest: rv.adresse, txid: tx.txid, hex: tx.hex, frais: tx.frais, montant: tx.montant, vt: tx.vtaille, total: total, entrees: p.utxos.length, etat: "a_diffuser", date: Date.now(), gen: TR.gen[kk], anciens: anciens };
       ecrireR("envois", TR.envois); TR.msg[kk] = null; boucleDiffusion(kk); rendreSiChasse();
     });
   }
@@ -1256,7 +1291,7 @@
     if (f > Math.floor(e.total / 2)) { TR.msg[kk] = { e: "att", d: t("tr_frais_max") }; return rendreSiChasse(); }
     TR.dest[kk] = TR.dest[kk] || e.dest; TR.cibles[kk] = TR.cibles[kk] || { n: e.n, h: e.h, adresse: e.adresse };
     if (f > e.total * AUTO_PART_MAX || f / e.vt > AUTO_TAUX_MAX || (e.concurrent && e.concurrent.uneSource)) {   // cher, ou concurrent vu d'un seul cote : on demande
-      TR.confirmer[kk] = { frais: f, total: e.total, vt: e.vt, fraisImpose: f }; return rendreSiChasse();
+      TR.confirmer[kk] = { frais: f, total: e.total, vt: e.vt, entrees: e.entrees, fraisImpose: f }; return rendreSiChasse();
     }
     lancerEnvoi(kk, f, true);
   }
@@ -1266,7 +1301,7 @@
       var adr = kk.slice(kk.indexOf(":") + 1); if (adresseCoffre && adr !== adresseCoffre) return;
       var e = TR.envois[kk], m = TR.msg[kk], id = kk.replace(/\W/g, "_"), x = "";
       if (TR.compte[kk]) x += '<p class="att" style="font-size:15px">' + esc(t("tr_compte")) + ' <b id="tr-compte-' + id + '">' + Math.ceil((TR.compte[kk] - Date.now()) / 1000) + '</b> s</p><div class="rec-adr">' + groupesEnvoi(TR.dest[kk]) + '</div>' + (R.reception && R.reception.adresse === TR.dest[kk] && R.reception.date ? '<p class="doux" style="font-size:12px">' + esc(t("rec_date", { d: fdateIso(R.reception.date) })) + "</p>" : "") + '<p><button class="bouton" data-envoyer="' + esc(kk) + '">' + esc(t("tr_envoyer_maintenant")) + '</button> <button class="bouton2" data-annuler="' + esc(kk) + '">' + esc(t("tr_annuler")) + "</button></p>";
-      if (TR.confirmer[kk]) { var cf = TR.confirmer[kk]; x += '<p class="att">' + esc(t("tr_confirmer", { f: fsats(cf.frais), p: Math.round(cf.frais / cf.total * 100), t: Math.round(cf.frais / cf.vt) })) + '</p><div class="rec-adr petit">' + groupesEnvoi(TR.dest[kk] || "") + '</div><p><button class="bouton" data-confirmer="' + esc(kk) + '">' + esc(t("tr_envoyer_frais")) + "</button></p>"; }
+      if (TR.confirmer[kk]) { var cf = TR.confirmer[kk]; x += '<p class="att">' + esc(t("tr_confirmer", { f: fsats(cf.frais), p: Math.round(cf.frais / cf.total * 100), t: Math.round(cf.frais / cf.vt) })) + (cf.secours ? " " + esc(t("tr_frais_secours")) : "") + '</p><div class="rec-adr petit">' + groupesEnvoi(TR.dest[kk] || "") + '</div><p><button class="bouton" data-confirmer="' + esc(kk) + '">' + esc(t("tr_envoyer_frais")) + "</button></p>"; }
       if (m) x += '<p class="' + esc(m.e) + '">' + esc(m.d) + (m.attenteAdresse ? ' <a href="#/reglages">' + esc(t("m_reglages")) + "</a>" : "") + "</p>";
       if (m && m.retape) x += carteRetape(kk, id);
       if (TR.annule && TR.annule[kk] && !e) x += '<p><button class="bouton" data-envoyer="' + esc(kk) + '">' + esc(t("tr_envoyer_maintenant")) + "</button></p>";
@@ -1449,6 +1484,14 @@
     f.hidden = false; f.querySelector(".fm-fermer").focus();
   }
   function fermerMot() { var f = $("feuille-mot"); if (f) { f.hidden = true; f.innerHTML = ""; } }
+  function carteOublier() {
+    var p0 = lireR("manif_premier_0", null), p1 = lireR("manif_premier_1", null);
+    if (!p0 && !p1 && !M.oublie) return "";
+    function b(hunt, cle) { return '<button class="bouton2" data-oublier="' + hunt + '">' + esc(M.oublierDemande === hunt ? t("r_oublier_conf") : t(cle)) + "</button> "; }   // deux gestes : le second confirme
+    return '<div class="cadre"><div class="sur">' + esc(t("r_oublier_t")) + '</div><p class="doux">' + esc(t("r_oublier_d")) + '</p><p>' +
+      (p0 ? b(0, "r_oublier_b") : "") + (p1 ? b(1, "r_oublier_b1") : "") +
+      (M.oublie ? ' <span class="ok">' + esc(t("r_oublier_fait")) + "</span>" : "") + "</p></div>";
+  }
   function pageReglages() {
     var e = window.GG_EMPREINTE;
     return '<div class="deux"><div><h1>' + esc(t("m_reglages")) + '</h1><div class="cadre"><label>' + esc(t("langue")) + '</label><select class="champ" id="r-lang">' + LANGUES.map(function (l) { return '<option value="' + l[0] + '"' + (l[0] === R.lang ? " selected" : "") + ">" + l[1] + "</option>"; }).join("") +
@@ -1457,9 +1500,9 @@
       (R.demo ? "" : '<div class="doux" style="font-size:12px" id="r-secours">' + esc(secoursValides().length ? t("secours_connu", { u: secoursValides().join(", ") }) : t("secours_aucun")) + "</div>") +
       '<label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texte)"><input type="checkbox" id="r-demo"' + (R.demo ? " checked" : "") + "> " + esc(t("mode_demo")) + '</label><div class="doux" style="font-size:12px">' + esc(t("mode_demo_note")) +
       '</div><label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texte)"><input type="checkbox" id="r-temoin"' + (R.temoin ? " checked" : "") + "> " + esc(t("reg_partage")) + '</label><div class="doux" style="font-size:12px">' + esc(R.temoin ? t("reg_partage_n") : t("reg_partage_non")) + " · " + esc(t("te_note")) + ' <a href="#/guide/temoin">' + esc(guide().en_savoir_plus) + " →</a></div>" +
-      '<p><button class="bouton" id="r-garder">' + esc(t("enregistrer")) + '</button> <button class="bouton2" id="r-accueil">' + esc(t("revoir_accueil")) + "</button></p></div>" + carteReception() + jamais(false) + "</div>" +
+      '<p><button class="bouton" id="r-garder">' + esc(t("enregistrer")) + '</button> <button class="bouton2" id="r-accueil">' + esc(t("revoir_accueil")) + "</button></p></div>" + carteReception() + carteOublier() + jamais(false) + "</div>" +
       '<div><div class="cadre gl-carte"><b class="gl-titre">' + esc(guide().carte_titre) + '</b><p class="doux" style="font-size:13px">' + esc(guide().carte_texte) + '</p><a class="bouton" href="#/guide">' + esc(guide().ouvrir) + "</a></div>" +
-      '<h1 style="margin-top:18px">' + esc(t("a_propos")) + '</h1><div class="cadre"><div class="ligne"><span class="doux">' + esc(t("version")) + '</span><span class="v">' + VERSION + " · " + esc(t("version_essai")) + '</span></div><div class="ligne"><span class="doux">' + esc(t("empreinte_programme")) +
+      '<h1 style="margin-top:18px">' + esc(t("a_propos")) + '</h1><div class="cadre"><div class="ligne"><span class="doux">' + esc(t("version")) + '</span><span class="v">' + VERSION + (R.demo || WEB ? "" : (function () { var o = officiel(); return o.etat === "officiel" ? " · " + esc(t("prog_court_ok")) : o.etat === "essai" ? " · " + esc(t("prog_court_beta")) : ""; })()) + '</span></div><div class="ligne"><span class="doux">' + esc(t("empreinte_programme")) +
       '</span><span class="v mono" style="font-size:12px">' + esc(e.empreinte) + (WEB ? '<br><span class="att" style="font-family:inherit">' + esc(t("prog_web")) + "</span>" : "") + '</span></div><div class="ligne"><span class="doux">' + esc(t("fichiers")) + '</span><span class="v">' + e.fichiers + '</span></div><div class="ligne"><span class="doux">' + esc(t("pierre")) +
       '</span><span class="v"><a href="#/pierre">' + esc(t("lire_pierre")) + '</a> <span class="mono doux" style="font-size:11px">' + esc(window.GG_PIERRE.sha256.slice(0, 16)) + '…</span></span></div><div class="ligne"><span class="doux">' + esc(t("conditions")) +
       '</span><span class="v"><a href="#/conditions">' + esc(t("lire_conditions")) + '</a></span></div><div class="ligne"><span class="doux">' + esc(t("fenetre_titre")) + '</span><span class="v" style="font-size:12.5px">' + esc(t(modeEnvoi())) + '</span></div><div class="ligne"><span class="doux">' + esc(t("licence")) +
@@ -1570,23 +1613,42 @@
     if (a && (h !== a.manifeste_sha256 || !man.amorce || man.amorce.txid !== a.amorce_txid || (man.messages && man.messages.adresse && man.messages.adresse !== a.adresse_auteur))) return "ko";
     if (pin && man.messages && man.messages.adresse && man.messages.adresse !== pin) return "ko";
     var cle = "manif_premier_" + hunt, prem = lireR(cle, null);
+    if (prem && prem !== h && a) { oublierPremier(hunt); prem = null; }       // l'ancre epinglee fait autorite sur un premier manifeste d'avant elle (audit 1.3.0, 6)
     if (prem && prem !== h) { M.erreurs.manifChange = true; return "change"; }
     return "ok";
   }
   function retenirPremier(hunt, h) { var cle = "manif_premier_" + hunt; if (!lireR(cle, null)) ecrireR(cle, h); }
+  function oublierPremier(hunt) { ["manif_premier_", "manif_preuve_", "manif_sig_"].forEach(function (p) { try { localStorage.removeItem("gg." + p + hunt); } catch (e) { } }); M.erreurs.manifChange = false; }
   function gravureManifeste(hunt, man, h) {
     if (ancrageOk(hunt, man, h) !== "ok") return Promise.resolve("ko");
     var am = man.amorce || {}, vout = hunt === 1 && am.vout_rendu == null ? 48 : am.vout_rendu;
     if (!/^[0-9a-f]{64}$/.test(String(am.txid)) || !Number.isInteger(vout)) return Promise.resolve("ko");
+    var an = ancreChasse(hunt), preuve = lireR("manif_preuve_" + hunt, null);
+    function prouve(r) { if (r === "ok") { retenirPremier(hunt, h); ecrireR("manif_preuve_" + hunt, { sha: h, date: Date.now() }); } return r; }
+    // la transaction de gravure epinglee a la construction (ancre.gravure_txid) : lue directement si l'outspend ne la montre pas encore
+    function parGravureEpinglee() {
+      if (!an || !/^[0-9a-f]{64}$/.test(String(an.gravure_txid || ""))) return "attente";
+      return explo("/tx/" + an.gravure_txid).then(function (tx) {
+        if (!tx || !tx.status || !tx.status.confirmed) return "attente";
+        if (!(tx.vin || []).some(function (v) { return v.txid === am.txid && v.vout === vout; })) return "attente";
+        var d = opReturn(tx.vout);
+        return d && ascii(d) === "AEDE:manifeste:" + h ? signatureManifeste(hunt, h).then(prouve) : "attente";
+      }, function () { return "attente"; });
+    }
     return explo("/tx/" + am.txid + "/outspend/" + vout).then(function (o) {
-      if (!o || !o.spent) return "attente";
+      if (!o || !o.spent) return parGravureEpinglee();
+      if (!o.status || !o.status.confirmed) return "attente";                 // une gravure non confirmee ne prouve rien encore (audit B8)
       return explo("/tx/" + o.txid).then(function (tx) {
         var d = tx && opReturn(tx.vout);
+        if (!tx || !tx.status || !tx.status.confirmed) return "attente";     // la gravure elle-meme, confirmee des deux cotes (audit B8)
         if (!d || ascii(d) !== "AEDE:manifeste:" + h) return "ko";
-        retenirPremier(hunt, h);
-        return signatureManifeste(hunt, h);
+        return signatureManifeste(hunt, h).then(prouve);                     // on ne retient le premier manifeste qu'une fois SIGNE (audit B7)
       });
-    }, function () { return "injoignable"; });
+    }, function () {
+      // hors ligne : ce que ce programme epingle (l'ancre), ou une preuve deja faite ici pour ce meme manifeste, tient lieu de gravure (article 10)
+      if ((an && an.manifeste_sha256 === h) || (preuve && preuve.sha === h)) return signatureManifeste(hunt, h);
+      return "injoignable";
+    });
   }
   // la signature du manifeste (specification, paragraphe 7) : {texte: "AEDE:manifeste:<sha>", adresse, signature}, dans l'etat de la librairie,
   // ou servie sous /api/chasse/<h>/manifeste_signature.json ; gardee sur la machine (elle se reverifie), donc lisible si la librairie tombe
@@ -1646,13 +1708,21 @@
     return d;
   }
   function contenu(e) { return contenuDe(MP, e); }
+  // le retour d'une diffusion de cri (audit B12) vit dans l'etat de la chasse, pas dans le bouton, que chaque rendu remplace
+  function etatDiffusion(Z, n) {
+    var d = Z.diffusion && Z.diffusion[n]; if (!d) return t("diffuser_cri");
+    if (d.enCours) return "…";
+    return d.ok ? "✓ " + t("diffuse") : d.hors_ligne ? t("injoignable") : /non-final|non_final|not final/i.test(d.texte || "") ? "⏳ " + t("pas_encore_accepte") : "✗ " + (d.texte || t("pas_encore_accepte")).slice(0, 80);
+  }
   var RENDU_PREVU = null;
   function rendreBientot() { if (RENDU_PREVU) return; RENDU_PREVU = setTimeout(function () { RENDU_PREVU = null; rendre(); }, 250); }
   // Ouvre, un a un, les verrous dus d'un COFFRET (MP pour la chasse n° 1, ZS[h] pour les autres), seulement apres la preuve de gravure.
   // Une balise drand deja connue (gardee, reverifiee) sert sans reseau : a chaque chargement, tout se rouvre ici, rien n'est cru sur parole.
   function ouvrirSuite(Z) {
     if (R.demo || !Z || !Z.coffret || !window.GGTL || Z.grave !== "ok" || Z.ouvreEnCours) return;
-    var now = maintenant(), e = elementsDe(Z).filter(function (x) { var k = cleV(x); return x.ouverture_utc <= now && Z.ouverts[k] == null && !(Z.echecs[k] > Date.now() - 30000); })
+    // l'horloge la plus precoce des deux (brute, corrigee) declenche : un serveur ne peut pas retarder une ouverture ; la cadence de 2 s tient tant que l'une des deux est a moins de 180 s
+    var now = Math.max(maintenant(), maintenantBrut()), tot = Math.min(maintenant(), maintenantBrut());
+    var e = elementsDe(Z).filter(function (x) { var k = cleV(x); var recent = tot - x.ouverture_utc < 180; return x.ouverture_utc <= now && Z.ouverts[k] == null && !(Z.echecs[k] > Date.now() - (recent ? 2000 : 30000)); })
       .sort(function (a, b) { return a.ouverture_utc - b.ouverture_utc; })[0];
     if (!e) return;
     var k = cleV(e), c = Z.coffret; Z.ouvreEnCours = true; Z.ouverture[k] = true;
@@ -1743,10 +1813,18 @@
       var s = GGR.lireSolution(m.texte); if (!s) return null;
       var h = s[0], man = h === 1 ? (MP.grave === "ok" ? M.manifeste : null) : ZS[h] && ZS[h].grave === "ok" ? ZS[h].man : null;
       var r = man ? GGR.engagementTenu(m.texte, man) : null;
-      return { h: h, c: s[1], m: m, tenu: r ? r[2] : null };
+      var cf = man && Array.isArray(man.coffres) ? man.coffres.filter(function (x) { return x && x.n === s[1]; })[0] : null;
+      // audit B14 : sans champ engagement au manifeste, on ne conclut pas (« ? ») ; B15 : une solution publiee avant la prise (ni confirmee,
+      // ni en mempool) se voit en rouge ; pour la chasse n° 1 dans M.soldes, pour les autres dans ZS[h] (chaque coffre lu sur la chaine)
+      var sd = h === 1 ? (cf && M.soldes ? M.soldes[cf.adresse] : null) : null, Zh = h !== 1 ? ZS[h] : null;
+      var lu = h === 1 ? !!sd : !!(Zh && Zh.depenses && Zh.depenses[s[1]] != null);
+      var pris = h === 1 ? !!(sd && (sd.depense || sd.retrait)) : !!(Zh && (Zh.depenses[s[1]] || (Zh.retraits && Zh.retraits[s[1]])));
+      var tenu = r ? (cf && cf.engagement == null ? null : r[2]) : null, avant = lu && !pris && tenu !== null;
+      return { h: h, c: s[1], m: m, tenu: tenu, avant: avant };
     }).filter(Boolean);
   }
   function badgeSolution(s) {
+    if (s.avant) return '<span class="ko">✗ ' + esc(t("sol_avant_prise")) + "</span>";
     if (s.tenu === true) return '<span class="ok">✓ ' + esc(t("sol_tenu")) + "</span>";
     if (s.tenu === false) return '<span class="ko">✗ ' + esc(t("sol_faux")) + "</span>";
     return '<span class="att">? ' + esc(t("sol_attente", { h: s.h })) + "</span>";
@@ -2146,6 +2224,7 @@
           var cs = j.chain_stats || {}, ms = j.mempool_stats || {};
           Z.soldes[k.n] = (cs.funded_txo_sum || 0) - (cs.spent_txo_sum || 0) + (ms.funded_txo_sum || 0) - (ms.spent_txo_sum || 0);
           Z.depenses[k.n] = (cs.spent_txo_count || 0) > 0;                  // « pris » : seulement une depense confirmee
+          Z.retraits = Z.retraits || {}; Z.retraits[k.n] = (ms.spent_txo_count || 0) > 0;   // un balayage encore en mempool
         }, function () { });
       });
     });
@@ -2560,7 +2639,7 @@
       p_.hidden = ouvert; p_.innerHTML = ouvert ? "" : detailsEtat(); de.setAttribute("aria-expanded", ouvert ? "false" : "true"); de.textContent = t("et_details") + (ouvert ? " ⌄" : " ⌃");
       return;
     }
-    var x = ev.target.closest("[data-p],[data-coffre],#rafraichir,#lancer,#rapport,#h-calculer,#h-lire-cri,#h-wif,#cp-envoyer,#r-garder,#r-accueil,#acheter,#ex-verifier,#ex-garder,[data-diffuser],#z-calculer,#r-rec-garder,#r-rec-changer,#r-rec-annuler,#r-rec-copier,#te-relire,[data-temoin],[data-accelerer],[data-envoyer],[data-annuler],[data-confirmer],[data-wif],[data-rec-ok],#roman-verifier,[data-retape],[data-compagnon],[data-ex-verif]");
+    var x = ev.target.closest("[data-p],[data-coffre],#rafraichir,#lancer,#rapport,#h-calculer,#h-lire-cri,#h-wif,#cp-envoyer,#r-garder,#r-accueil,#acheter,#ex-verifier,#ex-garder,[data-diffuser],#z-calculer,#r-rec-garder,#r-rec-changer,#r-rec-annuler,#r-rec-copier,#te-relire,[data-temoin],[data-accelerer],[data-envoyer],[data-annuler],[data-confirmer],[data-wif],[data-rec-ok],#roman-verifier,[data-retape],[data-compagnon],[data-ex-verif],[data-oublier]");
     if (!x) return;
     if (x.dataset.p) location.hash = "#/" + x.dataset.p;
     else if (x.dataset.coffre) location.hash = "#/coffre/" + x.dataset.coffre;
@@ -2589,7 +2668,13 @@
     else if (x.dataset.accelerer) accelerer(x.dataset.accelerer);
     else if (x.dataset.envoyer) { var ke = x.dataset.envoyer; delete TR.compte[ke]; if (TR.annule) delete TR.annule[ke]; lancerEnvoi(ke); }
     else if (x.dataset.annuler) { delete TR.compte[x.dataset.annuler]; TR.annule = TR.annule || {}; TR.annule[x.dataset.annuler] = 1; TR.msg[x.dataset.annuler] = { e: "att", d: t("tr_annule") }; rendreSiChasse(); }
-    else if (x.dataset.confirmer) { var kc = x.dataset.confirmer, cf0 = TR.confirmer[kc] || {}; delete TR.confirmer[kc]; lancerEnvoi(kc, cf0.fraisImpose || null, true); }
+    else if (x.dataset.oublier) {
+      var ho = +x.dataset.oublier;
+      if (M.oublierDemande === ho) { oublierPremier(ho); M.oublie = true; M.oublierDemande = null; }
+      else { M.oublierDemande = ho; M.oublie = false; setTimeout(function () { if (M.oublierDemande === ho) { M.oublierDemande = null; rendreBientot(); } }, 8000); }   // sans second geste en 8 s, on oublie la demande
+      rendre();
+    }
+    else if (x.dataset.confirmer) { var kc = x.dataset.confirmer, cf0 = TR.confirmer[kc] || {}; delete TR.confirmer[kc]; lancerEnvoi(kc, cf0.fraisImpose || null, { frais: cf0.frais, vt: cf0.vt, total: cf0.total, entrees: cf0.entrees }); }
     else if (x.dataset.wif) montrerCle(x.dataset.wif);
     else if (x.dataset.retape) retaper(x.dataset.retape);
     else if (x.dataset.exVerif) { ev.preventDefault(); location.hash = "#/livres"; verifierExemplaire(x.dataset.exVerif); }   // l'exemplaire de reference, dans le registre grave
@@ -2603,8 +2688,12 @@
       ecrireR("livres", MP.livres); MP.ex = null; rendre();
     }
     else if (x.dataset.diffuser) {
-      var cri = contenu(elements("cri").filter(function (e) { return e.coffre === +x.dataset.diffuser; })[0]);
-      if (cri && typeof cri.hex === "string") diffuser(cri.hex).then(function (r) { x.textContent = r.ok ? "✓ " + t("diffuse") : r.hors_ligne ? t("injoignable") : "⏳ " + t("pas_encore_accepte"); });
+      var hd = +(x.dataset.chasse || 1), Zd = hd === 1 ? MP : ZS[hd];
+      var cri = Zd && contenuDe(Zd, elementsDe(Zd).filter(function (e) { return e.type === "cri" && e.coffre === +x.dataset.diffuser; })[0]);
+      var nd = +x.dataset.diffuser; if (!Zd || x.disabled || (Zd.diffusion && Zd.diffusion[nd] && Zd.diffusion[nd].enCours)) return;
+      Zd.diffusion = Zd.diffusion || {}; Zd.diffusion[nd] = { enCours: true }; x.disabled = true;
+      if (cri && typeof cri.hex === "string") diffuser(cri.hex).then(function (r) { Zd.diffusion[nd] = { ok: r.ok, hors_ligne: r.hors_ligne, texte: r.texte || "" }; rendreBientot(); });
+      else { delete Zd.diffusion[nd]; x.disabled = false; }
     }
     else if (x.dataset.recOk) { receptionReconnue(); rendre(); }
     else if (x.id === "roman-verifier") verifierGravureRoman($("roman-tx").value);
@@ -2648,7 +2737,7 @@
     document.querySelectorAll("[data-compte]").forEach(function (el) { var s = +el.dataset.compte - now; el.textContent = fcompte(s); el.classList.toggle("imminent", s > 0 && s < 60); });
     // la chasse n° 1, la chasse zero et chaque chasse annoncee : chaque verrou du s'ouvre seul, page affichee ou non
     [MP].concat(Object.keys(ZS).map(function (h) { return ZS[h]; })).forEach(function (Z) {
-      if (Z.coffret && !Z.ouvreEnCours && Date.now() - (Z.dernierEssai || 0) > 3000 && elementsDe(Z).some(function (e) { return e.ouverture_utc <= now && Z.ouverts[cleV(e)] == null; })) { Z.dernierEssai = Date.now(); ouvrirSuite(Z); }
+      if (Z.coffret && !Z.ouvreEnCours && Date.now() - (Z.dernierEssai || 0) > 1000 && elementsDe(Z).some(function (e) { return e.ouverture_utc <= now && Z.ouverts[cleV(e)] == null; })) { Z.dernierEssai = Date.now(); ouvrirSuite(Z); }
     });
   }, 1000);
   setInterval(function () { if (!R.demo && !H.calcul && !V.enCours) charger(); }, 300000);

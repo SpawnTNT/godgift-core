@@ -45,7 +45,17 @@ OK = [0]
 def vert(m): OK[0] += 1; print('  vert :', m)
 def script(*rep):
     it = iter(rep)
-    return lambda invite='': next(it)
+    def entree(invite=''):
+        try: r = next(it)
+        except StopIteration: raise SystemExit('SCRIPT EPUISE a : ' + invite)
+        TRACE.append(invite)
+        return r(invite) if callable(r) else r
+    return entree
+# la Cave sans imprimante (15 octobre) : les cris vont sur deux cles chiffrees et chaque mot de passe affiche est retape depuis le papier
+DERNIER_MDP = {}; TRACE = []
+_vrai_afficher = PU.afficher_exact
+PU.afficher_exact = lambda t: (DERNIER_MDP.__setitem__('mdp', t), _vrai_afficher(t))[1]
+def retape(invite): return DERNIER_MDP['mdp']
 def muet(f, *a, **k):
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
@@ -59,11 +69,15 @@ CLE = os.path.join(T, 'cle'); os.makedirs(CLE)
 CLE_SECOURS = os.path.join(T, 'secours'); os.makedirs(CLE_SECOURS)   # la cle de SECOURS du carnet : la fin de chaque semis y ecrit sa copie (audit N4)
 S.DOSSIER_DONNEES = DON; PU.ICI = T              # le programme (la Pierre a cote) dans T ; ses donnees dans T/LA_CAVE_DONNEES
 PU.systeme_de_fichiers = lambda chemin: 'vfat'        # la cle du banc est un dossier : on la dit FAT32, comme banc_pupitre_v1g.py
-PU.cles_montees = lambda: [CLE, CLE_SECOURS]
+CRIS_A, CRIS_D = os.path.join(T, 'cris_auteur'), os.path.join(T, 'cris_depositaire'); os.makedirs(CRIS_A); os.makedirs(CRIS_D)
+PU.cles_montees = lambda: [CLE, CLE_SECOURS, CRIS_A, CRIS_D]
+def vider_cris():
+    for d in (CRIS_A, CRIS_D):
+        for n in os.listdir(d): os.remove(os.path.join(d, n))
 # la Pierre que publie la librairie de ce banc (static/), celle qu'elle exige dans un manifeste : entre une retouche de 01_PIERRE et la
 # resynchronisation par l'atelier (librairie, Cave), c'est elle qui fait foi pour l'accord Cave-librairie que ce banc eprouve
-shutil.copy(os.path.join(LIB, 'static', 'PIERRE_DU_PROGRAMME_V1j.md'), T)
-EMP_PIERRE = hashlib.sha256(open(os.path.join(T, 'PIERRE_DU_PROGRAMME_V1j.md'), 'rb').read()).hexdigest()
+shutil.copy(os.path.join(LIB, 'static', 'PIERRE_DU_PROGRAMME_V1k.md'), T)
+EMP_PIERRE = hashlib.sha256(open(os.path.join(T, 'PIERRE_DU_PROGRAMME_V1k.md'), 'rb').read()).hexdigest()
 # une chaine drand d'essai : sa cle est connue de l'atelier seulement
 SK = int.from_bytes(hashlib.sha256(b'AEDE banc point 13').digest(), 'big') % (2 ** 254)
 PK = V._g2_octets(multiply(G2, SK)).hex()
@@ -104,7 +118,7 @@ saisies += ['v', 'q']
 faites, sortie = muet(PU.mode_29_carnet, None, script(CODE, *saisies), chasse=0)
 assert faites == 6 and 'le carnet est pret pour le semis' in sortie, sortie[-600:]
 json.dump(utxo_guichet(400, 800_000, b'amont 400'), open(os.path.join(CLE, 'amorce_chasse0_utxo.json'), 'w'))
-man0, _ = muet(PU.mode_30_chasse_zero, CLE, script('s', CODE, '74600', '74600', 'SEME', *(['OUI'] * 3), '2'), imprimer=lambda ps, jeu: None, hygiene=lambda: [])
+man0, _ = muet(PU.mode_30_chasse_zero, CLE, script('s', CODE, '74600', '74600', 'SEME', *(['OUI'] * 3), '3', '4', retape, retape, retape, '2'), hygiene=lambda: [])
 AM0 = retenir_tx(man0['amorce']['hex'], temps=utc(2026, 10, 20))
 json.dump({'txid': AM0, 'vout': man0['amorce']['vout_rendu'], 'tx_hex': man0['amorce']['hex'], 'chemin': [3, 900]}, open(os.path.join(CLE, 'gravure_utxo.json'), 'w'))
 g0, _ = muet(PU.mode_26_graver, CLE, script('5', '', CODE, 'GRAVE'))
@@ -162,21 +176,22 @@ vert('sur le PC, preparer_guichet.py --definition chasse_2.json : amorce_chasse2
 # ---- son semis : amorce au guichet 3/10160 (tout autre index refuse), COFFRET, cris
 json.dump(utxo_guichet(10161, 900_000, b'amont 10161'), open(os.path.join(CLE, 'amorce_chasse2_utxo.json'), 'w'))
 try:
-    muet(PU.mode_31_chasses, CLE, script('o', 's', CODE, '74600', '74600', 'SEME', 'OUI', 'OUI'), imprimer=lambda ps, jeu: None, hygiene=lambda: []); raise AssertionError('amorce 3/10161 acceptee')
+    muet(PU.mode_31_chasses, CLE, script('o', 's', CODE, '74600', '74600', 'SEME', 'OUI', 'OUI'), hygiene=lambda: []); raise AssertionError('amorce 3/10161 acceptee')
 except (S.Refus, SystemExit) as x:
-    assert '3/10160' in str(x)
+    assert '3/10160' in str(x), ('refus', type(x).__name__, repr(str(x))[:300])
 json.dump(utxo_guichet(10160, 900_000, b'amont 10160'), open(os.path.join(CLE, 'amorce_chasse2_utxo.json'), 'w'))
-IMP = {}
-man2, sortie = muet(PU.mode_31_chasses, CLE, script('o', 's', CODE, '74600', '74600', 'SEME', 'OUI', 'OUI', '2'), imprimer=lambda ps, jeu: IMP.__setitem__(jeu, ps), hygiene=lambda: [])
+vider_cris()
+man2, sortie = muet(PU.mode_31_chasses, CLE, script('o', 's', CODE, '74600', '74600', 'SEME', 'OUI', 'OUI', '3', '4', retape, retape, '2'), hygiene=lambda: [])
+IMP = {'AUTEUR': os.listdir(CRIS_A), 'DEPOSITAIRE': os.listdir(CRIS_D)}
 MAN2_TXT = open(os.path.join(CLE, 'manifeste_chasse2.json'), encoding='utf-8').read(); COF2_TXT = open(os.path.join(CLE, 'COFFRET_CHASSE2_V1.json'), encoding='utf-8').read()
 EMP2 = hashlib.sha256(MAN2_TXT.encode()).hexdigest()
 assert json.loads(MAN2_TXT) == man2 and man2['chasse'] == 2 and man2['annee_A'] == 2027 and man2['definition'] == DEF2 and man2['empreinte_pierre'] == EMP_PIERRE
 assert [(c['n'], c['type'], c['euros_depart']) for c in man2['coffres']] == [(1, 'pierre', 150), (2, 'cathedrale', 400)] and man2['messages']['adresse'] == GUICHET0
 am = F.decoder_tx(man2['amorce']['hex'])
 assert man2['amorce']['vout_rendu'] == 4 and am['sorties'][4]['script'] == sc_guichet(10200) and man2['coffret']['sha256'] == hashlib.sha256(COF2_TXT.encode()).hexdigest()
-assert sorted(IMP) == ['AUTEUR', 'DEPOSITAIRE'] and 'choix 7' in sortie, (sorted(IMP), sortie[-400:])
+assert sorted(IMP) == ['AUTEUR', 'DEPOSITAIRE'] and len(IMP['AUTEUR']) >= 2 and 'choix 7' in sortie, (IMP, sortie[-400:])
 AM2 = retenir_tx(man2['amorce']['hex'], temps=utc(2027, 1, 20))
-vert('semis de la chasse n° 2 : amorce au guichet 3/10160 (3/10161 refuse), rendu 3/10200, 2 cris, 2 coffres ; manifeste avec sa definition et l empreinte de la Pierre ; 2 jeux de cris imprimes (AUTEUR, DEPOSITAIRE)')
+vert('semis de la chasse n° 2 : amorce au guichet 3/10160 (3/10161 refuse), rendu 3/10200, 2 cris, 2 coffres ; manifeste avec sa definition et l empreinte de la Pierre ; 2 jeux de cris sur cles chiffrees (AUTEUR, DEPOSITAIRE)')
 # ---- son COFFRET : chaque verrou a l'heure de chasses.py ; le cri et les mots redonnent l'adresse ; aucune autre chasse ne l'ouvre
 cof2 = json.loads(COF2_TXT); ALEAS2 = {}
 assert cof2['chasse'] == 2 and sorted(e['type'] for e in cof2['elements']) == ['cri'] * 2 + ['enigme'] * 4 + ['indice'] * 4
