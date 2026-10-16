@@ -24,7 +24,7 @@
     var texte = JSON.stringify(man, null, 1), enigmes = [];
     for (var k = 1; k <= 48; k++) if (dateEnigme(k) <= MAINTENANT) enigmes.push({ numero: k, coffre: Math.ceil(k / 2), date_utc: dateEnigme(k),
       texte_fr: TEXTE_DEMO(k).texte_fr, texte_en: TEXTE_DEMO(k).texte_en });
-    var etat = { programme: "AEDE", pierre: "V1j", version_app: "demo", coffres: coffres.map(function (c) { return { n: c.n, adresse: c.adresse }; }), amorce: man.amorce.txid,
+    var etat = { programme: "AEDE", pierre: "V1k", version_app: "demo", coffres: coffres.map(function (c) { return { n: c.n, adresse: c.adresse }; }), amorce: man.amorce.txid,
       empreinte_manifeste: C.sha256hex(texte), enigmes: enigmes, livre: { paru: { fr: true, en: true }, prix_sats: 21000 },   // le prix publie par la caisse (illustration)
       versements: [{ trimestre: "2026T4", txid: C.sha256hex("versement 1") }, { trimestre: "2027T1", txid: C.sha256hex("versement 2") }, { trimestre: "2027T2", txid: C.sha256hex("versement 3") }] };
     return { etat: etat, manifeste: man, manifTexte: texte, soldes: soldes, hauteur: 1001482, prixEur: 62500, derniere: Date.now(), erreurs: {} };
@@ -68,7 +68,7 @@
   }
   // coherent avec monde() : les coffres 1 a 4 sont pris, le 5 est a prendre, le 6 en chasse
   function messages() {
-    return [{ date: "2027-06-03", texte: "Le coffre 4 a été pris. Bravo au chasseur, et bonne chasse à tous pour le cinquième et le sixième.\n(message de démonstration)", adresse: "bc1q…démo", signature: "", valide: true, forme: true },
+    return [{ date: "2027-06-03", texte: "Le coffre 4 a été trouvé. Bravo au chasseur, et bonne chasse à tous pour le cinquième et le sixième.\n(message de démonstration)", adresse: "bc1q…démo", signature: "", valide: true, forme: true },
             { date: "2027-01-03", texte: "Bienvenue dans L’Ange de l’Eau. La première énigme est parue.\n(message de démonstration)", adresse: "bc1q…démo", signature: "", valide: true, forme: true }];
   }
 

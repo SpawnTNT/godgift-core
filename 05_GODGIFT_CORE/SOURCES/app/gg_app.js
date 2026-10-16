@@ -82,6 +82,10 @@
   };
   if (R.parrain && !lireR("parrain", null)) ecrireR("parrain", R.parrain);
   if (!I18N[R.lang]) R.lang = "fr";
+  // le stockage peut avoir ete altere par une extension ou une main hostile : une source qui n'est pas une adresse https redevient celle de depart
+  if (typeof R.explo !== "string" || !/^https?:\/\//.test(R.explo)) R.explo = EXPLO_DEF;
+  if (typeof R.explo2 !== "string") R.explo2 = EXPLO2_DEF;
+  if (typeof R.caisse !== "string" || !/^https?:\/\//.test(R.caisse)) R.caisse = CAISSE_DEF;
   // la version design (1.4.0) : ce que l'ecran retient, et rien d'autre. La vue des coffres (salle, carte, registre) et « moins de
   // mouvement » sont gardes sur cette machine ; la chasse affichee et le filtre des messages ne vivent qu'en memoire.
   var UI = { vue: ["salle", "carte", "registre"].indexOf(lireR("vue", "salle")) >= 0 ? lireR("vue", "salle") : "salle", chasse: "grande", filtreMsg: "tous", calme: lireR("calme", false) === true, poussiere: null };
@@ -553,7 +557,7 @@
       (MP.coffret ? '<a href="#/coffret">⧗ ' + esc(t("coffret_bandeau", { o: elements().filter(function (e) { return MP.ouverts[cleV(e)] != null; }).length, n: elements().length })) + "</a>" : "") +
       (ZS[0].etat ? '<a href="#/chasse/0">◇ ' + esc(t("cz_bandeau")) + "</a>" : "") +
       Object.keys(ZS).filter(function (h) { return +h >= 2 && CHASSES[h]; }).map(function (h) { return '<a href="#/chasse/' + h + '">◇ ' + esc(CHASSES[h].nom) + "</a>"; }).join("") +
-      (msg ? '<a href="#/messages" class="dernier-msg">✉ ' + esc(msg.texte.split("\n")[0].slice(0, 90)) + "</a>" : "") + "</div>";
+      (msg ? '<a href="#/messages" class="dernier-msg">✉ ' + esc(msg.texte.split("\n")[0].slice(0, 90).replace(/\s+$/, "") + (msg.texte.split("\n")[0].length > 90 ? "…" : "")) + "</a>" : "") + "</div>";
     // le selecteur de chasse (barre segmentee, curseur d'or) et le selecteur de vue (trois icones d'eau)
     var segment = '<div class="segment" role="group" aria-label="' + esc(t("d_quelle_chasse")) + '" style="--n:' + chasses.length + ';--i:' + ic + '"><span class="glisse"></span>' +
       chasses.map(function (c) { return '<button type="button" data-chasse-vue="' + esc(c.id) + '" aria-pressed="' + (c.id === UI.chasse ? "true" : "false") + '">' + esc(c.nom) + "</button>"; }).join("") + "</div>";
@@ -601,14 +605,14 @@
 
   // ------------------------------------------------------------------ 2. un coffre
   function pageCoffre(n) {
-    n = parseInt(n, 10); if (!(n >= 1 && n <= 24)) return pageTableau();
+    n = parseInt(n, 10); if (!(n >= 1 && n <= 24) || String(n) !== String(route().a)) { setTimeout(function () { location.replace("#/tableau"); }, 0); return pageTableau(); }
     var k = coffres()[n - 1], c = k.c, now = maintenant();
     var l = [[t("type"), t("type_" + k.type) + " · " + t("mots_par", { m: MOTS[k.type] })], [t("montant_depart"), feur(k.euros) + (c && c.sats_semes ? " = " + fsats(c.sats_semes) + " sats" : "")],
       [t("enigme_du_3"), fdate(k.t3, true)], [t("enigme_du_17"), fdate(k.t17, true)]];
     if (c) {
-      l.push([t("adresse"), '<a href="' + esc(webExplo("/address/" + c.adresse)) + '" target="_blank" class="mono">' + esc(c.adresse) + "</a>"]);
+      l.push([t("adresse"), R.demo ? '<span class="mono">' + esc(c.adresse) + "</span>" : '<a href="' + esc(webExplo("/address/" + c.adresse)) + '" target="_blank" class="mono">' + esc(c.adresse) + "</a>"]);
       l.push([motSimple("empreinte", t("empreinte_alea")), '<span class="mono" style="font-size:12px">' + esc(c.empreinte_alea) + "</span>"]);
-      l.push([motSimple("cri", t("le_cri")), now < k.t17 ? t("cri_attend", { d: fdate(k.t17 + 3600, true) }) : '<a target="_blank" href="' + esc(webExplo("/tx/" + c.cri_txid)) + '" class="mono">' + esc(String(c.cri_txid).slice(0, 16)) + "…</a>"]);
+      l.push([motSimple("cri", t("le_cri")), now < k.t17 ? t("cri_attend", { d: fdate(k.t17 + 3600, true) }) : R.demo ? '<span class="mono">' + esc(String(c.cri_txid).slice(0, 16)) + "…</span>" : '<a target="_blank" href="' + esc(webExplo("/tx/" + c.cri_txid)) + '" class="mono">' + esc(String(c.cri_txid).slice(0, 16)) + "…</a>"]);
     }
     var en = enigmesParues().filter(function (e) { return e.coffre === n; });
     var montant = k.sats != null && k.etat !== "a_semer" ? fsats(k.sats) + " sats" : feur(k.euros), eur = k.sats != null && k.etat !== "a_semer" && M.prixEur ? "≈ " + feur(k.sats / 1e8 * M.prixEur) : "";
@@ -616,7 +620,7 @@
       '<div class="cadre"><div class="chiffres"><div>' + coffreSvg(k.etat, 44) + '<h1>' + esc(t("tresor_n", { n: n })) + '</h1><div class="' + (k.etat === "a_prendre" ? "or" : k.etat === "en_chasse" ? "eau" : "doux") + '">' + esc(t("e_" + k.etat)) +
       '</div></div><div><div class="grand">' + esc(montant) + '</div><small class="doux">' + esc(eur) + "</small></div></div>" +
       l.map(function (x) { return '<div class="ligne"><span class="doux">' + (x[0].indexOf("<") >= 0 ? x[0] : esc(x[0])) + '</span><span class="v">' + (x[1].indexOf("<") >= 0 ? x[1] : esc(x[1])) + "</span></div>"; }).join("") + "</div>" +
-      '<div><h2>' + esc(t("d_les_enigmes_du_coffre")) + '</h2><div class="liste">' + (en.length ? en.map(function (e) { return cadenas(true, t("enigme_n", { n: e.numero }), fdate(e.date_utc, true), esc(texteEnigme(e)) + noteEnigme(e)); }).join("") : '<p class="doux">' + esc(t("aucune_parue")) + "</p>") + "</div></div>" +
+      '<div><h2>' + esc(t("d_les_enigmes_du_coffre")) + '</h2><div class="liste">' + (en.length ? en.map(function (e) { return cadenas(true, t("enigme_n", { n: e.numero }), fdate(e.date_utc, true), esc(texteEnigme(e)) + noteEnigme(e)); }).join("") : '<p class="doux">' + esc(t("aucune_parue")) + "</p>" + (k.etat === "en_chasse" || k.etat === "a_prendre" ? '<p class="note">' + esc(t("gardien_note")) + "</p>" : "")) + "</div></div>" +
       (k.etat === "a_prendre" || k.etat === "en_chasse" ? '<div><a class="bouton" href="#/chasser/' + n + '">' + esc(t("d_six_mots")) + " · " + esc(t("chasser_ce")) + "</a></div>" : "") + blocCoffret(n, 1);
   }
   // une carte d'enigme avec son cadenas (anse ouverte quand le texte est la)
@@ -662,7 +666,7 @@
         esc(t("enigme_n", { n: e.numero })) + '</b><small><a href="#/coffre/' + esc(e.coffre) + '">' + esc(t("coffre_n", { n: e.coffre })) + "</a> · " + esc(fdate(e.date_utc, true)) + '</small></div></div><div class="txt">' + esc(texteEnigme(e)) + "</div>" + noteEnigme(e) +
         (R.lang !== "fr" && e.texte_fr ? '<details><summary class="doux">' + esc(t("texte_francais")) + '</summary><div class="texte">' + esc(e.texte_fr) + "</div></details>" : "") + "</div>";
     }).join("") : '<div class="cadre"><p>' + esc(t("aucune_enigme", { d: fdate(dateEnigme(1), true) })) + '</p><p class="doux">' + esc(t("regle_enigmes")) + "</p></div>";
-    return tete_ + cpt + note + l;
+    return tete_ + cpt + note + l + '<p class="note">' + esc(t("gardien_note")) + "</p>";
   }
 
   // ------------------------------------------------------------------ 4. verifier
@@ -842,9 +846,9 @@
       if (s.length < 2) return ajoute(t("v_sources"), "att", t("v_sources_une"));
       return explo("/blocks/tip/height", true).then(function () {
         ajoute(t("v_sources"), M.src.ecarts.length ? "ko" : M.src.etat === 2 ? "ok" : "att", M.src.ecarts.length ? t("v_sources_ko", { l: M.src.ecarts.join(", ") }) : M.src.etat === 2 ? t("v_sources_ok", { a: hote(s[0]), b: hote(s[1]) }) : t("v_sources_une"));
-      });
+      }, function () { ajoute(t("v_sources"), "att", t("ann_injoignable")); });
     });
-    return etapes.reduce(function (p, f) { return p.then(function () { return Promise.resolve().then(f).catch(function (e) { ajoute("…", "ko", String(e.message || e)); }); }); }, Promise.resolve())
+    return etapes.reduce(function (p, f) { return p.then(function () { return Promise.resolve().then(f).catch(function (e) { var m = String(e && e.message || e); if (/fetch|network|injoignable|load failed|aborted/i.test(m)) ajoute(t("v_sources"), "att", t("ann_injoignable")); else ajoute("…", "ko", m); }); }); }, Promise.resolve())
       .then(function () { V.enCours = false; rendre(); publierConstat(); });
   }
   // « Tout vérifier », une ligne par chasse suivie : le manifeste prouve grave (et signe, si l'adresse de l'auteur est epinglee),
@@ -883,11 +887,11 @@
   // ------------------------------------------------------------------ 5. chasser
   var ESSAIS = [
     { id: "A", n: 1, nom: "essai_A", alea: C.sha256hex("EXEMPLE DU MODE D EMPLOI - jamais une vraie chasse"), adresse: "bc1qhsml20xzevmqml9nvz9pw8p3ue5tj3z96ffq95",
-      e3: "Le jour, il brûle sans jamais se montrer deux fois au même endroit du ciel. La nuit, elle emprunte sa lumière et ne la rend jamais. Moi, je vous les rends tous les deux, à l'envers, sans rien garder. Qui sommes-nous ?",
+      e3: "Le jour, il brûle sans jamais se montrer deux fois au même endroit du ciel. La nuit, elle emprunte sa lumière et ne la rend jamais. Moi, je vous les rends tous les deux, à l’envers, sans rien garder. Qui sommes-nous ?",
       e17: "Dans nos contes, il porte une pierre rouge au front, et il la pose sur la berge avant de descendre boire. Nommez celui qui rampe, ce qu'il dépose, et ce qu'il boit." },
     { id: "B", n: 11, nom: "essai_B", alea: C.sha256hex("COFFRE D ESSAI B - jamais une vraie chasse"), adresse: "bc1q04c3p5gr07q6n0hg6gesucw2m73388248v4x7t",
-      e3: "L'oiseau m'a donné de quoi écrire ; la seiche, de quoi noircir ; l'arbre, de quoi tourner. Et à la fin, relié, je deviens tout autre chose. Quatre mots.",
-      e17: "Deux points cardinaux qui se tournent le dos, celle qui guide le marin quand la nuit tombe, et ce qu'on dessine pour ne pas se perdre. Quatre mots." }];
+      e3: "L’oiseau m’a donné de quoi écrire ; la seiche, de quoi noircir ; l’arbre, de quoi tourner. Et à la fin, relié, je deviens tout autre chose. Quatre mots.",
+      e17: "Deux points cardinaux qui se tournent le dos, celle qui guide le marin quand la nuit tombe, et ce qu’on dessine pour ne pas se perdre. Quatre mots." }];
   var H = { choix: "A", calcul: null, res: null, alea: {}, prog: 0 };
   function plier(s) { return s.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/œ/g, "oe").replace(/æ/g, "ae"); }
   var INDEX = null;
@@ -919,7 +923,7 @@
     var cs = coffres(), opts = ESSAIS.map(function (e) { return [e.id, t(e.nom)]; });
     cs.forEach(function (k) { if (k.c && (k.etat === "a_prendre" || k.etat === "en_chasse")) opts.push([String(k.n), t("coffre_n", { n: k.n }) + " · " + t("e_" + k.etat)]); });
     var c = cibleChasse(), m = c ? MOTS[c.type] : 3;
-    var sel = '<select class="champ" id="h-choix">' + opts.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === H.choix ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join("") + "</select>";
+    var sel = '<select class="champ" id="h-choix" aria-label="' + esc(t("quel_coffre")) + '">' + opts.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === H.choix ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join("") + "</select>";
     var enig = "";
     if (c && c.essai) enig = '<div class="cadre" style="margin:12px 0"><span class="tag">' + esc(t("enigme_du_3")) + '</span><div class="cg" style="font-size:18px;margin:6px 0 12px">' + esc(c.essai.e3) + '</div><span class="tag">' + esc(t("enigme_du_17")) + '</span><div class="cg" style="font-size:18px;margin-top:6px">' + esc(c.essai.e17) + '</div><p class="doux" style="font-size:12px">' + esc(t("essai_note")) + "</p></div>";
     else if (c) enig = '<p class="doux">' + esc(t("vrai_coffre_note")) + ' <a href="#/coffre/' + c.n + '">' + esc(t("voir_enigmes")) + "</a></p>";
@@ -931,10 +935,10 @@
     var adr = '<p class="note">' + esc(t("d_mon_adresse")) + " " + (rv.ok ? '<code>' + esc(courte(rv.adresse)) + "</code>" : '<code>' + esc(t("d_adresse_non")) + "</code> · " + esc(t("d_adresse_poser"))) + ' <a href="#/adresse">' + esc(t("plus_adresse")) + " →</a></p>";
     return visuel("chasser", t("d_lg_chasser")).replace('class="visuel', 'id="h-cle" class="visuel') + '<div><div class="sur">' + esc(t("outil_chasseur")) + '</div><h1>' + esc(t("m_chasser")) + aide("chasser") + '</h1></div><p class="intro">' + esc(t("chasser_intro")) + "</p>" + carteTresor(null) +
       '<div class="cadre"><label>' + esc(t("quel_coffre")) + "</label>" + sel + enig + alea + "</div>" +
-      '<div class="cadre mots"><label>' + esc(t("reponse_3", { m: m })) + '</label><input class="champ" id="h-r3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><div class="note mono" id="h-v3"></div><label>' + esc(t("reponse_17", { m: m })) +
+      '<div class="cadre mots"><label for="h-r3">' + esc(t("reponse_3", { m: m })) + '</label><input class="champ" id="h-r3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><div class="note mono" id="h-v3"></div><label>' + esc(t("reponse_17", { m: m })) +
       '</label><input class="champ" id="h-r17" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><div class="note mono" id="h-v17"></div><div class="boutons"><button class="bouton" id="h-calculer"' + (H.calcul ? " disabled" : "") + ">" + esc(t("calculer")) + '</button></div><p class="note">' + esc(t("calcul_note")) + "</p>" + res + "</div>" +
       '<ol class="etapes"><li><span>' + esc(t("d_etape_1")) + "</span></li><li><span>" + esc(t("d_etape_2")) + "</span></li><li><span>" + esc(t("d_etape_3")) + "</span></li></ol>" + carteArmement(c) + adr + jamais(true) +
-      '<h2>' + esc(t("dictionnaire")) + '</h2><div class="cadre"><input class="champ" id="h-dico" autocomplete="off" spellcheck="false" placeholder="' + esc(t("dico_ph")) + '"><div id="h-dico-r" class="mono note"></div></div>';
+      '<h2>' + esc(t("dictionnaire")) + '</h2><div class="cadre"><input class="champ" id="h-dico" autocomplete="off" spellcheck="false" aria-label="' + esc(t("dictionnaire")) + '" placeholder="' + esc(t("dico_ph")) + '"><div id="h-dico-r" class="mono note"></div></div>';
   }
   function apercu(id, vid) {
     var c = cibleChasse(); if (!c) return; var m = MOTS[c.type], v = $(id).value, r = lireReponse(v, m), bon = !!v.trim() && !r.err.length;
@@ -1174,10 +1178,10 @@
       // hors du sceau de la fenetre dediee, le formulaire ne reprend pas l'adresse enregistree (elle se recopierait de l'ecran) : il part vide
       var a = TR.recSaisie || (receptionScellee() && R.reception.adresse) || "", ok = a && window.GGTX.decoderAdresse(a);
       h = (R.reception && !rv.ok ? '<p class="ko">⚠ ' + esc(t("rec_err_" + rv.raison)) + "</p>" : "") +
-        '<p class="doux" style="font-size:13px">' + esc(t("rec_intro")) + '</p><label>' + esc(t("rec_adresse")) + '</label><input class="champ mono" id="r-rec-adr" spellcheck="false" autocomplete="off" value="' + esc(a) + '" placeholder="bc1q…">' +
+        '<p class="doux" style="font-size:13px">' + esc(t("rec_intro")) + '</p><label for="r-rec-adr">' + esc(t("rec_adresse")) + '</label><input class="champ mono" id="r-rec-adr" spellcheck="false" autocomplete="off" value="' + esc(a) + '" placeholder="bc1q…">' +
         (ok ? '<div class="rec-adr petit">' + groupes(a) + "</div>" : "") +
         '<label>' + esc(t("rec_message")) + '</label><div class="champ mono" id="r-rec-msg" style="word-break:break-all;font-size:12px">' + esc(ok ? messageSaisie(a) : "AEDE:reception:…") + '</div><button class="bouton2" style="padding:2px 10px;font-size:11px;margin-top:4px" id="r-rec-copier">' + esc(t("rec_copier")) + "</button>" +
-        '<label>' + esc(t("rec_signature")) + '</label><textarea class="champ" id="r-rec-sig" rows="2" spellcheck="false" autocomplete="off" placeholder="' + esc(t("rec_signature_ph")) + '">' + esc(TR.recSig || "") + '</textarea><div class="doux" style="font-size:12px">' + esc(t("rec_signature_note")) + '</div>' +
+        '<label for="r-rec-sig">' + esc(t("rec_signature")) + '</label><textarea class="champ" id="r-rec-sig" rows="2" spellcheck="false" autocomplete="off" placeholder="' + esc(t("rec_signature_ph")) + '">' + esc(TR.recSig || "") + '</textarea><div class="doux" style="font-size:12px">' + esc(t("rec_signature_note")) + '</div>' +
         '<p><button class="bouton" id="r-rec-garder">' + esc(t("rec_garder")) + "</button>" + (R.reception ? ' <button class="bouton2" id="r-rec-annuler">' + esc(t("retour")) + "</button>" : "") + "</p>" + (TR.recErr ? '<p class="ko">' + esc(TR.recErr) + "</p>" : "");
     }
     return '<h2>' + esc(t("rec_titre")) + aide("reception") + '</h2><div class="cadre" id="rec-carte">' + h + '<p class="doux" style="font-size:12px" id="rec-fenetre">' + esc(t(modeEnvoi())) + "</p></div>";
@@ -1574,10 +1578,10 @@
     var parts = '<div class="cadre"><div class="sur">' + esc(t("par_livre")) + '</div><div class="ligne"><span>' + esc(t("prix_livre")) + '</span><span class="v" id="cp-prix">' + (px ? fsats(px) + " sats" : esc(t("prix_inconnu"))) + '</span></div><div class="ligne"><span class="or">' + esc(t("part_compagnon")) +
       '</span><span class="v or">' + part(40) + '</span></div><div class="ligne"><span>' + esc(t("part_tresor")) + '</span><span class="v">' + part(20) + '</span></div><div class="ligne"><span>' + esc(t("part_auteur")) +
       '</span><span class="v">' + part(40) + '</span></div><p class="doux" style="font-size:12px">' + esc(t("parts_note")) + "</p></div>";
-    var e1 = '<div class="cadre"><span class="tag">1</span> <b>' + esc(t("cp_adresse")) + '</b><p class="doux" style="font-size:12.5px">' + esc(t("cp_adresse_note")) + '</p><input class="champ mono" id="cp-a" value="' + esc(a) + '" placeholder="bc1q…" autocomplete="off" spellcheck="false">' +
+    var e1 = '<div class="cadre"><span class="tag">1</span> <b>' + esc(t("cp_adresse")) + '</b><p class="doux" style="font-size:12.5px">' + esc(t("cp_adresse_note")) + '</p><input class="champ mono" id="cp-a" aria-label="' + esc(t("cp_adresse")) + '" value="' + esc(a) + '" placeholder="bc1q…" autocomplete="off" spellcheck="false">' +
       (a && !okA ? '<div class="ko" style="font-size:12px">' + esc(t("adresse_invalide")) + "</div>" : "") + (lv && lv.propriete && okA && a !== lv.propriete ? '<div class="att" style="font-size:12px">' + esc(t("cp_autre_adresse")) + "</div>" : "") + st + "</div>";
     var e2 = '<div class="cadre"' + (okA ? "" : ' style="opacity:.45"') + '><span class="tag">2</span> <b>' + esc(t("cp_signature")) + '</b><p class="doux" style="font-size:12.5px">' + esc(t("cp_signature_note")) + '</p><div class="champ mono" style="user-select:all">' + esc(msg || "AEDE:compagnon:bc1q…") +
-      '</div><label>' + esc(t("signature_collee")) + '</label><textarea class="champ" id="cp-s" rows="3"' + (okA ? "" : " disabled") + ">" + esc(CP.signature) + "</textarea></div>";
+      '</div><label for="cp-s">' + esc(t("signature_collee")) + '</label><textarea class="champ" id="cp-s" rows="3"' + (okA ? "" : " disabled") + ">" + esc(CP.signature) + "</textarea></div>";
     var lien = okA ? R.caisse.replace(/\/$/, "") + "/c/" + codeCompagnon(a) : "";
     var e3 = '<div class="cadre"' + (okA && CP.signature ? "" : ' style="opacity:.45"') + '><span class="tag">3</span> <b>' + esc(t("cp_lien")) + '</b><p class="doux" style="font-size:12.5px">' + esc(t("cp_lien_note")) + "</p>" +
       (okA ? '<div class="champ mono" style="user-select:all">' + esc(lien) + "</div>" : "") + '<p><button class="bouton" id="cp-envoyer"' + (okA && CP.signature ? "" : " disabled") + ">" + esc(t("cp_envoyer")) + "</button></p></div>";
@@ -1588,7 +1592,7 @@
   // ------------------------------------------------------------------ 7. le reseau
   function pageReseau() {
     var sc = sources(), l = [[t("src_chaine"), sc.join("  +  "), M.erreurs.sources ? '<span class="ko">' + esc(t("sources_desaccord")) + "</span>" : M.hauteur ? '<span class="ok">' + esc(sc.length > 1 && M.src.etat === 2 ? t("sources_accord") : t("bloc") + " " + fsats(M.hauteur)) + "</span>" : '<span class="ko">' + esc(t("injoignable")) + "</span>"],
-      [t("src_librairie"), R.caisse, M.etat ? '<span class="ok">' + esc(t("flux_recu")) + " · v" + esc(M.etat.version_app || "?") + "</span>" : '<span class="att">' + esc(t("pas_encore_ouverte")) + "</span>"],
+      [t("src_librairie"), R.caisse, M.etat ? '<span class="ok">' + esc(t("flux_recu")) + " · v" + esc(M.etat.version_app || "?") + "</span>" : '<span class="att">' + esc(t(M.erreurs.caisse ? "injoignable" : "pas_encore_ouverte")) + "</span>"],
       [t("src_site"), SITE, '<a target="_blank" href="' + SITE + '">' + esc(t("ouvrir")) + "</a>"]];
     if (R.demo) l = l.map(function (x) { return [x[0], x[1], '<span class="att">' + esc(t("demo_court")) + "</span>"]; });
     var conc = "";
@@ -1621,7 +1625,7 @@
   function detailsEtat() {
     var srcs = sources().map(hote), l = [];
     l.push([t("et_chaine"), (M.erreurs.explo ? '<span class="ko">' + esc(t("et_chaine_ko")) + "</span>" : M.erreurs.sources ? '<span class="ko">' + esc(t("et_desaccord")) + "</span>" : '<span class="ok">' + esc(t("sources_accord")) + "</span>") + (M.hauteur ? " · " + esc(t("et_bloc")) + " " + fsats(M.hauteur) : "") + '<br><span class="doux">' + esc(srcs.join(" + ")) + " · " + esc(t("et_sources")) + "</span>"]);
-    l.push([t("et_lib"), M.etat ? '<span class="ok">' + esc(t("flux_recu")) + "</span>" : '<span class="att">' + esc(t("pas_encore_ouverte")) + "</span>"]);
+    l.push([t("et_lib"), M.etat ? '<span class="ok">' + esc(t("flux_recu")) + "</span>" : '<span class="att">' + esc(t(M.erreurs.caisse ? "injoignable" : "pas_encore_ouverte")) + "</span>"]);
     if (M.derniere) l.push([t("et_lu"), esc(fheure(M.derniere / 1000))]);
     if (R.demo) l.push([t("et_version"), "v" + VERSION + ' · <span class="att">' + esc(t("demo_court")) + "</span>"]);
     else l.push([t("et_version"), "v" + VERSION + " · " + badgeOfficiel(true) + (WEB ? "" : "<br>" + badgeOfficiel(false))]);
@@ -1664,7 +1668,7 @@
       carteReception() + carteOublier() +
       '<div class="cadre gl-carte"><b class="gl-titre">' + esc(guide().carte_titre) + '</b><p class="note">' + esc(guide().carte_texte) + '</p><a class="bouton" href="#/guide">' + esc(guide().ouvrir) + "</a></div>" +
       '<h2>' + esc(t("a_propos")) + '</h2><div class="cadre"><div class="ligne"><span class="doux">' + esc(t("version")) + '</span><span class="v">' + VERSION + (R.demo || WEB ? "" : (function () { var o = officiel(); return o.etat === "officiel" ? " · " + esc(t("prog_court_ok")) : o.etat === "essai" ? " · " + esc(t("prog_court_beta")) : ""; })()) + '</span></div><div class="ligne"><span class="doux">' + esc(t("empreinte_programme")) +
-      '</span><span class="v mono">' + esc(e.empreinte) + (WEB ? '<br><span class="att">' + esc(t("prog_web")) + "</span>" : "") + '</span></div><div class="ligne"><span class="doux">' + esc(t("fichiers")) + '</span><span class="v">' + e.fichiers + '</span></div><div class="ligne"><span class="doux">' + esc(t("pierre")) +
+      '</span><span class="v"><span class="mono">' + esc(e.empreinte) + "</span>" + (WEB ? '<br><span class="att">' + esc(t("prog_web")) + "</span>" : "") + '</span></div>' + (WEB ? "" : '<div class="ligne"><span class="doux">' + esc(t("fichiers")) + '</span><span class="v">' + e.fichiers + '</span></div>') + '<div class="ligne"><span class="doux">' + esc(t("pierre")) +
       '</span><span class="v"><a href="#/pierre">' + esc(t("lire_pierre")) + '</a> <span class="mono doux">' + esc(window.GG_PIERRE.sha256.slice(0, 16)) + '…</span></span></div><div class="ligne"><span class="doux">' + esc(t("conditions")) +
       '</span><span class="v"><a href="#/conditions">' + esc(t("lire_conditions")) + '</a></span></div><div class="ligne"><span class="doux">' + esc(t("fenetre_titre")) + '</span><span class="v">' + esc(t(modeEnvoi())) + '</span></div><div class="ligne"><span class="doux">' + esc(t("licence")) +
       '</span><span class="v">AGPL-3.0</span></div>' + (WEB ? "" : '<div class="ligne"><span class="doux">' + esc(t("desinstaller")) + '</span><span class="v">' + esc(t(/Mac/.test(navigator.platform) ? "desinst_mac" : /Linux/.test(navigator.platform) ? "desinst_linux" : "desinst_win")) + '</span></div>') + '<p class="note">' + esc(t("apropos_texte")) + "</p></div>" + jamais(false);
@@ -1707,7 +1711,7 @@
     period: 3, genesis_time: 1692803367, hash: "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
     groupHash: "f477d5c89f21a17c863a7f937c6a6d15859414d2be09cd448d4279af331c5d3e", schemeID: "bls-unchained-g1-rfc9380", metadata: { beaconID: "quicknet" } };
   var TYPES_VERROU = ["enigme", "cri", "indice"];
-  var MP = { h: 1, coffret: null, coffretErreur: null, ouverts: {}, ouverture: {}, echecs: {}, nouveau: {}, messages: null, livres: lireR("livres", []), ex: null, exEnCours: false, dernierEssai: 0, roman: null };
+  var MP = { h: 1, coffret: null, coffretErreur: null, ouverts: {}, ouverture: {}, echecs: {}, nouveau: {}, messages: null, livres: (function (l) { return (Array.isArray(l) ? l : []).filter(function (x) { return x && typeof x.emp === "string" && /^[0-9a-f]{64}$/.test(x.emp); }); })(lireR("livres", [])), ex: null, exEnCours: false, dernierEssai: 0, roman: null };
   var CLE_BALISES = "drand_" + QUICKNET.hash.slice(0, 16), BALISES = lireR(CLE_BALISES, {}) || {};   // { ronde: balise } : publiques, reverifiees avant chaque usage
   function garderBalises() { var ks = Object.keys(BALISES); if (ks.length > 400) ks.sort(function (a, b) { return a - b; }).slice(0, ks.length - 400).forEach(function (k) { delete BALISES[k]; }); ecrireR(CLE_BALISES, BALISES); }
   function cleV(e) { return e.type + ":" + e.coffre + ":" + (e.type === "indice" ? e.rang : e.numero || 0); }
@@ -1740,7 +1744,7 @@
     }).join("");
     setTimeout(filtrerGuide, 0);
     return tete("guide", t("d_lg_guide")) + '<div><div class="sur">' + esc(g.sur) + '</div><h1>' + esc(g.titre) + '</h1></div><p class="intro">' + esc(g.intro) + "</p>" +
-      '<input class="champ gl-cherche" id="g-cherche" type="search" autocomplete="off" placeholder="' + esc(g.recherche) + '" value="' + esc(G.q) + '">' +
+      '<input class="champ gl-cherche" id="g-cherche" type="search" autocomplete="off" aria-label="' + esc(g.recherche) + '" placeholder="' + esc(g.recherche) + '" value="' + esc(G.q) + '">' +
       '<div id="g-parcours"><h2>' + esc(g.t_parcours) + "</h2>" + parcours + "</div>" +
       "<h2>" + esc(g.t_glossaire) + '</h2><div class="gl-liste">' + gloss + "</div>" +
       "<h2>" + esc(g.t_faq) + '</h2><div class="gl-faqs">' + faq + "</div>" +
@@ -2282,7 +2286,7 @@
     var res = MP.exEnCours ? '<p class="doux">' + esc(t("ex_verification")) + "</p>" : MP.ex ? '<div class="verif"><div class="ic">' + (MP.ex.e === "ok" ? '<span class="ok">✓</span>' : MP.ex.e === "ko" ? '<span class="ko">✗</span>' : '<span class="att">⏳</span>') + '</div><div><div class="t">' + esc(MP.ex.d) + "</div>" +
       (MP.ex.n ? '<p><button class="bouton2" id="ex-garder">' + esc(t("ajouter_mes_livres")) + "</button></p>" : "") + "</div></div>" : "";
     var verif = '<div class="cadre"><div class="sur">' + esc(t("verifier_exemplaire")) + aide("exemplaire") + '</div><p class="doux" style="font-size:12.5px">' + esc(t("ex_intro")) + '</p><div class="depot" id="ex-depot">' + esc(t("ex_deposer")) + '<input type="file" id="ex-fichier" accept=".epub,.pdf,application/epub+zip,application/pdf"></div>' +
-      '<label>' + esc(t("ex_ou_taper")) + '</label><div style="display:flex;gap:8px"><input class="champ mono" id="ex-emp" placeholder="' + esc(t("ph_64")) + '" spellcheck="false"><button class="bouton" id="ex-verifier">' + esc(t("verifier")) + "</button></div>" + res + "</div>";
+      '<label for="ex-emp">' + esc(t("ex_ou_taper")) + '</label><div style="display:flex;gap:8px"><input class="champ mono" id="ex-emp" placeholder="' + esc(t("ph_64")) + '" spellcheck="false"><button class="bouton" id="ex-verifier">' + esc(t("verifier")) + "</button></div>" + res + "</div>";
     if (MP.livres.length) lireAttributions();
     var mes = '<div class="cadre"><div class="sur">' + esc(t("mes_livres")) + aide("mes_livres") + "</div>" + (MP.livres.length ? MP.livres.map(function (l, i) {
       return '<div class="ligne"><span>' + '<b class="or">' + esc(t("exemplaire_n", { n: l.n })) + "</b> " + (l.langue ? '<span class="tag">' + esc(String(l.langue).toUpperCase()) + "</span>" : "") + '<br><span class="mono doux" style="font-size:11px">' + esc(l.emp.slice(0, 32)) + "…</span>" + attribution(l, i) + "</span>" +
@@ -2415,7 +2419,7 @@
     }).catch(function () { Z.erreur = Z.erreur || "absent"; });   // une panne ici n'arrete jamais le reste du programme
   }
 
-  // ------------------------------------------------------------------ les chasses annoncees (Pierre V1j, article 8)
+  // ------------------------------------------------------------------ les chasses annoncees (Pierre V1k, article 8)
   // Une chasse n° h, de 2 a 999, n'existe que par son annonce : le texte exact AEDE:chasse:<h>:<SHA-256 de son manifeste>, grave sur
   // la chaine (OP_RETURN confirme, lu aux deux sources, avant sa premiere enigme) et signe BIP-322 par l'adresse des messages de
   // l'auteur : celle que prouve la gravure du manifeste de la chasse n° 1, ou de la chasse zero tant que la 1 n'est pas semee, et

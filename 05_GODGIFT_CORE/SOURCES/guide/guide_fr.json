@@ -27,9 +27,9 @@
       "etapes": [
         "Avant tout, tranquillement : enregistrez dans Réglages « Mon adresse de réception », celle de votre propre portefeuille, et signez-la avec lui : la signature est obligatoire. C’est là que partira le trésor.",
         "Le 3 du mois à 18:15:05 UTC (19:15:05 à Paris en hiver, 20:15:05 en été) paraît la première énigme du coffre ; le 17 à la même heure, la seconde. Lisez-les dans « Énigmes ».",
-        "Chaque réponse est faite de mots français de la liste des cinq mille : trois mots pour la plupart des coffres, quatre pour les plus gros. Vérifiez vos mots dans « Chasser », en bas de la page.",
+        "Chaque réponse est faite de mots français de la liste des cinq mille : trois mots par énigme de pierre, quatre pour une cathédrale et le coffre final. Vérifiez vos mots dans « Trouver », en bas de la page.",
         "Une heure après la seconde énigme paraît le cri : il apporte l’aléa, la dernière pièce de la clé. GodGift Core le lit tout seul.",
-        "Dans « Chasser », choisissez le coffre : GodGift Core le prépare et affiche « Armé ». Coupez internet, tapez vos deux réponses, puis « Calculer la clé ».",
+        "Dans « Trouver », choisissez le coffre : GodGift Core le prépare et affiche « Armé ». Coupez internet, tapez vos deux réponses, puis « Calculer la clé ».",
         "Si c’est la bonne clé, rebranchez internet. Dans la fenêtre de l’application installée, ouverte par son icône, GodGift Core signe aussitôt la transaction sur votre machine et l’envoie toute seule vers votre adresse, avec une offre forte (environ 10 % du trésor en frais) ; ailleurs (navigateur, version web, fenêtre rechargée), il vous fait d’abord retaper 16 caractères de votre adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre portefeuille ; « Sans installer », il n’envoie rien. Si quelqu’un d’autre a trouvé en même temps, c’est la course : « Accélérer » double d’un coup les frais.",
         "Entraînez-vous d’abord sur les coffres d’essai A et B : ils sont faux, publics, et vous montrent exactement ce qui se passerait."
       ]
@@ -166,7 +166,8 @@
       "voir": [
         "verrou",
         "drand",
-        "manifeste"
+        "manifeste",
+        "gardien"
       ]
     },
     {
@@ -184,7 +185,9 @@
       "texte": "La transaction qui publie l’aléa d’un coffre sur la chaîne, une heure après sa seconde énigme. Elle a été signée d’avance dans la Cave et part toute seule : dès le cri, les chasseurs ont tout pour calculer la clé.",
       "voir": [
         "alea",
-        "coffret"
+        "coffret",
+        "gardien",
+        "depositaire"
       ]
     },
     {
@@ -223,9 +226,29 @@
       ]
     },
     {
+      "id": "gardien",
+      "mot": "Gardien des énigmes",
+      "texte": "Une personne désignée par écrit, hors de la famille de l’auteur, qui garde sous enveloppe les mots de passe des énigmes et des indices. Si un texte n’a pas paru quarante-huit heures après son heure, il ouvre l’enveloppe de ce texte, et elle seule, et le fait publier. Son nom reste scellé ; son rôle est public. GodGift Core compare tout texte publié ainsi à l’empreinte gravée au semis.",
+      "voir": [
+        "enigme",
+        "depositaire",
+        "coffret"
+      ]
+    },
+    {
+      "id": "depositaire",
+      "mot": "Dépositaire des clés",
+      "texte": "Une personne qui garde, sur une clé, les fichiers verrouillés des énigmes et des indices, sans leurs mots de passe. Il ne peut rien lire seul : il faut l’enveloppe du gardien des énigmes. Il peut aussi faire diffuser un cri signé d’avance si le site ne le fait pas. Il n’a ni nom, ni ville en public.",
+      "voir": [
+        "gardien",
+        "cri",
+        "coffret"
+      ]
+    },
+    {
       "id": "etats",
       "mot": "États d’un coffre",
-      "texte": "À SEMER : pas encore rempli (avant décembre 2026). SCELLÉ : rempli, aucune énigme parue. EN CHASSE : la première énigme est parue, la seconde arrive le 17. À PRENDRE : les deux énigmes sont parues, la clé peut être trouvée. PRIS : quelqu’un l’a vidé.",
+      "texte": "À SEMER : pas encore rempli (avant décembre 2026). À VENIR : rempli, aucune énigme parue. EN JEU : la première énigme est parue, la seconde arrive le 17. À PRENDRE : les deux énigmes sont parues, la clé peut être trouvée. TROUVÉ : quelqu’un l’a vidé.",
       "voir": [
         "coffre",
         "pris"
@@ -334,8 +357,8 @@
     },
     {
       "id": "pris",
-      "mot": "Pris",
-      "texte": "Un coffre est pris dès que la première transaction qui le vide est confirmée sur la chaîne. Il n’y a rien à déclarer ni à réclamer : la chaîne fait foi. Un coffre non trouvé reste à prendre, sans limite de temps.",
+      "mot": "Trouvé",
+      "texte": "Un coffre est trouvé dès que la première transaction qui le vide est confirmée sur la chaîne. Il n’y a rien à déclarer ni à réclamer : la chaîne fait foi. Un coffre non trouvé reste à prendre, sans limite de temps.",
       "voir": [
         "balayer",
         "etats"
@@ -381,7 +404,8 @@
       "voir": [
         "message",
         "manifeste",
-        "indice"
+        "indice",
+        "gardien"
       ]
     },
     {
@@ -473,7 +497,7 @@
     {
       "id": "installateur",
       "mot": "Vérifier mon installateur",
-      "texte": "Sur angedeleau.com/verifier-installateur, déposez le fichier téléchargé : votre navigateur calcule son empreinte sur place et la compare aux installateurs publiés. Sous Windows, l’installateur portera aussi la signature de l’auteur, une fois signé (Certum) ; la version bêta ne l’est pas encore.",
+      "texte": "Sur angedeleau.com/verifier-installateur, déposez le fichier téléchargé : votre navigateur calcule son empreinte sur place et la compare aux installateurs publiés. Sous Windows, l’installateur portera aussi la signature de l’auteur, une fois signé (Certum) ; la version d’essai ne l’est pas encore.",
       "voir": [
         "officiel",
         "jamais"

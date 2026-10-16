@@ -27,9 +27,9 @@
       "etapes": [
         "Antes de tudo, com calma: guarde em Definições «O meu endereço de receção», o da sua própria carteira, e assine-o com ela: a assinatura é obrigatória. É para lá que o tesouro irá.",
         "No dia 3 do mês às 18:15:05 UTC (19:15:05 em Paris no inverno, 20:15:05 no verão) sai o primeiro enigma do cofre; no dia 17, à mesma hora, o segundo. Leia-os em «Enigmas».",
-        "Cada resposta é feita de palavras francesas da lista das cinco mil: três palavras para a maioria dos cofres, quatro para os maiores. Verifique as suas palavras em «Caçar», no fundo da página.",
+        "Cada resposta é feita de palavras francesas da lista das cinco mil: três palavras por enigma de pedra, quatro para uma catedral e o cofre final. Verifique as suas palavras em «Encontrar», no fundo da página.",
         "Uma hora depois do segundo enigma sai o grito: traz o acaso, a última peça da chave. O GodGift Core lê-o sozinho.",
-        "Em «Caçar», escolha o cofre: o GodGift Core prepara-o e mostra «Armado». Desligue a internet, escreva as suas duas respostas e depois «Calcular a chave».",
+        "Em «Encontrar», escolha o cofre: o GodGift Core prepara-o e mostra «Armado». Desligue a internet, escreva as suas duas respostas e depois «Calcular a chave».",
         "Se for a chave certa, volte a ligar a internet. Na janela da aplicação instalada, aberta pelo seu ícone, o GodGift Core assina logo a transação na sua máquina e envia-a sozinha para o seu endereço, com uma oferta forte (cerca de 10 % do tesouro em taxas); noutro sítio (navegador, versão web, janela recarregada), faz-lhe primeiro voltar a escrever 16 caracteres do seu endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua carteira; em «Sem instalar», não envia nada. Se outra pessoa encontrou ao mesmo tempo, é a corrida: «Acelerar» duplica de uma vez as taxas.",
         "Treine primeiro nos cofres de treino A e B: são falsos, públicos, e mostram-lhe exatamente o que aconteceria."
       ]
@@ -166,7 +166,8 @@
       "voir": [
         "verrou",
         "drand",
-        "manifeste"
+        "manifeste",
+        "gardien"
       ]
     },
     {
@@ -184,7 +185,9 @@
       "texte": "A transação que publica na cadeia o acaso de um cofre, uma hora depois do seu segundo enigma. Foi assinada de antemão na Caverna e parte sozinha: a partir do grito, os caçadores têm tudo para calcular a chave.",
       "voir": [
         "alea",
-        "coffret"
+        "coffret",
+        "gardien",
+        "depositaire"
       ]
     },
     {
@@ -223,9 +226,29 @@
       ]
     },
     {
+      "id": "gardien",
+      "mot": "Guardião dos enigmas",
+      "texte": "Uma pessoa designada por escrito, fora da família do autor, que guarda em envelopes fechados as palavras-passe dos enigmas e das pistas. Se um texto não apareceu quarenta e oito horas depois da sua hora, abre o envelope desse texto, e só esse, e fá-lo publicar. O seu nome fica selado; o seu papel é público. O GodGift Core compara todo o texto assim publicado com a impressão gravada na sementeira.",
+      "voir": [
+        "enigme",
+        "depositaire",
+        "coffret"
+      ]
+    },
+    {
+      "id": "depositaire",
+      "mot": "Depositário das chaves",
+      "texte": "Uma pessoa que guarda, numa pen USB, os ficheiros trancados dos enigmas e das pistas, sem as suas palavras-passe. Não pode ler nada sozinho: é preciso o envelope do guardião dos enigmas. Pode também fazer difundir um grito assinado antecipadamente se o site não o fizer. Não tem nome nem cidade em público.",
+      "voir": [
+        "gardien",
+        "cri",
+        "coffret"
+      ]
+    },
+    {
       "id": "etats",
       "mot": "Estados de um cofre",
-      "texte": "POR SEMEAR: ainda não enchido (antes de dezembro de 2026). SELADO: enchido, nenhum enigma saiu. EM CAÇA: o primeiro enigma saiu, o segundo chega no dia 17. POR PEGAR: os dois enigmas saíram, a chave pode ser encontrada. PEGO: alguém esvaziou-o.",
+      "texte": "POR SEMEAR: ainda não enchido (antes de dezembro de 2026). EM BREVE: enchido, nenhum enigma saiu. EM JOGO: o primeiro enigma saiu, o segundo chega no dia 17. POR PEGAR: os dois enigmas saíram, a chave pode ser encontrada. ENCONTRADO: alguém esvaziou-o.",
       "voir": [
         "coffre",
         "pris"
@@ -334,8 +357,8 @@
     },
     {
       "id": "pris",
-      "mot": "Pego",
-      "texte": "Um cofre está pego assim que a primeira transação que o esvazia é confirmada na cadeia. Não há nada a declarar nem a reclamar: a cadeia faz fé. Um cofre não encontrado continua por pegar, sem limite de tempo.",
+      "mot": "Encontrado",
+      "texte": "Um cofre está encontrado assim que a primeira transação que o esvazia é confirmada na cadeia. Não há nada a declarar nem a reclamar: a cadeia faz fé. Um cofre não encontrado continua por pegar, sem limite de tempo.",
       "voir": [
         "balayer",
         "etats"
@@ -381,7 +404,8 @@
       "voir": [
         "message",
         "manifeste",
-        "indice"
+        "indice",
+        "gardien"
       ]
     },
     {
@@ -473,7 +497,7 @@
     {
       "id": "installateur",
       "mot": "Verificar o meu instalador",
-      "texte": "Em angedeleau.com/verifier-installateur, deposite o ficheiro descarregado: o seu navegador calcula a impressão no próprio local e compara-a com os instaladores publicados. No Windows, o instalador terá também a assinatura do autor, depois de assinado (Certum); a versão beta ainda não está.",
+      "texte": "Em angedeleau.com/verifier-installateur, deposite o ficheiro descarregado: o seu navegador calcula a impressão no próprio local e compara-a com os instaladores publicados. No Windows, o instalador terá também a assinatura do autor, depois de assinado (Certum); a versão de ensaio ainda não está.",
       "voir": [
         "officiel",
         "jamais"

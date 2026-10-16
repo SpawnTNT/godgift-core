@@ -27,9 +27,9 @@
       "etapes": [
         "Vor allem in aller Ruhe: Speichern Sie in den Einstellungen „Meine Empfangsadresse“, die Adresse Ihrer eigenen Wallet, und signieren Sie sie mit ihr: Die Signatur ist erforderlich. Dorthin geht der Schatz.",
         "Am 3. des Monats um 18:15:05 UTC (19:15:05 in Paris im Winter, 20:15:05 im Sommer) erscheint das erste Rätsel der Truhe, am 17. zur gleichen Uhrzeit das zweite. Lesen Sie sie unter „Rätsel“.",
-        "Jede Antwort besteht aus französischen Wörtern der Liste der Fünftausend: drei Wörter bei den meisten Truhen, vier bei den größten. Prüfen Sie Ihre Wörter unter „Jagen“, unten auf der Seite.",
+        "Jede Antwort besteht aus französischen Wörtern der Liste der Fünftausend: drei Wörter pro Stein-Rätsel, vier bei einer Kathedrale und der letzten Truhe. Prüfen Sie Ihre Wörter unter „Finden“, unten auf der Seite.",
         "Eine Stunde nach dem zweiten Rätsel erscheint der Ruf: Er bringt den Zufall, das letzte Teil des Schlüssels. GodGift Core liest ihn ganz allein.",
-        "Wählen Sie unter „Jagen“ die Truhe: GodGift Core bereitet sie vor und zeigt „Bereit“ an. Trennen Sie das Internet, tippen Sie Ihre beiden Antworten und dann „Schlüssel berechnen“.",
+        "Wählen Sie unter „Finden“ die Truhe: GodGift Core bereitet sie vor und zeigt „Bereit“ an. Trennen Sie das Internet, tippen Sie Ihre beiden Antworten und dann „Schlüssel berechnen“.",
         "Ist es der richtige Schlüssel, verbinden Sie das Internet wieder. Im Fenster der installierten Anwendung, über ihr Symbol geöffnet, signiert GodGift Core sofort die Transaktion auf Ihrem Rechner und sendet sie von selbst an Ihre Adresse, mit einem starken Angebot (etwa 10 % des Schatzes als Gebühren); anderswo (Browser, Webversion, neu geladenes Fenster) lässt es Sie zuerst 16 Zeichen Ihrer Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer Wallet; „Ohne Installation“ sendet es nichts. Hat jemand anderes gleichzeitig gefunden, ist es das Rennen: „Beschleunigen“ verdoppelt die Gebühren auf einen Schlag.",
         "Üben Sie zuerst an den Übungstruhen A und B: Sie sind falsch, öffentlich und funktionieren genau wie die echten."
       ]
@@ -166,7 +166,8 @@
       "voir": [
         "verrou",
         "drand",
-        "manifeste"
+        "manifeste",
+        "gardien"
       ]
     },
     {
@@ -184,7 +185,9 @@
       "texte": "Die Transaktion, die den Zufall einer Truhe in der Kette veröffentlicht, eine Stunde nach ihrem zweiten Rätsel. Sie wurde in der Höhle im Voraus signiert und geht von selbst hinaus: Ab dem Ruf haben die Jäger alles, um den Schlüssel zu berechnen.",
       "voir": [
         "alea",
-        "coffret"
+        "coffret",
+        "gardien",
+        "depositaire"
       ]
     },
     {
@@ -223,9 +226,29 @@
       ]
     },
     {
+      "id": "gardien",
+      "mot": "Hüter der Rätsel",
+      "texte": "Eine schriftlich benannte Person außerhalb der Familie des Autors, die die Passwörter der Rätsel und Hinweise in verschlossenen Umschlägen verwahrt. Ist ein Text achtundvierzig Stunden nach seiner Zeit nicht erschienen, öffnet sie den Umschlag dieses Textes, und nur diesen, und lässt ihn veröffentlichen. Ihr Name bleibt versiegelt; ihre Rolle ist öffentlich. GodGift Core vergleicht jeden so veröffentlichten Text mit dem bei der Saat gravierten Fingerabdruck.",
+      "voir": [
+        "enigme",
+        "depositaire",
+        "coffret"
+      ]
+    },
+    {
+      "id": "depositaire",
+      "mot": "Verwahrer der Schlüssel",
+      "texte": "Eine Person, die auf einem USB-Stick die verschlossenen Dateien der Rätsel und Hinweise verwahrt, ohne deren Passwörter. Sie kann allein nichts lesen: Dazu braucht es den Umschlag des Hüters der Rätsel. Sie kann auch einen vorab signierten Ruf senden lassen, falls die Website es nicht tut. Sie hat öffentlich weder Namen noch Stadt.",
+      "voir": [
+        "gardien",
+        "cri",
+        "coffret"
+      ]
+    },
+    {
       "id": "etats",
       "mot": "Zustände einer Truhe",
-      "texte": "ZU FÜLLEN: noch nicht gefüllt (vor Dezember 2026). VERSIEGELT: gefüllt, noch kein Rätsel erschienen. IN DER JAGD: Das erste Rätsel ist erschienen, das zweite kommt am 17. ZU HOLEN: Beide Rätsel sind erschienen, der Schlüssel kann gefunden werden. GEHOLT: Jemand hat sie geleert.",
+      "texte": "ZU FÜLLEN: noch nicht gefüllt (vor Dezember 2026). DEMNÄCHST: gefüllt, noch kein Rätsel erschienen. IM SPIEL: Das erste Rätsel ist erschienen, das zweite kommt am 17. ZU HOLEN: Beide Rätsel sind erschienen, der Schlüssel kann gefunden werden. GEFUNDEN: Jemand hat sie geleert.",
       "voir": [
         "coffre",
         "pris"
@@ -334,8 +357,8 @@
     },
     {
       "id": "pris",
-      "mot": "Geholt",
-      "texte": "Eine Truhe gilt als geholt, sobald die erste Transaktion, die sie leert, in der Kette bestätigt ist. Es gibt nichts anzumelden oder einzufordern: Die Kette ist maßgeblich. Eine nicht gefundene Truhe bleibt zu holen, ohne zeitliche Grenze.",
+      "mot": "Gefunden",
+      "texte": "Eine Truhe gilt als gefunden, sobald die erste Transaktion, die sie leert, in der Kette bestätigt ist. Es gibt nichts anzumelden oder einzufordern: Die Kette ist maßgeblich. Eine nicht gefundene Truhe bleibt zu holen, ohne zeitliche Grenze.",
       "voir": [
         "balayer",
         "etats"
@@ -381,7 +404,8 @@
       "voir": [
         "message",
         "manifeste",
-        "indice"
+        "indice",
+        "gardien"
       ]
     },
     {
@@ -473,7 +497,7 @@
     {
       "id": "installateur",
       "mot": "Mein Installationsprogramm prüfen",
-      "texte": "Legen Sie auf angedeleau.com/verifier-installateur die heruntergeladene Datei ab: Ihr Browser berechnet ihren Fingerabdruck an Ort und Stelle und vergleicht ihn mit den veröffentlichten Installationsprogrammen. Unter Windows wird das Installationsprogramm auch die Signatur des Autors tragen, sobald es signiert ist (Certum); die Beta-Version ist es noch nicht.",
+      "texte": "Legen Sie auf angedeleau.com/verifier-installateur die heruntergeladene Datei ab: Ihr Browser berechnet ihren Fingerabdruck an Ort und Stelle und vergleicht ihn mit den veröffentlichten Installationsprogrammen. Unter Windows wird das Installationsprogramm auch die Signatur des Autors tragen, sobald es signiert ist (Certum); die Probeversion ist es noch nicht.",
       "voir": [
         "officiel",
         "jamais"

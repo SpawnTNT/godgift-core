@@ -27,9 +27,9 @@
       "etapes": [
         "Before anything else, calmly: save « My receiving address » in Settings, the one of your own wallet, and sign it with that wallet: the signature is required. That is where the treasure will go.",
         "On the 3rd of the month at 18:15:05 UTC (19:15:05 in Paris in winter, 20:15:05 in summer) the first riddle of the chest comes out; on the 17th, at the same time, the second. Read them in « Riddles ».",
-        "Each answer is made of French words from the list of five thousand: three words for most chests, four for the biggest ones. Check your words in « Hunt », at the bottom of the page.",
+        "Each answer is made of French words from the list of five thousand: three words per stone riddle, four for a cathedral and the final chest. Check your words in « Find », at the bottom of the page.",
         "One hour after the second riddle comes the cry: it brings the randomness, the last piece of the key. GodGift Core reads it by itself.",
-        "In « Hunt », choose the chest: GodGift Core prepares it and shows « Armed ». Switch off the internet, type your two answers, then « Compute the key ».",
+        "In « Find », choose the chest: GodGift Core prepares it and shows « Armed ». Switch off the internet, type your two answers, then « Compute the key ».",
         "If it is the right key, switch the internet back on. In the window of the installed app, opened from its icon, GodGift Core signs the transaction at once on your machine and sends it by itself to your address, with a strong offer (about 10% of the treasure in fees); elsewhere (browser, web version, reloaded window), it first has you retype 16 characters of your address, in two pieces drawn at random and hidden on screen, read in your wallet; in « No install », it sends nothing. If someone else found it at the same time, it is the race: « Speed up » doubles the fees at once.",
         "Practise first on practice chests A and B: they are fake, public, and show you exactly what would happen."
       ]
@@ -166,7 +166,8 @@
       "voir": [
         "verrou",
         "drand",
-        "manifeste"
+        "manifeste",
+        "gardien"
       ]
     },
     {
@@ -184,7 +185,9 @@
       "texte": "The transaction that publishes a chest's randomness on chain, one hour after its second riddle. It was signed in advance in the Cave and goes out by itself: from the cry on, hunters have everything they need to compute the key.",
       "voir": [
         "alea",
-        "coffret"
+        "coffret",
+        "gardien",
+        "depositaire"
       ]
     },
     {
@@ -223,9 +226,29 @@
       ]
     },
     {
+      "id": "gardien",
+      "mot": "Keeper of the riddles",
+      "texte": "A person appointed in writing, outside the author’s family, who keeps in sealed envelopes the passwords of the riddles and hints. If a text has not appeared forty-eight hours after its time, they open the envelope of that text, and that one only, and have it published. Their name stays sealed; their role is public. GodGift Core compares any text published this way with the fingerprint engraved at the seeding.",
+      "voir": [
+        "enigme",
+        "depositaire",
+        "coffret"
+      ]
+    },
+    {
+      "id": "depositaire",
+      "mot": "Custodian of the keys",
+      "texte": "A person who keeps, on a USB key, the locked files of the riddles and hints, without their passwords. They can read nothing alone: the keeper’s envelope is needed. They can also have a pre-signed cry broadcast if the site does not. They have no name and no city in public.",
+      "voir": [
+        "gardien",
+        "cri",
+        "coffret"
+      ]
+    },
+    {
       "id": "etats",
       "mot": "States of a chest",
-      "texte": "TO SEED: not filled yet (before December 2026). SEALED: filled, no riddle out. HUNTING: the first riddle is out, the second comes on the 17th. TO TAKE: both riddles are out, the key can be found. TAKEN: someone has emptied it.",
+      "texte": "TO SEED: not filled yet (before December 2026). COMING: filled, no riddle out. IN PLAY: the first riddle is out, the second comes on the 17th. CAN BE TAKEN: both riddles are out, the key can be found. FOUND: someone has emptied it.",
       "voir": [
         "coffre",
         "pris"
@@ -334,8 +357,8 @@
     },
     {
       "id": "pris",
-      "mot": "Taken",
-      "texte": "A chest is taken as soon as the first transaction that empties it is confirmed on chain. There is nothing to declare or claim: the chain is the authority. A chest that is not found stays to take, with no time limit.",
+      "mot": "Found",
+      "texte": "A chest is found as soon as the first transaction that empties it is confirmed on chain. There is nothing to declare or claim: the chain is the authority. A chest that is not found stays to take, with no time limit.",
       "voir": [
         "balayer",
         "etats"
@@ -381,7 +404,8 @@
       "voir": [
         "message",
         "manifeste",
-        "indice"
+        "indice",
+        "gardien"
       ]
     },
     {
@@ -473,7 +497,7 @@
     {
       "id": "installateur",
       "mot": "Verify my installer",
-      "texte": "On angedeleau.com/verifier-installateur, drop the downloaded file: your browser computes its fingerprint on the spot and compares it with the published installers. On Windows, the installer will also carry the author's signature, once signed (Certum); the beta version is not signed yet.",
+      "texte": "On angedeleau.com/verifier-installateur, drop the downloaded file: your browser computes its fingerprint on the spot and compares it with the published installers. On Windows, the installer will also carry the author's signature, once signed (Certum); the trial version is not signed yet.",
       "voir": [
         "officiel",
         "jamais"

@@ -403,3 +403,6 @@ h1 .bq{position:static}h1 .bqb,h1 .bq:hover .bqb,h1 .bq:focus .bqb,h1 .bq:focus-
 html.calme *,html.calme *::before,html.calme *::after{animation:none!important;transition:none!important}
 
 .h1-sous{font:700 1.25rem var(--titres);color:var(--or);margin:0}
+
+/* zoom 200 % sur un telephone (195 px CSS) : les cinq onglets tiennent encore */
+@media (max-width:240px){nav.onglets .o{font-size:.5rem;letter-spacing:0;padding-left:0;padding-right:0}nav.onglets .o span{overflow-wrap:anywhere}}
