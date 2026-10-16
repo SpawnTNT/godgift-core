@@ -12,20 +12,20 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0b1220">
 <link rel="apple-touch-icon" href="img/icone_192.png">
-<link rel="stylesheet" href="gg.css" integrity="sha384-eQthpKQ3i45Oe7+nQ0C3+rSpuu88G5xGMDgCiO4sUaUTLQpdUkPpUWoQXjAR1Akk">
+<link rel="stylesheet" href="gg.css" integrity="sha384-x7initqyt6rRVVOXmTkEtYH9biLvBlgyAxT+fB3MtL/4btOuMNXywPBL4GFebbbX">
 </head>
 <body>
 <div id="app" class="app">
-  <aside class="cote">
-    <div class="logo">GodGift Core<small id="sous-logo">le nœud de la chasse</small></div>
-    <nav id="menu"></nav>
-    <div class="etat" id="etat-cote"></div>
-  </aside>
+  <header class="haut" id="haut">
+    <div class="marque"><div class="sceau" aria-hidden="true">G</div><div class="logo"><div class="n">GodGift Core</div><small id="sous-logo"></small></div></div>
+    <div class="haut-droite" id="statut"></div>
+  </header>
+  <hr class="fil" aria-hidden="true">
+  <div class="etat-panneau" id="etat-panneau" hidden></div>
   <main class="main">
-    <div class="fond" id="fond"></div><div class="voile"></div>
-    <div class="statut" id="statut"></div>
     <div class="dedans" id="page"></div>
   </main>
+  <nav id="onglets" class="onglets" aria-label="GodGift Core"></nav>
 </div>
 <div id="accueil" class="accueil" hidden></div>
 <script src="gg_crypto.js" integrity="sha384-jwVOgIZlRB0lVgLMqQTKmHexswfgjTioarwTVmcIijPHStQ2IMA9EEDOEwxqqSMR"></script>
@@ -35,6 +35,7 @@
 <script src="gg_i18n_beta.js" integrity="sha384-MRYUEZ7fpg9SYvHDE1A6+QUFP0encHKspxdwcpyzgK6MJ1ghPlR9errQams+VlDO"></script>
 <script src="gg_i18n_tel.js" integrity="sha384-JX3441nkvfPZpqovNmSZyLBe+d457Ij2ezTWob1ZdcZl29ELIiKd+h7ZmReytyED"></script>
 <script src="gg_i18n_130.js" integrity="sha384-bTNDwNfM/5jBVK46+mKpDB2oKUI1jPFZQN+VSiFOsD6AvgqQ5N+gdJPS5yen5S0T"></script>
+<script src="gg_i18n_140.js" integrity="sha384-39b7DOlBKJtS3PRUUMrK2lbPl52OhWU6r49LNXbjJyhtTwfJ4MRXnN1tlGvZ83Gh"></script>
 <script src="gg_tlock.js" integrity="sha384-6uHMXhpZ9lJlk8TRhTfg9TEtLrh/YxctrC8V8ueU278V1S2NNbs8GcXDCOO6madm"></script>
 <script src="gg_tx.js" integrity="sha384-3LVU2cwwMZI+RcfzRbaLN71hGxvBYWJssb6ZlFvzBWLidxvCOqoggRe4mLR1WNN8"></script>
 <script src="gg_liste.js" integrity="sha384-ver8NvRrEw+F1d2S8g+M5PGMuwhuPQ8vin+NDJ4WX6qe7z1LqGnGlO2CKOl3FGaL"></script>
@@ -43,6 +44,6 @@
 <script src="gg_demo.js" integrity="sha384-cjiE63bV3LYlAJSapFe+34nSBj5yuUJNLaQtjIsLiCCzulyZFGj3/brHtkEJnkU9"></script>
 <script src="gg_ancre.js" integrity="sha384-EpnoO1lw9cAsTF4Z3lH7EJXcY64UkciBnzfg7iXN1TsM8AZg5eEiJqoihvw5FPI2"></script>
 <script src="gg_guide.js" integrity="sha384-BUJZUWzJtGbdRg8OcFIuT+eFUiP74FtWR8a+i4cORaSYt01Rc2QmktfQCLD3GhHj"></script>
-<script src="gg_app.js" integrity="sha384-nASH8ZaaTkVS15CAiQK/ihny4qE+faAOkDLR1OE5pX4Sn1JuBm916bTYT9U9zBFY"></script>
+<script src="gg_app.js" integrity="sha384-Atv6h7qa5K8Zr3azPlx5A+QHFP6NKfox7jcjxMahAq72JrUs572h2JivCA1leqEw"></script>
 </body>
 </html>

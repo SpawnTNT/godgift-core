@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   if (window.top !== window.self) { document.body.textContent = ""; return; }   // jamais dans le cadre d'une autre page
-  var VERSION = "1.3.0";
+  var VERSION = "1.4.0";
   var A = 2027;
   // la version web (https://app.angedeleau.com/, hebergement statique a part) lit la librairie sur angedeleau.com ; installe, sur librairie.angedeleau.com
   var WEB = location.protocol === "https:";
@@ -82,6 +82,11 @@
   };
   if (R.parrain && !lireR("parrain", null)) ecrireR("parrain", R.parrain);
   if (!I18N[R.lang]) R.lang = "fr";
+  // la version design (1.4.0) : ce que l'ecran retient, et rien d'autre. La vue des coffres (salle, carte, registre) et « moins de
+  // mouvement » sont gardes sur cette machine ; la chasse affichee et le filtre des messages ne vivent qu'en memoire.
+  var UI = { vue: ["salle", "carte", "registre"].indexOf(lireR("vue", "salle")) >= 0 ? lireR("vue", "salle") : "salle", chasse: "grande", filtreMsg: "tous", calme: lireR("calme", false) === true, poussiere: null };
+  document.documentElement.classList.toggle("calme", UI.calme);
+  function mouvementReduit() { return UI.calme || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
 
   function t(k, v) {
     var s = (I18N[R.lang] && I18N[R.lang][k]) || I18N.fr[k] || k;
@@ -350,48 +355,61 @@
       '<path d="M13 8.8V40M35 8.8V40" stroke-width="1.2" opacity=".85"/><rect x="20" y="18" width="8" height="10" rx="1.5" fill="#0f1116" stroke="' + st[0] + '"/>' + cle + "</svg>";
   }
 
-  // ------------------------------------------------------------------ le cadre : menu, statut
-  var PAGES = [["tableau", "▦"], ["enigmes", "✎"], ["coffret", "⧗"], ["messages", "✉"], ["livres", "❦"], ["verifier", "✓"], ["chasser", "⚿"], ["compagnon", "✦"], ["chasses", "◇"], ["reseau", "◎"], ["guide", "?"], ["reglages", "⚙"]];
-  var FONDS = { tableau: "fond_coffre_salle_inondee.jpg", coffre: "fond_coffre_quai.jpg", enigmes: "fond_auteur_bureau_lyon.jpg", verifier: "fond_cave_forte.jpg", chasser: "fond_vouivre_tete.jpg", compagnon: "fond_auteur_quai.jpg", reseau: "fond_vouivre_vol_2.jpg", reglages: "fond_vouivre_rocher.jpg", pierre: "fond_vouivre_rocher.jpg", guide: "fond_auteur_bureau_lyon.jpg",
-    coffret: "fond_cave_forte.jpg", messages: "fond_auteur_bureau_lyon.jpg", livres: "fond_auteur_quai.jpg", chasses: "fond_coffre_salle_inondee.jpg", chasse: "fond_coffre_quai.jpg" };
+  // ------------------------------------------------------------------ le cadre : l'en-tete (sceau, pastille), le fil, les cinq onglets
+  // La version design : plus de menu lateral. L'en-tete porte le sceau, le nom, la version, et la pastille « verifie · N sources » qui ouvre
+  // le panneau d'etat (detailsEtat) ; en bas, cinq onglets fixes : Coffres, Enigmes, Trouver (le bouton d'or), Messages, Plus.
+  var ICONES = {
+    tableau: '<svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 12v3"/><path d="M5 8V6a7 7 0 0 1 14 0v2"/></svg>',
+    enigmes: '<svg viewBox="0 0 24 24"><path d="M4 20h16M6 20V9l6-5 6 5v11"/><path d="M12 20v-5"/></svg>',
+    chasser: '<svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M15 12v2"/></svg>',
+    messages: '<svg viewBox="0 0 24 24"><path d="M4 6h16v10H8l-4 4z"/><path d="M8 10h8M8 13h5"/></svg>',
+    plus: '<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>',
+    verifier: '<svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>',
+    adresse: '<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>',
+    compagnon: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2c2.9.2 5.5 2.3 5.5 5.8"/></svg>',
+    livres: '<svg viewBox="0 0 24 24"><path d="M4 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>',
+    reseau: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="6" r="2"/><circle cx="20" cy="6" r="2"/><circle cx="12" cy="21" r="2"/><path d="M6 7l4 3M18 7l-4 3M12 15v4"/></svg>',
+    pierre: '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/></svg>',
+    guide: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7"/><circle cx="12" cy="17" r=".6"/></svg>',
+    reglages: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>',
+    coffret: '<svg viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="12" rx="2"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.5"/></svg>',
+    chasses: '<svg viewBox="0 0 24 24"><path d="M12 3l9 9-9 9-9-9z"/><path d="M12 8v8M8 12h8"/></svg>',
+    salle: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+    carte: '<svg viewBox="0 0 24 24"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>',
+    registre: '<svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2"/><circle cx="4" cy="12" r="1.2"/><circle cx="4" cy="18" r="1.2"/></svg>'
+  };
+  var ONGLETS = ["tableau", "enigmes", "chasser", "messages", "plus"];
+  var PARENT = { coffre: "tableau", verifier: "plus", compagnon: "plus", reseau: "plus", reglages: "plus", pierre: "plus", conditions: "plus", coffret: "plus", livres: "plus", chasses: "plus", chasse: "plus", guide: "plus", adresse: "plus", plus: "plus" };
   function route() { var h = (location.hash || "#/tableau").slice(2).split("/"); return { p: h[0] || "tableau", a: h[1] }; }
 
   function cadre(page) {
     document.documentElement.lang = R.lang;
-    $("sous-logo").textContent = t("sous_logo");
-    $("menu").innerHTML = PAGES.map(function (x) {
-      return '<div class="m' + (x[0] === page || (page === "coffre" && x[0] === "tableau") || (page === "pierre" && x[0] === "reglages") || (page === "chasse" && x[0] === "chasses") ? ' actif' : '') + '" data-p="' + x[0] + '"><b>' + x[1] + "</b><span>" + esc(t("m_" + x[0])) + "</span></div>";
+    $("sous-logo").textContent = VERSION + " · " + t("d_sous");
+    // la pastille : verte quand les deux sources s'accordent, orange en demonstration ou a une seule source, rouge en desaccord ou hors ligne
+    var ns = sources().length, cls, txt;
+    if (R.demo) { cls = "att"; txt = t("demo_court"); }
+    else if (!M.pret && !M.hauteur) { cls = "att"; txt = t("lecture"); }
+    else if (M.erreurs.sources) { cls = "ko"; txt = t("et_desaccord"); }
+    else if (M.erreurs.explo || !M.hauteur) { cls = "ko"; txt = t("et_chaine_ko"); }
+    else if (ns < 2 || M.src.etat < 2) { cls = "att"; txt = t("d_une_source"); }
+    else { cls = "ok"; txt = t("d_verifie", { n: ns }); }
+    var ouvert = $("etat-panneau") && !$("etat-panneau").hidden;
+    $("statut").innerHTML = '<button type="button" class="verif-chip ' + cls + '" id="etat-details" aria-expanded="' + (ouvert ? "true" : "false") + '" aria-label="' + esc(t("d_etat_ouvrir")) + '">' + ICONES.verifier + '<span class="texte">' + esc(txt) + "</span></button>" +
+      '<button type="button" class="haut-bouton" id="rafraichir" title="' + esc(t("et_rafraichir")) + '" aria-label="' + esc(t("et_rafraichir")) + '">↻</button>' +
+      '<select id="langue" aria-label="' + esc(t("d_langue")) + '">' + LANGUES.map(function (l) { return '<option value="' + l[0] + '"' + (l[0] === R.lang ? " selected" : "") + ">" + l[0].toUpperCase() + "</option>"; }).join("") + "</select>";
+    if (ouvert) $("etat-panneau").innerHTML = detailsEtat();
+    var onglet = PARENT[page] || page;
+    $("onglets").innerHTML = ONGLETS.map(function (o) {
+      var actif = o === onglet, ic = o === "chasser" ? '<span class="rond">' + ICONES.chasser + "</span>" : ICONES[o];
+      return '<button type="button" class="o' + (o === "chasser" ? " trouver" : "") + (actif ? " actif" : "") + '" data-p="' + o + '"' + (actif ? ' aria-current="page"' : "") + ">" + ic + "<span>" + esc(t("tb_" + o)) + "</span></button>";
     }).join("");
-    $("fond").style.backgroundImage = "url(img/" + (FONDS[page] || FONDS.tableau) + ")";
-    var st = [];
-    if (R.demo) st.push('<span class="pastille att"></span><b class="att">' + esc(t("demo_court")) + "</b>");
-    else {
-      var srcs = sources().map(hote).join(" + ");
-      st.push('<span class="pastille' + (M.erreurs.explo || M.erreurs.sources ? " ko" : "") + '"></span><span>' + esc(t("chaine")) + " : " + esc(srcs) + (M.erreurs.sources ? ' · <b class="ko">' + esc(t("sources_desaccord")) + "</b>" : M.hauteur ? " · " + t("bloc") + " " + fsats(M.hauteur) : " · " + t("injoignable")) + "</span>");
-      st.push(badgeOfficiel(true));
-      st.push("<span>·</span><span>" + esc(t("librairie")) + " : " + (M.etat ? '<span class="ok">' + esc(t("flux_recu")) + "</span>" : '<span class="att">' + esc(t("pas_encore_ouverte")) + "</span>") + "</span>");
-    }
-    st.push('<span style="flex:1"></span><button class="bouton2" style="padding:2px 10px;font-size:11px" id="rafraichir">↻</button>');
-    st.push('<select id="langue">' + LANGUES.map(function (l) { return '<option value="' + l[0] + '"' + (l[0] === R.lang ? " selected" : "") + ">" + l[0].toUpperCase() + "</option>"; }).join("") + "</select>");
-    $("statut").innerHTML = st.join(" ");
-    // la passe telephone : cinq onglets nommes en bas (Coffres, Enigmes, Verifier, Messages, Plus) et un en-tete d'une ligne
-    var ONGLETS = [["tableau", "▦"], ["enigmes", "✎"], ["verifier", "✓"], ["messages", "✉"], ["plus", "⋯"]];
-    var dansPlus = ["coffret", "livres", "chasser", "compagnon", "chasses", "reseau", "guide", "reglages", "pierre", "conditions", "chasse", "plus"];
-    var onglet = page === "coffre" ? "tableau" : dansPlus.indexOf(page) >= 0 ? "plus" : page;
-    var tb = $("onglets"); if (!tb) { tb = document.createElement("nav"); tb.id = "onglets"; tb.className = "onglets"; tb.setAttribute("aria-label", "GodGift Core"); $("app").appendChild(tb); }
-    tb.innerHTML = ONGLETS.map(function (o) { return '<button type="button" class="o' + (o[0] === onglet ? " actif" : "") + '" data-p="' + o[0] + '"' + (o[0] === onglet ? ' aria-current="page"' : "") + "><b>" + o[1] + "</b><span>" + esc(t("tb_" + o[0])) + "</span></button>"; }).join("");
-    var ligne = $("ligne-etat"); if (!ligne) { ligne = document.createElement("div"); ligne.id = "ligne-etat"; ligne.className = "ligne-etat"; $("statut").parentNode.insertBefore(ligne, $("statut")); }
-    var okChaine = !M.erreurs.explo && !M.erreurs.sources, resume = R.demo ? t("demo_court") : (okChaine && M.hauteur ? t("et_bloc") + " " + fsats(M.hauteur) : M.erreurs.sources ? t("et_desaccord") : t("et_chaine_ko")) + " · " + (M.etat ? t("et_librairie_ok") : t("et_librairie_non"));
-    ligne.innerHTML = '<span><span class="pastille' + (R.demo ? " att" : okChaine ? "" : " ko") + '"></span>' + esc(resume) + '</span><button type="button" class="lien-etat" id="etat-details" aria-expanded="false">' + esc(t("et_details")) + " ⌄</button>";
-    var ec = [];
-    if (M.pret) {
-      ec.push('<span class="pastille' + (R.demo ? " att" : M.erreurs.explo ? " ko" : "") + '"></span> ' + esc(R.demo ? t("demo_court") : M.erreurs.explo ? t("hors_ligne") : t("synchronise")));
-      if (M.hauteur) ec.push(t("bloc") + " " + fsats(M.hauteur));
-      if (M.derniere) ec.push(t("lu_a") + " " + fheure(M.derniere / 1000));
-    } else ec.push(esc(t("lecture")));
-    ec.push('<span class="doux">v' + VERSION + "</span>");
-    $("etat-cote").innerHTML = ec.join("<br>");
   }
+  // le bandeau image d'un ecran (140 px, balayage de lumiere, legende d'or) ; sur une sous-page, la pastille « ‹ » ramene a la page parente
+  function visuel(page, legende, retour) {
+    return '<div class="visuel v-' + page + '">' + (retour ? '<a class="fleche-retour" href="#/' + retour + '" aria-label="' + esc(t("d_retour")) + '">‹</a>' : "") + "<b>" + esc(legende) + "</b></div>";
+  }
+  var PARENT_RETOUR = { coffre: "tableau", verifier: "plus", compagnon: "plus", reseau: "plus", reglages: "plus", pierre: "plus", conditions: "plus", coffret: "plus", livres: "plus", chasses: "plus", chasse: "chasses", guide: "plus", adresse: "plus" };
+  function tete(page, legende) { return visuel(page, legende, PARENT_RETOUR[page]); }
   function hote(u) { try { return new URL(u).host; } catch (e) { return u; } }
 
   // ------------------------------------------------------------------ la version publiee
@@ -423,39 +441,155 @@
       : '<span class="' + cls + '">' + esc(txt) + "</span>";
   }
 
-  // ------------------------------------------------------------------ 1. le tableau
+  // ------------------------------------------------------------------ 1. le tableau (« Coffres ») : les trois lignes, la vedette, le selecteur de
+  // chasse (chasse zero / grande chasse / chaque chasse annoncee), le selecteur de vue (la salle, la carte, le registre), la vue, la note
+  var VUE_ETAT = { a_semer: "semer", scelle: "venir", en_chasse: "jeu", a_prendre: "prendre", pris: "pris" };
+  function chassesAffichables() {   // les chasses du selecteur : la chasse zero, la grande chasse, puis chaque chasse annoncee et verifiee
+    var l = (R.demo ? [] : [{ id: "zero", nom: t("d_seg_zero") }]).concat([{ id: "grande", nom: t("d_seg_grande") }]);
+    Object.keys(ZS).map(Number).filter(function (h) { return h >= 2 && CHASSES[h]; }).sort(function (a, b) { return a - b; }).forEach(function (h) { l.push({ id: String(h), nom: CHASSES[h].nom }); });
+    return l;
+  }
+  // les coffres de la vue, dans une forme commune : la grande chasse (coffres(), M.soldes), ou une chasse de ZS (soldes et depenses lus sur la chaine)
+  function coffresVue(id) {
+    var now = maintenant();
+    if (id === "grande") return coffres().map(function (k) {
+      var mt = k.etat === "a_semer" ? feur(k.euros) : k.sats != null ? fsats(k.sats) + " sats" : "…";
+      var dt = k.etat === "a_prendre" ? t("a_prendre_depuis") : k.etat === "en_chasse" ? t("seconde_le") + " " + fjour(k.t17) : fmois(k.t3);
+      return { n: k.n, v: VUE_ETAT[k.etat], etat: k.etat, sats: k.sats, mt: mt, dt: dt, titre: t("type_" + k.type) + " · " + fmois(k.t3), gros: k.type !== "pierre", lien: "#/coffre/" + k.n };
+    });
+    var h = id === "zero" ? 0 : +id, Z = ZS[h], d = CHASSES[h]; if (!Z || !d) return [];
+    var out = [];
+    for (var n = 1; n <= d.coffres; n++) {
+      var t3 = heureDef(d, n, 3), t17 = heureDef(d, n, 17), pris = !!(Z.depenses && Z.depenses[n]), s = Z.soldes ? Z.soldes[n] : null;
+      var etat = pris ? "pris" : !Z.etat ? "scelle" : now < t3 ? "scelle" : now < t17 ? "en_chasse" : "a_prendre";
+      var mt = pris ? t("e_pris") : s ? fsats(s) + " sats" : feur(d.euros[n - 1]);
+      var dt = etat === "a_prendre" ? t("a_prendre_depuis") : etat === "en_chasse" ? t("seconde_le") + " " + fjour(t17) : fjour(t3);
+      out.push({ n: n, v: VUE_ETAT[etat], etat: etat, sats: s, mt: mt, dt: dt, titre: h === 0 ? t("d_reg_zero", { n: n }) : t("type_" + d.types[n - 1]) + " · " + fmois(t3), gros: d.types[n - 1] !== "pierre", lien: null });
+    }
+    return out;
+  }
+  function vueSalle(l) {
+    return '<div class="salle">' + l.map(function (k, i) {
+      return '<' + (k.lien ? "button type=\"button\"" : "div") + ' class="coffre ' + k.v + (k.gros ? " gros" : "") + '" style="--i:' + Math.min(i, 15) + '"' + (k.lien ? ' data-coffre="' + k.n + '"' : "") + '><span class="img"><span class="no">' + k.n +
+        '</span><span class="ico">' + coffreSvg(k.etat, 22) + '</span></span><span class="corps"><span class="mt">' + esc(k.mt) + '</span><span class="et">' + esc(t("e_" + k.etat)) + '</span><span class="dt">' + esc(k.dt) + "</span></span></" + (k.lien ? "button" : "div") + ">";
+    }).join("") + "</div>";
+  }
+  function vueRegistre(l) {
+    return '<div class="registre">' + l.map(function (k, i) {
+      return '<' + (k.lien ? "button type=\"button\"" : "div") + ' class="ligne-reg ' + k.v + '" style="--i:' + Math.min(i, 15) + '"' + (k.lien ? ' data-coffre="' + k.n + '"' : "") + '><span class="n">' + k.n + '</span><span class="quoi"><b>' + esc(k.titre) + "</b><small>" +
+        esc(t("d_leg_" + k.v)) + " · " + esc(k.dt) + '</small></span><span class="sats">' + esc(k.mt) + '</span><span class="cire"></span></' + (k.lien ? "button" : "div") + ">";
+    }).join("") + "</div>";
+  }
+  function vueCarte(l) {   // le dessin lui-meme se fait apres le rendu (dessinerCarte) : le ₿ veut la longueur du trace, que seul le DOM connait
+    UI.carte = l;
+    return '<div class="carte"><svg id="svg-carte" role="img" aria-label="' + esc(t("d_carte_aria")) + '"></svg><div class="legende">' +
+      ["venir", "jeu", "prendre", "pris"].map(function (v) { return '<span class="' + v + '"><i></i>' + esc(t("d_leg_" + v)) + "</span>"; }).join("") + "</div></div>";
+  }
+  function dessinerCarte() {
+    var SVG = $("svg-carte"), l = UI.carte; if (!SVG || !l || !l.length) return;
+    var NS = SVG.namespaceURI, pos = [], d, vb, deb, fin, decor = "", trois = l.length <= 3, i, p;   // l'espace de noms SVG, lu sur la balise
+    if (trois) { vb = "0 0 400 150"; d = "M30 75 H370"; for (i = 0; i < l.length; i++) pos.push({ x: l.length === 1 ? 200 : 60 + 280 * i / (l.length - 1), y: 75 }); deb = [30, 36, "start"]; fin = [370, 124, "end"]; }
+    else {   // le ₿ de Bitcoin : la chasse le dessine, coffre apres coffre (fut, boucle haute, boucle basse) ; barres d'or, barre du milieu immobile
+      vb = "0 0 400 470"; d = "M115 410 V60 H232 C340 60, 340 225, 232 225 C360 225, 360 410, 240 410 Z";
+      decor = '<path class="riviere fixe" d="M115 225 H232"/><path d="M152 60 V34 M190 60 V34 M152 410 V436 M190 410 V436" stroke="#8f6d2a" stroke-width="3" stroke-linecap="round" opacity=".8"/>';
+      var tmp = document.createElementNS(NS, "path"); tmp.setAttribute("d", d); SVG.appendChild(tmp);
+      var L = tmp.getTotalLength(); for (i = 0; i < l.length; i++) { p = tmp.getPointAtLength(L * ((i + 0.15) / l.length)); pos.push({ x: p.x, y: p.y }); } SVG.removeChild(tmp);
+      deb = [20, 448, "start"]; fin = [385, 448, "end"];
+    }
+    SVG.setAttribute("viewBox", vb); SVG.innerHTML = decor;
+    var path = document.createElementNS(NS, "path"); path.setAttribute("class", "riviere"); path.setAttribute("d", d); SVG.appendChild(path);
+    var g0 = document.createElementNS(NS, "g"); SVG.appendChild(g0);
+    l.forEach(function (c, i) {
+      var q = pos[i], g = document.createElementNS(NS, "g"); g.setAttribute("class", "pt " + c.v); if (c.lien) g.setAttribute("data-coffre", c.n);
+      g.setAttribute("transform", "translate(" + q.x.toFixed(1) + "," + q.y.toFixed(1) + ")");
+      var r = c.gros ? 15 : trois ? 17 : 13;
+      g.innerHTML = '<circle class="h" r="' + r + '" fill="#e2b85c" opacity="0"/><circle class="c" r="' + r + '"/><text>' + c.n + "</text><title>" + esc(t("coffre_n", { n: c.n }) + " · " + t("d_leg_" + c.v) + " · " + c.mt) + "</title>";
+      g0.appendChild(g);
+    });
+    function txt(x, y, a, s) { var e = document.createElementNS(NS, "text"); e.setAttribute("x", x); e.setAttribute("y", y); e.setAttribute("font-size", "11"); e.setAttribute("fill", "#cdbf9f"); e.setAttribute("text-anchor", a); e.textContent = s; SVG.appendChild(e); }
+    var first = l[0], last = l[l.length - 1];
+    txt(deb[0], deb[1], deb[2], first.dt && trois ? first.dt : fmois(dateEnigme(1)));
+    txt(fin[0], fin[1], fin[2], last.dt && trois ? last.dt : fmois(dateEnigme(48)));
+  }
+  // la prochaine enigme, toutes chasses confondues (comme compteProchaine) : la date, son titre, ou aller
+  function prochaineToutes(pro, now) {
+    var z = null; if (!R.demo) [[3, 1], [17, 2]].forEach(function (j) { var d = GGR.heureEnigme(0, 1, j[0]); if (!z && d > now && (!pro || d < dateEnigme(pro))) z = { d: d, q: j[1] }; });
+    if (z) return { d: z.d, titre: t("cz_prochaine", { q: t("cz_prochaine_" + z.q) }), lien: "#/chasse/0", lienTexte: t("cz_voir") };
+    if (!pro) return null;
+    return { d: dateEnigme(pro), titre: t("enigme_n", { n: pro }) + " · " + t("coffre_n", { n: coffreDe(pro) }), lien: "#/coffre/" + coffreDe(pro), lienTexte: t("coffre_n", { n: coffreDe(pro) }) };
+  }
+  function rebours(d, now) {
+    var r = Math.max(0, d - now), j = Math.floor(r / 86400), h = Math.floor(r % 86400 / 3600), m = Math.floor(r % 3600 / 60), s = Math.floor(r % 60);
+    function p(x) { return (x < 10 ? "0" : "") + x; }
+    return '<div class="rebours" data-rebours="' + d + '"><span><b class="rj">' + j + '</b> <small>' + esc(t("d_j")) + '</small></span><span><b class="rh">' + p(h) + '</b> <small>' + esc(t("d_h")) + '</small></span><span><b class="rm">' + p(m) + '</b> <small>' + esc(t("d_min")) + '</small></span><span><b class="rs s">' + p(s) + '</b> <small>' + esc(t("d_sec")) + "</small></span></div>";
+  }
+  function battreRebours() {   // chaque seconde : les quatre nombres, et la seconde qui bat en or
+    var now = maintenant();
+    document.querySelectorAll("[data-rebours]").forEach(function (el) {
+      var r = Math.max(0, +el.dataset.rebours - now), v = { rj: Math.floor(r / 86400), rh: Math.floor(r % 86400 / 3600), rm: Math.floor(r % 3600 / 60), rs: Math.floor(r % 60) };
+      Object.keys(v).forEach(function (k) { var b = el.querySelector("." + k); if (!b) return; b.textContent = k === "rj" ? v[k] : (v[k] < 10 ? "0" : "") + v[k]; if (k === "rs" && !mouvementReduit()) { b.classList.remove("tic"); void b.offsetWidth; b.classList.add("tic"); } });
+    });
+  }
   function pageTableau() {
     var cs = coffres(), now = maintenant(), pro = prochaine(), total = 0, restants = 0;
     cs.forEach(function (k) { if (k.etat !== "pris" && k.sats) { total += k.sats; restants++; } });
-    var tuiles = cs.map(function (k) {
-      var mt = k.etat === "a_semer" ? feur(k.euros) : k.sats != null ? fsats(k.sats) + " sats" : "…";
-      var dt = k.etat === "a_prendre" ? t("a_prendre_depuis") : k.etat === "en_chasse" ? t("seconde_le") + " " + fjour(k.t17) : fmois(k.t3);   // « PRIS » est deja l'etat
-      return '<div style="--i:' + k.n + '" class="apparait coffre k-' + k.etat + (k.type !== "pierre" ? " k-gros" : "") + '" data-coffre="' + k.n + '"><div class="no">' + k.n + "</div>" + coffreSvg(k.etat) +
-        '<div class="et">' + esc(t("e_" + k.etat)) + '</div><div class="mt">' + esc(mt) + '</div><div class="dt">' + esc(dt) + "</div></div>";
-    }).join("");
-    var tete;
-    if (!M.manifeste) {
-      tete = '<div class="sur">' + esc(t("les_24")) + '</div><div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap"><h1>' + esc(t("tableau_titre")) + aide("tableau") +
-        '</h1><div style="text-align:right"><div class="sur">' + esc(t("tresor_depart")) + '</div><div class="tresor or">4 000 €</div></div></div><div class="bandeau">' + esc(t("avant_semis")) + " " + motSimple("seme") + "</div>";
-    } else {
-      tete = '<div class="sur">' + esc(t("les_24")) + '</div><div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap"><h1>' + esc(t("tableau_titre")) + aide("tableau") +
-        '</h1><div style="text-align:right"><div class="sur">' + esc(t("tresor_restant", { n: restants })) + '</div><div class="tresor or">' + fsats(total) + ' sats</div>' +
-        (M.prixEur ? '<div class="doux">≈ ' + feur(total / 1e8 * M.prixEur) + "</div>" : "") + "</div></div>";
-    }
-    var bas = '<div class="deux" style="margin-top:18px"><div class="cadre"><div class="sur">' + esc(t("prochaine_enigme")) + "</div>" +
-      (compteProchaine(pro, now) || "<div>" + esc(t("chasse_finie")) + "</div>") +
-      '</div><div class="cadre"><div class="sur">' + esc(t("ce_qui_se_passe")) + "</div>" + fil() + "</div></div>";
+    var chasses = chassesAffichables(), ids = chasses.map(function (c) { return c.id; });
+    if (ids.indexOf(UI.chasse) < 0) UI.chasse = "grande";
+    var ic = ids.indexOf(UI.chasse), chasseZ = UI.chasse !== "grande";
+    // les trois lignes (Laspicot) : ce que c'est, quand, ou taper
+    var pt = prochaineToutes(pro, now), l1 = UI.chasse === "zero" ? t("d_l1_zero") : chasseZ ? t("d_l1_chasse", { n: CHASSES[+UI.chasse].coffres }) : t("d_l1");
+    var trois = '<div class="trois-lignes"><p class="n">' + esc(l1) + "</p><p>" + esc(pt ? t("d_l2", { d: fdate(pt.d, true) }) : t("chasse_finie")) + ' <a href="#/chasser">' + esc(t("d_l3")) + "</a></p></div>";
+    // la vedette : l'Ange qui tient la cle, la poussiere d'or, la prochaine enigme et son compte a rebours
+    var vedette = '<div class="vedette"><div class="ange"><div class="fond"><div class="globe"></div></div><canvas id="poussiere" aria-hidden="true"></canvas><span class="ange-mot">' + esc(t("d_vedette") + " · " + chasses[ic].nom) + '</span></div><div class="corps">' +
+      (pt ? '<h2>' + esc(t("prochaine_enigme")) + " · " + esc(pt.titre) + '</h2><p class="quand">' + esc(fdate(pt.d, true)) + ' · <a href="' + pt.lien + '">' + esc(pt.lienTexte) + " →</a></p>" + rebours(pt.d, now) : "<h2>" + esc(t("prochaine_enigme")) + "</h2><p class=\"quand\">" + esc(t("chasse_finie")) + "</p>") + "</div></div>";
+    // les chiffres de la grande chasse : le titre (et sa bulle), le tresor restant ou le tresor de depart
+    var chiffres = '<div class="chiffres"><div><div class="sur">' + esc(t("les_24")) + '</div><h1>' + esc(t("tableau_titre")) + aide("tableau") + "</h1></div>" +
+      (!M.manifeste ? '<div><div class="sur">' + esc(t("tresor_depart")) + '</div><div class="tresor or">4 000 €</div></div>' :
+        '<div><div class="sur">' + esc(t("tresor_restant", { n: restants })) + '</div><div class="tresor or">' + fsats(total) + " sats</div>" + (M.prixEur ? '<div class="doux">≈ ' + feur(total / 1e8 * M.prixEur) + "</div>" : "") + "</div>") + "</div>" +
+      (!M.manifeste ? '<div class="bandeau">' + esc(t("avant_semis")) + " " + motSimple("seme") + "</div>" : "");
     var cp = (M.etat && M.etat.compteur) || (R.demo ? { vendus: 1284, certifies_sur_la_chaine: 1102 } : null), msg = MP.messages && MP.messages.filter(function (m) { return m.valide && (R.demo || (MP.adresseAncree && m.adresse === MP.adresseAncree)); })[0];
-    var bandeauMp = '<div class="bandeau-mp">' + '<a href="#/chasses" class="tag">' + esc(t("chasse_n", { n: 1 }) + " · " + t("nom_chasse1")) + "</a>" +
+    var chips = '<div class="chips">' + '<a href="#/chasses" class="tag">' + esc(t("chasse_n", { n: 1 }) + " · " + t("nom_chasse1")) + "</a>" +
       (cp ? '<a href="#/livres">❦ ' + esc(t("ex_bandeau", { n: fsats(cp.vendus), c: fsats(cp.certifies_sur_la_chaine) })) + "</a>" : "") +
       (MP.coffret ? '<a href="#/coffret">⧗ ' + esc(t("coffret_bandeau", { o: elements().filter(function (e) { return MP.ouverts[cleV(e)] != null; }).length, n: elements().length })) + "</a>" : "") +
       (ZS[0].etat ? '<a href="#/chasse/0">◇ ' + esc(t("cz_bandeau")) + "</a>" : "") +
       Object.keys(ZS).filter(function (h) { return +h >= 2 && CHASSES[h]; }).map(function (h) { return '<a href="#/chasse/' + h + '">◇ ' + esc(CHASSES[h].nom) + "</a>"; }).join("") +
       (msg ? '<a href="#/messages" class="dernier-msg">✉ ' + esc(msg.texte.split("\n")[0].slice(0, 90)) + "</a>" : "") + "</div>";
-    var qTemoin = !R.demo && R.installe && R.temoin == null ? '<div class="bandeau">' + esc(t("ac4_q")) + " " + esc(t("ac4_texte")) + ' <button class="bouton2" style="padding:2px 12px;font-size:12px" data-temoin="1">' + esc(t("ac4_oui")) + '</button> <button class="bouton2" style="padding:2px 12px;font-size:12px" data-temoin="0">' + esc(t("ac4_non")) + "</button></div>" : "";
-    var alerteMan = M.erreurs.manifChange || M.erreurs.manifeste ? '<div class="bandeau" style="border-color:#e0605a;background:rgba(224,96,90,.18)">⚠ ' + esc(t(M.erreurs.manifChange ? "manif_change" : "manif_invalide")) + "</div>" : "";
-    return alerteMan + alerteReception() + qTemoin + (R.demo ? '<div class="bandeau demo">' + esc(t("demo_bandeau")) + "</div>" : "") + (M.manifCache ? '<div class="bandeau">' + esc(t("librairie_tombee")) + "</div>" : "") + tete + bandeauMp + '<div class="grille" style="margin-top:12px">' + tuiles + "</div>" + bas;
+    // le selecteur de chasse (barre segmentee, curseur d'or) et le selecteur de vue (trois icones d'eau)
+    var segment = '<div class="segment" role="group" aria-label="' + esc(t("d_quelle_chasse")) + '" style="--n:' + chasses.length + ';--i:' + ic + '"><span class="glisse"></span>' +
+      chasses.map(function (c) { return '<button type="button" data-chasse-vue="' + esc(c.id) + '" aria-pressed="' + (c.id === UI.chasse ? "true" : "false") + '">' + esc(c.nom) + "</button>"; }).join("") + "</div>";
+    var formes = '<div class="barre-vue"><h2>' + esc(t("d_les_coffres")) + '</h2><div class="formes" role="group" aria-label="' + esc(t("d_comment_voir")) + '">' +
+      ["salle", "carte", "registre"].map(function (v) { return '<button type="button" data-vue="' + v + '" aria-pressed="' + (v === UI.vue ? "true" : "false") + '" title="' + esc(t("d_vue_" + v)) + '" aria-label="' + esc(t("d_vue_" + v)) + '">' + ICONES[v] + "</button>"; }).join("") + "</div></div>" +
+      '<p class="legende-vue">' + esc(t("d_vue", { v: t("d_vue_" + UI.vue) })) + "</p>";
+    var liste = coffresVue(UI.chasse), vue = UI.vue === "carte" ? vueCarte(liste) : UI.vue === "registre" ? vueRegistre(liste) : vueSalle(liste);
+    var suite = chasseZ ? pageChasse(UI.chasse === "zero" ? "0" : UI.chasse) : "";   // la chasse zero (ou une chasse annoncee) : sa page entiere, sous la vue
+    var bas = '<div class="cadre"><div class="sur">' + esc(t("ce_qui_se_passe")) + '</div><div class="fil-ev">' + fil() + "</div></div>";
+    var qTemoin = !R.demo && R.installe && R.temoin == null ? '<div class="bandeau">' + esc(t("ac4_q")) + " " + esc(t("ac4_texte")) + ' <span class="boutons"><button class="bouton2" data-temoin="1">' + esc(t("ac4_oui")) + '</button> <button class="bouton2" data-temoin="0">' + esc(t("ac4_non")) + "</button></span></div>" : "";
+    var alerteMan = M.erreurs.manifChange || M.erreurs.manifeste ? '<div class="bandeau ko">⚠ ' + esc(t(M.erreurs.manifChange ? "manif_change" : "manif_invalide")) + "</div>" : "";
+    return alerteMan + alerteReception() + qTemoin + (R.demo ? '<div class="bandeau demo">' + esc(t("demo_bandeau")) + "</div>" : "") + (M.manifCache ? '<div class="bandeau">' + esc(t("librairie_tombee")) + "</div>" : "") +
+      trois + vedette + (chasseZ ? "" : chiffres + chips) + segment + formes + vue + (chasseZ ? "" : '<p class="note">' + esc(t("d_note_coffres")) + "</p>") + (chasseZ ? suite.replace(/<h1>/g, '<h2 class="h1-sous">').replace(/<\/h1>/g, "</h2>") : suite) + bas;
   }
+  // la poussiere d'or de la vedette : 46 particules sur un canvas, eteinte en mouvement reduit ; une seule boucle a la fois
+  function poussiere() {
+    if (UI.poussiere) { cancelAnimationFrame(UI.poussiere); UI.poussiere = null; }
+    var cv = $("poussiere"); if (!cv || mouvementReduit()) return;
+    var cx = cv.getContext("2d"), W, H, pts = [];
+    function dim() { W = cv.width = cv.clientWidth; H = cv.height = cv.clientHeight; } dim();
+    for (var i = 0; i < 46; i++) pts.push({ x: Math.random(), y: Math.random(), r: .6 + Math.random() * 1.6, v: .00025 + Math.random() * .0006, o: Math.random() * 6.28 });
+    (function dessine(tm) {
+      if (!cv.isConnected) { UI.poussiere = null; return; }
+      if (cv.clientWidth !== W) dim();
+      cx.clearRect(0, 0, W, H);
+      pts.forEach(function (p) { p.y -= p.v; if (p.y < -.02) { p.y = 1.02; p.x = Math.random(); } var a = .35 + .35 * Math.sin(tm / 900 + p.o); cx.beginPath(); cx.arc(p.x * W + Math.sin(tm / 1400 + p.o) * 6, p.y * H, p.r, 0, 6.28); cx.fillStyle = "rgba(255,226,150," + a.toFixed(2) + ")"; cx.fill(); });
+      UI.poussiere = requestAnimationFrame(dessine);
+    })(0);
+  }
+  function placerGlobe() {   // le halo sur la cle de l'Ange : a sa place dans l'image, quelle que soit la largeur
+    var f = document.querySelector(".ange .fond"), g = f && f.querySelector(".globe"); if (!g) return;
+    var IW = 640, IH = 360, FX = .555, FY = .37, w = f.clientWidth, h = f.clientHeight, s = Math.max(w / IW, h / IH), rw = IW * s, rh = IH * s, ox = (w - rw) / 2, oy = (h - rh) * .5;
+    g.style.left = (ox + FX * rw) + "px"; g.style.top = (oy + FY * rh) + "px";
+  }
+  function apresRendu() { dessinerCarte(); placerGlobe(); poussiere(); }
+  window.addEventListener("resize", function () { dessinerCarte(); placerGlobe(); });
   function fil() {
     var ev = [], now = maintenant();
     enigmesParues().slice(-3).reverse().forEach(function (e) { ev.push([e.date_utc, t("enigme_parue", { n: e.numero }), "eau"]); });
@@ -477,12 +611,18 @@
       l.push([motSimple("cri", t("le_cri")), now < k.t17 ? t("cri_attend", { d: fdate(k.t17 + 3600, true) }) : '<a target="_blank" href="' + esc(webExplo("/tx/" + c.cri_txid)) + '" class="mono">' + esc(String(c.cri_txid).slice(0, 16)) + "…</a>"]);
     }
     var en = enigmesParues().filter(function (e) { return e.coffre === n; });
-    return '<div class="sur"><a href="#/tableau">← ' + esc(t("m_tableau")) + '</a></div><div style="display:flex;gap:18px;align-items:center;margin:8px 0 14px">' + coffreSvg(k.etat, 80) +
-      '<div><h1>' + esc(t("tresor_n", { n: n })) + '</h1><div class="' + (k.etat === "a_prendre" ? "or" : k.etat === "en_chasse" ? "eau" : "doux") + '">' + esc(t("e_" + k.etat)) +
-      (k.sats != null && k.etat !== "a_semer" ? " · " + fsats(k.sats) + " sats" : "") + "</div></div></div>" +
-      '<div class="deux"><div class="cadre">' + l.map(function (x) { return '<div class="ligne"><span class="doux">' + (x[0].indexOf("<") >= 0 ? x[0] : esc(x[0])) + '</span><span class="v">' + (x[1].indexOf("<") >= 0 ? x[1] : esc(x[1])) + "</span></div>"; }).join("") +
-      '</div><div class="cadre"><div class="sur">' + esc(t("ses_enigmes")) + "</div>" + (en.length ? en.map(function (e) { return '<div style="margin:10px 0"><span class="tag">' + esc(t("enigme_n", { n: e.numero })) + '</span><div class="cg" style="font-size:18px;white-space:pre-wrap;margin-top:6px">' + esc(texteEnigme(e)) + "</div>" + noteEnigme(e) + "</div>"; }).join("") : '<p class="doux">' + esc(t("aucune_parue")) + "</p>") +
-      (k.etat === "a_prendre" || k.etat === "en_chasse" ? '<p><a class="bouton" href="#/chasser/' + n + '">' + esc(t("chasser_ce")) + "</a></p>" : "") + "</div></div>" + blocCoffret(n, 1);
+    var montant = k.sats != null && k.etat !== "a_semer" ? fsats(k.sats) + " sats" : feur(k.euros), eur = k.sats != null && k.etat !== "a_semer" && M.prixEur ? "≈ " + feur(k.sats / 1e8 * M.prixEur) : "";
+    return tete("coffre", t("d_lg_coffre", { n: n, e: t("d_leg_" + VUE_ETAT[k.etat]) })) +
+      '<div class="cadre"><div class="chiffres"><div>' + coffreSvg(k.etat, 44) + '<h1>' + esc(t("tresor_n", { n: n })) + '</h1><div class="' + (k.etat === "a_prendre" ? "or" : k.etat === "en_chasse" ? "eau" : "doux") + '">' + esc(t("e_" + k.etat)) +
+      '</div></div><div><div class="grand">' + esc(montant) + '</div><small class="doux">' + esc(eur) + "</small></div></div>" +
+      l.map(function (x) { return '<div class="ligne"><span class="doux">' + (x[0].indexOf("<") >= 0 ? x[0] : esc(x[0])) + '</span><span class="v">' + (x[1].indexOf("<") >= 0 ? x[1] : esc(x[1])) + "</span></div>"; }).join("") + "</div>" +
+      '<div><h2>' + esc(t("d_les_enigmes_du_coffre")) + '</h2><div class="liste">' + (en.length ? en.map(function (e) { return cadenas(true, t("enigme_n", { n: e.numero }), fdate(e.date_utc, true), esc(texteEnigme(e)) + noteEnigme(e)); }).join("") : '<p class="doux">' + esc(t("aucune_parue")) + "</p>") + "</div></div>" +
+      (k.etat === "a_prendre" || k.etat === "en_chasse" ? '<div><a class="bouton" href="#/chasser/' + n + '">' + esc(t("d_six_mots")) + " · " + esc(t("chasser_ce")) + "</a></div>" : "") + blocCoffret(n, 1);
+  }
+  // une carte d'enigme avec son cadenas (anse ouverte quand le texte est la)
+  function cadenas(ouvert, titre, sous, corps) {
+    return '<div class="enig ' + (ouvert ? "ouverte" : "fermee") + '"><div class="tete"><svg class="cadenas" viewBox="0 0 24 30" aria-hidden="true"><path class="anse" d="M7 13V9a5 5 0 0 1 10 0v4" fill="none" stroke="#e2b85c" stroke-width="2.2" stroke-linecap="round"/><rect x="3" y="13" width="18" height="14" rx="3" fill="#171e29" stroke="#e2b85c" stroke-width="2"/><circle cx="12" cy="20" r="2" fill="#e2b85c"/></svg><div><b>' +
+      esc(titre) + "</b><small>" + esc(sous) + "</small></div></div>" + (corps ? '<div class="texte">' + corps + "</div>" : "") + "</div>";
   }
   // les verrous d'un coffre (sauf ses enigmes, montrees plus haut) : son cri, ses deux indices ; puis la solution, si l'auteur l'a publiee
   // apres la prise par un message signe (verifiee contre l'engagement grave au semis, jamais recopiee dans les reponses)
@@ -513,16 +653,16 @@
   // ------------------------------------------------------------------ 3. les enigmes
   function pageEnigmes() {
     var pub = enigmesParues().slice().reverse(), pro = prochaine(), now = maintenant();
-    var tete = '<div class="sur">' + esc(t("les_48")) + " · " + motSimple("coffret") + '</div><h1>' + esc(t("m_enigmes")) + aide("enigmes") + "</h1>";
+    var tete_ = tete("enigmes", t("d_lg_enigmes")) + '<div><div class="sur">' + esc(t("les_48")) + " · " + motSimple("coffret") + '</div><h1>' + esc(t("m_enigmes")) + aide("enigmes") + "</h1></div>";
     // la prochaine enigme, toutes chasses confondues : avant le 3 janvier 2027, c'est l'une des deux de la chasse zero (3 et 17 novembre 2026, article 8 bis)
-    var cpt = compteProchaine(pro, now) ? '<div class="cadre" style="margin:14px 0"><div class="sur">' + esc(t("prochaine_enigme")) + "</div>" + compteProchaine(pro, now) + "</div>" : "";
-    var note = R.lang !== "fr" ? '<p class="doux">' + esc(t("fr_fait_foi")) + "</p>" : "";
+    var cpt = compteProchaine(pro, now) ? '<div class="cadre"><div class="sur">' + esc(t("prochaine_enigme")) + "</div>" + compteProchaine(pro, now) + "</div>" : "";
+    var note = R.lang !== "fr" ? '<p class="note">' + esc(t("fr_fait_foi")) + "</p>" : "";
     var l = pub.length ? pub.map(function (e) {
-      return '<div class="cadre enigme"><div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap"><span class="tag" style="white-space:nowrap">' + esc(t("enigme_n", { n: e.numero })) + '</span><a href="#/coffre/' + esc(e.coffre) + '" style="white-space:nowrap">' + esc(t("coffre_n", { n: e.coffre })) +
-        '</a><span class="doux" style="font-size:12px">' + esc(fdate(e.date_utc, true)) + '</span></div><div class="txt">' + esc(texteEnigme(e)) + "</div>" + noteEnigme(e) +
-        (R.lang !== "fr" && e.texte_fr ? '<details style="margin-top:8px"><summary class="doux">' + esc(t("texte_francais")) + '</summary><div class="cg" style="font-size:17px;white-space:pre-wrap">' + esc(e.texte_fr) + "</div></details>" : "") + "</div>";
+      return '<div class="enig enigme ouverte"><div class="tete"><svg class="cadenas" viewBox="0 0 24 30" aria-hidden="true"><path class="anse" d="M7 13V9a5 5 0 0 1 10 0v4" fill="none" stroke="#e2b85c" stroke-width="2.2" stroke-linecap="round"/><rect x="3" y="13" width="18" height="14" rx="3" fill="#171e29" stroke="#e2b85c" stroke-width="2"/><circle cx="12" cy="20" r="2" fill="#e2b85c"/></svg><div><b>' +
+        esc(t("enigme_n", { n: e.numero })) + '</b><small><a href="#/coffre/' + esc(e.coffre) + '">' + esc(t("coffre_n", { n: e.coffre })) + "</a> · " + esc(fdate(e.date_utc, true)) + '</small></div></div><div class="txt">' + esc(texteEnigme(e)) + "</div>" + noteEnigme(e) +
+        (R.lang !== "fr" && e.texte_fr ? '<details><summary class="doux">' + esc(t("texte_francais")) + '</summary><div class="texte">' + esc(e.texte_fr) + "</div></details>" : "") + "</div>";
     }).join("") : '<div class="cadre"><p>' + esc(t("aucune_enigme", { d: fdate(dateEnigme(1), true) })) + '</p><p class="doux">' + esc(t("regle_enigmes")) + "</p></div>";
-    return tete + cpt + note + l;
+    return tete_ + cpt + note + l;
   }
 
   // ------------------------------------------------------------------ 4. verifier
@@ -531,17 +671,17 @@
     var l = V.res ? V.res.map(function (r) {
       var ic = r.e === "ok" ? '<span class="ok">✓</span>' : r.e === "ko" ? '<span class="ko">✗</span>' : '<span class="att">…</span>';
       return '<div class="verif"><div class="ic">' + ic + '</div><div><div class="t">' + esc(r.t) + '</div><div class="d">' + esc(r.d) + "</div></div></div>";
-    }).join("") : '<p class="doux">' + esc(t("verif_intro")) + "</p>";
-    if (horlogeDecalee()) l = '<p class="att">' + esc(t("horloge_decalee", { s: Math.round(HORLOGE.decalage / 1000) })) + "</p>" + l;
+    }).join("") : '<p class="intro">' + esc(t("verif_intro")) + "</p>";
+    if (horlogeDecalee()) l = '<div class="verif"><div class="ic"><span class="att">!</span></div><div><div class="d att">' + esc(t("horloge_decalee", { s: Math.round(HORLOGE.decalage / 1000) })) + "</div></div></div>" + l;
     var bilan = "";
     if (V.res && !V.enCours) {
       var ko = V.res.filter(function (r) { return r.e === "ko"; }).length, ok = V.res.filter(function (r) { return r.e === "ok"; }).length, att = V.res.length - ko - ok;
-      bilan = '<div class="bandeau' + (ko ? '" style="border-color:#e0605a;background:rgba(224,96,90,.15)' : '') + '">' + esc(ko ? t("verif_ko", { n: ko }) : t(ok === 1 ? "verif_ok1" : "verif_ok", { n: ok }) + (att ? " " + t("verif_att", { n: att }) : "")) + ' <a href="#" id="rapport">' + esc(t("exporter")) + "</a></div>";
+      bilan = '<div class="bandeau' + (ko ? " ko" : "") + '">' + esc(ko ? t("verif_ko", { n: ko }) : t(ok === 1 ? "verif_ok1" : "verif_ok", { n: ok }) + (att ? " " + t("verif_att", { n: att }) : "")) + ' <a href="#" id="rapport">' + esc(t("exporter")) + "</a></div>";
     }
     var titre = t("tout_verifier"), sous = "";
-    if (V.res && !V.enCours) { var nko = V.res.filter(function (r) { return r.e === "ko"; }).length; titre = nko ? t("v_titre_ko") : V.res.some(function (r) { return r.e !== "ok"; }) ? t("v_titre_att") : t("v_titre_ok"); sous = '<p class="doux" style="margin:0 0 8px">' + esc(t("v_sous")) + "</p>"; }
-    return '<div class="sur">' + esc(t("ne_croire_personne")) + '</div><div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap"><h1>' + esc(titre) + aide("verifier") +
-      '</h1><button class="bouton" id="lancer"' + (V.enCours ? " disabled" : "") + ">" + esc(V.enCours ? t("verif_en_cours") : V.res ? t("v_relancer") : t("lancer_verif")) + "</button></div>" + sous + bilan + '<div class="cadre" style="margin-top:12px">' + l + "</div>";
+    if (V.res && !V.enCours) { var nko = V.res.filter(function (r) { return r.e === "ko"; }).length; titre = nko ? t("v_titre_ko") : V.res.some(function (r) { return r.e !== "ok"; }) ? t("v_titre_att") : t("v_titre_ok"); sous = '<p class="note">' + esc(t("v_sous")) + "</p>"; }
+    return tete("verifier", t("d_lg_verifier")) + '<div class="chiffres"><div><div class="sur">' + esc(t("ne_croire_personne")) + '</div><h1>' + esc(titre) + aide("verifier") +
+      '</h1></div><button class="bouton" id="lancer"' + (V.enCours ? " disabled" : "") + ">" + esc(V.enCours ? t("verif_en_cours") : V.res ? t("v_relancer") : t("lancer_verif")) + "</button></div>" + sous + bilan + '<div class="preuves">' + l + "</div>";
   }
 
   function opReturn(vouts) {
@@ -785,16 +925,22 @@
     else if (c) enig = '<p class="doux">' + esc(t("vrai_coffre_note")) + ' <a href="#/coffre/' + c.n + '">' + esc(t("voir_enigmes")) + "</a></p>";
     var alea = c && !c.essai ? '<label>' + esc(t("alea_du_cri")) + '</label><input class="champ mono" id="h-alea" autocomplete="off" spellcheck="false" value="' + esc(c.alea) + '" placeholder="' + esc(t("ph_64")) + '"><div class="doux" style="font-size:12px">' + esc(t("alea_note")) + ' <button class="bouton2" style="padding:2px 10px;font-size:11px" id="h-lire-cri">' + esc(t("lire_cri")) + "</button></div>" : "";
     var res = "";
-    if (H.calcul) res = '<div style="margin-top:12px"><div class="barre"><i style="width:' + Math.round(H.prog * 100) + '%"></i></div><div class="doux" style="font-size:12px;margin-top:4px">' + esc(t("calcul_en_cours")) + "</div></div>";
+    if (H.calcul) res = '<div><div class="barre"><i style="width:' + Math.round(H.prog * 100) + '%"></i></div><p class="note">' + esc(t("calcul_en_cours")) + "</p></div>";
     else if (H.res) res = H.res;
-    return '<div class="sur">' + esc(t("outil_chasseur")) + '</div><h1>' + esc(t("m_chasser")) + aide("chasser") + '</h1><div class="bandeau">' + esc(t("chasser_intro")) + "</div>" + carteTresor(null) + '<div class="deux"><div><label>' + esc(t("quel_coffre")) + "</label>" + sel + enig + alea + carteArmement(c) + jamais(true) +
-      "</div><div class=\"cadre\"><label>" + esc(t("reponse_3", { m: m })) + '</label><input class="champ" id="h-r3" autocomplete="off" spellcheck="false"><div class="doux mono" id="h-v3" style="font-size:12px;min-height:18px"></div><label>' + esc(t("reponse_17", { m: m })) +
-      '</label><input class="champ" id="h-r17" autocomplete="off" spellcheck="false"><div class="doux mono" id="h-v17" style="font-size:12px;min-height:18px"></div><p><button class="bouton" id="h-calculer"' + (H.calcul ? " disabled" : "") + ">" + esc(t("calculer")) + '</button></p><p class="doux" style="font-size:12px">' + esc(t("calcul_note")) + "</p>" + res + "</div></div>" +
-      '<h2>' + esc(t("dictionnaire")) + '</h2><div class="cadre"><input class="champ" id="h-dico" autocomplete="off" spellcheck="false" placeholder="' + esc(t("dico_ph")) + '"><div id="h-dico-r" class="mono" style="margin-top:8px;min-height:20px"></div></div>';
+    var rv = receptionValide();
+    var adr = '<p class="note">' + esc(t("d_mon_adresse")) + " " + (rv.ok ? '<code>' + esc(courte(rv.adresse)) + "</code>" : '<code>' + esc(t("d_adresse_non")) + "</code> · " + esc(t("d_adresse_poser"))) + ' <a href="#/adresse">' + esc(t("plus_adresse")) + " →</a></p>";
+    return visuel("chasser", t("d_lg_chasser")).replace('class="visuel', 'id="h-cle" class="visuel') + '<div><div class="sur">' + esc(t("outil_chasseur")) + '</div><h1>' + esc(t("m_chasser")) + aide("chasser") + '</h1></div><p class="intro">' + esc(t("chasser_intro")) + "</p>" + carteTresor(null) +
+      '<div class="cadre"><label>' + esc(t("quel_coffre")) + "</label>" + sel + enig + alea + "</div>" +
+      '<div class="cadre mots"><label>' + esc(t("reponse_3", { m: m })) + '</label><input class="champ" id="h-r3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><div class="note mono" id="h-v3"></div><label>' + esc(t("reponse_17", { m: m })) +
+      '</label><input class="champ" id="h-r17" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><div class="note mono" id="h-v17"></div><div class="boutons"><button class="bouton" id="h-calculer"' + (H.calcul ? " disabled" : "") + ">" + esc(t("calculer")) + '</button></div><p class="note">' + esc(t("calcul_note")) + "</p>" + res + "</div>" +
+      '<ol class="etapes"><li><span>' + esc(t("d_etape_1")) + "</span></li><li><span>" + esc(t("d_etape_2")) + "</span></li><li><span>" + esc(t("d_etape_3")) + "</span></li></ol>" + carteArmement(c) + adr + jamais(true) +
+      '<h2>' + esc(t("dictionnaire")) + '</h2><div class="cadre"><input class="champ" id="h-dico" autocomplete="off" spellcheck="false" placeholder="' + esc(t("dico_ph")) + '"><div id="h-dico-r" class="mono note"></div></div>';
   }
   function apercu(id, vid) {
-    var c = cibleChasse(); if (!c) return; var m = MOTS[c.type], v = $(id).value, r = lireReponse(v, m);
+    var c = cibleChasse(); if (!c) return; var m = MOTS[c.type], v = $(id).value, r = lireReponse(v, m), bon = !!v.trim() && !r.err.length;
     $(vid).innerHTML = !v.trim() ? "" : r.err.length ? '<span class="ko">' + esc(r.err.join(" · ")) + "</span>" : '<span class="ok">' + r.nums.map(function (x) { return String(x).padStart(4, "0") + " " + esc(window.GG_LISTE.mots[x - 1]); }).join(" · ") + "</span>";
+    $(id).classList.toggle("ok", bon);                                        // la cle s'allume quand les deux reponses sont bien lues
+    var cle = $("h-cle"); if (cle) cle.classList.toggle("allumee", $("h-r3").classList.contains("ok") && $("h-r17").classList.contains("ok"));
   }
   function calculer() {
     var c = cibleChasse(); if (!c) return; var m = MOTS[c.type];
@@ -1103,7 +1249,7 @@
     TR.prep[k] = Object.assign(TR.prep[k] || {}, { enCours: p });
     return p.then(function (x) { if (TR.prep[k]) delete TR.prep[k].enCours; rendreSiChasse(); return x; });
   }
-  function rendreSiChasse() { var p = route().p; if (p === "chasser" || p === "chasse") rendre(); }
+  function rendreSiChasse() { var p = route().p; if (p === "chasser" || p === "chasse" || (p === "tableau" && UI.chasse !== "grande")) rendre(); }
 
   // ------------------------------------------------------------------ la cle est trouvee
   function apresTrouve(c, k) {
@@ -1332,7 +1478,7 @@
   function carteArmement(c) {   // sur la page Chasser : vers ou partira le tresor
     if (!c) return "";
     var rv = receptionValide();
-    if (c.essai || R.demo) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + '</div><p class="doux" style="font-size:13px">' + esc(rv.ok ? t("tr_essai_arme", { a: courte(rv.adresse) }) : t("tr_essai_sans")) + "</p></div>";
+    if (c.essai || R.demo) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + '</div><p class="note">' + esc(rv.ok ? t("tr_essai_arme", { a: courte(rv.adresse) }) : t("tr_essai_sans")) + (rv.ok ? "" : ' <a href="#/adresse">' + esc(t("plus_adresse")) + " →</a>") + "</p></div>";
     if (SANS_INSTALLER) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + '</div><p class="att">' + esc(t("fenetre_sans_installer")) + "</p></div>";
     if (!rv.ok) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + '</div><p class="att">⚠ ' + esc(t(R.reception ? "rec_err_" + rv.raison : "tr_pas_arme")) + ' <a href="#/reglages">' + esc(t("m_reglages")) + "</a></p></div>";
     if (TR.recAlerte) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + "</div>" + alerteReception() + "</div>";
@@ -1435,8 +1581,8 @@
     var lien = okA ? R.caisse.replace(/\/$/, "") + "/c/" + codeCompagnon(a) : "";
     var e3 = '<div class="cadre"' + (okA && CP.signature ? "" : ' style="opacity:.45"') + '><span class="tag">3</span> <b>' + esc(t("cp_lien")) + '</b><p class="doux" style="font-size:12.5px">' + esc(t("cp_lien_note")) + "</p>" +
       (okA ? '<div class="champ mono" style="user-select:all">' + esc(lien) + "</div>" : "") + '<p><button class="bouton" id="cp-envoyer"' + (okA && CP.signature ? "" : " disabled") + ">" + esc(t("cp_envoyer")) + "</button></p></div>";
-    return '<div class="sur">' + esc(t("porter_le_livre")) + '</div><h1>' + esc(t("devenir_compagnon")) + aide("compagnon") + '</h1><p style="max-width:780px">' + esc(t("cp_intro")) + '</p><div class="deux"><div style="display:grid;gap:14px">' + e0 + e1 + e2 + e3 + "</div><div>" + parts +
-      '<div class="cadre" style="margin-top:14px"><div class="sur">' + esc(t("cp_regles")) + '</div><p style="font-size:13px">' + esc(t("cp_regles_texte")) + '</p><a class="bouton2" href="#/conditions">' + esc(t("conditions")) + "</a></div></div></div>";
+    return tete("compagnon", t("d_lg_compagnon")) + '<div><div class="sur">' + esc(t("porter_le_livre")) + '</div><h1>' + esc(t("devenir_compagnon")) + aide("compagnon") + '</h1></div><p class="intro">' + esc(t("cp_intro")) + "</p>" + e0 + e1 + e2 + e3 + parts +
+      '<div class="cadre"><div class="sur">' + esc(t("cp_regles")) + '</div><p class="note">' + esc(t("cp_regles_texte")) + '</p><p><a class="bouton2" href="#/conditions">' + esc(t("conditions")) + "</a></p></div>";
   }
 
   // ------------------------------------------------------------------ 7. le reseau
@@ -1450,30 +1596,43 @@
       var memes = M.manifeste.coffres.every(function (c, i) { return M.etat.coffres[i] && M.etat.coffres[i].adresse === c.adresse; });
       conc = '<div class="ligne"><span>' + esc(t("concordance")) + '</span><span class="' + (memes ? "ok" : "ko") + '">' + esc(memes ? t("tout_concorde") : t("desaccord")) + "</span></div>";
     }
-    return '<div class="sur">' + esc(t("comme_bitcoin")) + '</div><h1>' + esc(t("reseau_titre")) + aide("reseau") + '</h1><p style="max-width:780px">' + esc(t("reseau_intro")) + '</p><div class="cadre">' +
-      l.map(function (x) { return '<div class="ligne"><span><b>' + esc(x[0]) + '</b><br><span class="doux mono" style="font-size:12px">' + esc(x[1]) + '</span></span><span class="v">' + x[2] + "</span></div>"; }).join("") + conc +
-      '<div class="ligne"><span><b>' + esc(t("v_programme")) + '</b><br><span class="doux mono" style="font-size:12px">' + esc(VERSION + " · " + window.GG_EMPREINTE.empreinte.slice(0, 16) + "…") + '</span></span><span class="v">' + badgeOfficiel(false) + "</span></div></div>" + carteTemoins() +
-      '<h2>' + esc(t("a_venir")) + '</h2><div class="deux"><div class="cadre"><b>' + esc(t("miroir_titre")) + '</b><p class="doux" style="font-size:13px">' + esc(t("miroir_texte")) + '</p></div><div class="cadre"><b>' + esc(t("noeud_titre")) + '</b><p class="doux" style="font-size:13px">' + esc(t("noeud_texte")) + "</p></div></div>";
+    function pastilleDe(h) { return /class="ok"/.test(h) ? "" : /class="ko"/.test(h) ? "ko" : "att"; }
+    return tete("reseau", t("d_lg_reseau")) + '<div><div class="sur">' + esc(t("comme_bitcoin")) + '</div><h1>' + esc(t("reseau_titre")) + aide("reseau") + '</h1></div><p class="intro">' + esc(t("reseau_intro")) + '</p><div class="preuves">' +
+      l.map(function (x) { return '<div class="statut"><i class="' + pastilleDe(x[2]) + '"></i><span><b>' + esc(x[0]) + '</b><small class="mono">' + esc(x[1]) + "</small></span><code>" + x[2] + "</code></div>"; }).join("") +
+      (conc ? '<div class="cadre">' + conc + "</div>" : "") +
+      '<div class="statut"><i class="' + pastilleDe(badgeOfficiel(false)) + '"></i><span><b>' + esc(t("v_programme")) + '</b><small class="mono">' + esc(VERSION + " · " + window.GG_EMPREINTE.empreinte.slice(0, 16) + "…") + "</small></span><code>" + badgeOfficiel(false) + "</code></div></div>" + carteTemoins() +
+      '<h2>' + esc(t("a_venir")) + '</h2><div class="cadre"><b>' + esc(t("miroir_titre")) + '</b><p class="note">' + esc(t("miroir_texte")) + '</p></div><div class="cadre"><b>' + esc(t("noeud_titre")) + '</b><p class="note">' + esc(t("noeud_texte")) + "</p></div>";
   }
 
   // ------------------------------------------------------------------ 8. reglages et a propos
   // la page « Plus » (telephone) : tout ce que les cinq onglets ne portent pas, nomme par ce que ca fait
+  // la salle des pas perdus (« Plus ») : tout ce que les cinq onglets ne portent pas, nomme par ce que ca fait, une icone par ligne
   function pagePlus() {
-    var l = [["coffret", "⧗"], ["livres", "❦"], ["chasser", "⚿"], ["compagnon", "✦"], ["chasses", "◇"], ["reseau", "◎"], ["guide", "?"], ["reglages", "⚙"]];
-    return '<div class="sur">' + esc(t("plus_sous")) + '</div><h1>' + esc(t("plus_titre")) + '</h1><div class="cadre liste-plus">' + l.map(function (x) {
-      return '<button type="button" class="ligne-plus" data-p="' + x[0] + '"><b>' + x[1] + "</b><span><span class=\"n\">" + esc(t("plus_" + x[0])) + '</span><small>' + esc(t("plus_" + x[0] + "_n")) + "</small></span><i>›</i></button>";
-    }).join("") + "</div>" + '<p class="doux" style="font-size:12px;margin-top:14px">GodGift Core v' + VERSION + "</p>";
+    var l = [["verifier", "plus_verifier", "plus_verifier_n"], ["adresse", "plus_adresse", "plus_adresse_n"], ["compagnon", "d_plus_compagnon", "d_plus_compagnon_n"], ["livres", "d_plus_livres", "d_plus_livres_n"],
+      ["reseau", "d_plus_reseau", "d_plus_reseau_n"], ["pierre", "plus_pierre", "plus_pierre_n"], ["guide", "plus_guide", "plus_guide_n"], ["reglages", "plus_reglages", "plus_reglages_n"],
+      ["coffret", "plus_coffret", "plus_coffret_n"], ["chasses", "plus_chasses", "plus_chasses_n"]];
+    var langues = '<div class="inter"><span><b>' + esc(t("d_langue")) + '</b><small>' + esc((LANGUES.filter(function (x) { return x[0] === R.lang; })[0] || LANGUES[0])[1]) + '</small></span><div class="formes or" role="group" aria-label="' + esc(t("d_langue")) + '">' +
+      LANGUES.map(function (x) { return '<button type="button" data-langue="' + x[0] + '" aria-pressed="' + (x[0] === R.lang ? "true" : "false") + '" title="' + esc(x[1]) + '">' + x[0].toUpperCase() + "</button>"; }).join("") + "</div></div>";
+    return visuel("plus", t("d_lg_plus")) + '<div><div class="sur">' + esc(t("plus_sous")) + '</div><h1>' + esc(t("plus_titre")) + '</h1></div><div class="liste">' + l.map(function (x) {
+      return '<button type="button" class="item" data-p="' + x[0] + '"><span class="ico">' + ICONES[x[0]] + "</span><span><b>" + esc(t(x[1])) + "</b><small>" + esc(t(x[2])) + '</small></span><span class="fleche">›</span></button>';
+    }).join("") + "</div>" + langues + '<p class="pied">' + esc(t("d_plus_pied")) + "<br>GodGift Core " + VERSION + (R.demo || WEB ? "" : " · " + badgeOfficiel(true)) + "</p>";
   }
-  // les details de l'etat (le panneau sous l'en-tete d'une ligne)
+  // les details de l'etat : le panneau que la pastille de l'en-tete ouvre (la chaine, ses deux sources, la librairie, la version et son badge)
   function detailsEtat() {
     var srcs = sources().map(hote), l = [];
     l.push([t("et_chaine"), (M.erreurs.explo ? '<span class="ko">' + esc(t("et_chaine_ko")) + "</span>" : M.erreurs.sources ? '<span class="ko">' + esc(t("et_desaccord")) + "</span>" : '<span class="ok">' + esc(t("sources_accord")) + "</span>") + (M.hauteur ? " · " + esc(t("et_bloc")) + " " + fsats(M.hauteur) : "") + '<br><span class="doux">' + esc(srcs.join(" + ")) + " · " + esc(t("et_sources")) + "</span>"]);
     l.push([t("et_lib"), M.etat ? '<span class="ok">' + esc(t("flux_recu")) + "</span>" : '<span class="att">' + esc(t("pas_encore_ouverte")) + "</span>"]);
     if (M.derniere) l.push([t("et_lu"), esc(fheure(M.derniere / 1000))]);
-    l.push([t("et_version"), "v" + VERSION + (WEB ? "" : " · " + badgeOfficiel(false))]);
-    return '<div class="cadre" style="margin-top:8px"><div class="sur">' + esc(t("et_titre")) + "</div>" + l.map(function (x) { return '<div class="ligne"><span class="doux">' + esc(x[0]) + '</span><span class="v">' + x[1] + "</span></div>"; }).join("") +
-      (M.erreurs.explo && M.derniere ? '<p class="doux" style="font-size:12.5px">' + esc(t("et_hors_ligne", { d: fheure(M.derniere / 1000) })) + "</p>" : "") +
-      '<p style="margin:10px 0 0"><button class="bouton2" id="rafraichir" style="padding:6px 14px;font-size:12px">↻ ' + esc(t("et_rafraichir")) + "</button></p></div>";
+    if (R.demo) l.push([t("et_version"), "v" + VERSION + ' · <span class="att">' + esc(t("demo_court")) + "</span>"]);
+    else l.push([t("et_version"), "v" + VERSION + " · " + badgeOfficiel(true) + (WEB ? "" : "<br>" + badgeOfficiel(false))]);
+    return '<div class="cadre"><div class="sur">' + esc(t("et_titre")) + "</div>" + l.map(function (x) { return '<div class="ligne"><span class="doux">' + esc(x[0]) + '</span><span class="v">' + x[1] + "</span></div>"; }).join("") +
+      (M.erreurs.explo && M.derniere ? '<p class="note">' + esc(t("et_hors_ligne", { d: fheure(M.derniere / 1000) })) + "</p>" : "") +
+      '<p class="boutons"><button class="bouton2" id="etat-rafraichir">↻ ' + esc(t("et_rafraichir")) + '</button><a class="bouton2" href="#/verifier">' + esc(t("tout_verifier")) + '</a><button class="bouton2" id="etat-fermer">' + esc(t("et_fermer")) + "</button></p></div>";
+  }
+  // la page « Mon adresse de reception » (Plus) : la meme carte que dans Reglages, seule, avec ses trois regles
+  function pageAdresse() {
+    return tete("adresse", t("d_lg_adresse")) + '<h1>' + esc(t("plus_adresse")) + '</h1>' + carteReception() +
+      '<ol class="etapes"><li><span>' + esc(t("rec_signature_note")) + "</span></li><li><span>" + esc(t("rec_rappel")) + "</span></li><li><span>" + esc(t(modeEnvoi())) + "</span></li></ol>";
   }
   // un mot du protocole, explique d'un toucher (panneau bas) : on dit la chose, puis son nom dans les regles
   function motSimple(cle, libelle) { return '<button type="button" class="mot" data-mot="' + cle + '">' + esc(libelle || t("mot_" + cle + "_t")) + "</button>"; }
@@ -1494,19 +1653,21 @@
   }
   function pageReglages() {
     var e = window.GG_EMPREINTE;
-    return '<div class="deux"><div><h1>' + esc(t("m_reglages")) + '</h1><div class="cadre"><label>' + esc(t("langue")) + '</label><select class="champ" id="r-lang">' + LANGUES.map(function (l) { return '<option value="' + l[0] + '"' + (l[0] === R.lang ? " selected" : "") + ">" + l[1] + "</option>"; }).join("") +
-      '</select><label>' + esc(t("src_chaine")) + '</label><input class="champ mono" id="r-explo" value="' + esc(R.explo) + '"><div class="doux" style="font-size:12px">' + esc(t(WEB ? "explo_note_web" : "explo_note")) + '</div><label>' + esc(t("src_chaine2")) + '</label><input class="champ mono" id="r-explo2" value="' + esc(R.explo2 || "") + '"><div class="doux" style="font-size:12px">' + esc(t("explo2_note")) + '</div><label>' + esc(t("src_librairie")) + '</label><input class="champ mono" id="r-caisse" value="' + esc(R.caisse) +
-      '"><label>' + esc(t("code_parrain")) + aide("parrain") + '</label><input class="champ mono" id="r-parrain" value="' + esc(R.parrain || "") + '" placeholder="abcdefgh">' +
-      (R.demo ? "" : '<div class="doux" style="font-size:12px" id="r-secours">' + esc(secoursValides().length ? t("secours_connu", { u: secoursValides().join(", ") }) : t("secours_aucun")) + "</div>") +
-      '<label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texte)"><input type="checkbox" id="r-demo"' + (R.demo ? " checked" : "") + "> " + esc(t("mode_demo")) + '</label><div class="doux" style="font-size:12px">' + esc(t("mode_demo_note")) +
-      '</div><label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texte)"><input type="checkbox" id="r-temoin"' + (R.temoin ? " checked" : "") + "> " + esc(t("reg_partage")) + '</label><div class="doux" style="font-size:12px">' + esc(R.temoin ? t("reg_partage_n") : t("reg_partage_non")) + " · " + esc(t("te_note")) + ' <a href="#/guide/temoin">' + esc(guide().en_savoir_plus) + " →</a></div>" +
-      '<p><button class="bouton" id="r-garder">' + esc(t("enregistrer")) + '</button> <button class="bouton2" id="r-accueil">' + esc(t("revoir_accueil")) + "</button></p></div>" + carteReception() + carteOublier() + jamais(false) + "</div>" +
-      '<div><div class="cadre gl-carte"><b class="gl-titre">' + esc(guide().carte_titre) + '</b><p class="doux" style="font-size:13px">' + esc(guide().carte_texte) + '</p><a class="bouton" href="#/guide">' + esc(guide().ouvrir) + "</a></div>" +
-      '<h1 style="margin-top:18px">' + esc(t("a_propos")) + '</h1><div class="cadre"><div class="ligne"><span class="doux">' + esc(t("version")) + '</span><span class="v">' + VERSION + (R.demo || WEB ? "" : (function () { var o = officiel(); return o.etat === "officiel" ? " · " + esc(t("prog_court_ok")) : o.etat === "essai" ? " · " + esc(t("prog_court_beta")) : ""; })()) + '</span></div><div class="ligne"><span class="doux">' + esc(t("empreinte_programme")) +
-      '</span><span class="v mono" style="font-size:12px">' + esc(e.empreinte) + (WEB ? '<br><span class="att" style="font-family:inherit">' + esc(t("prog_web")) + "</span>" : "") + '</span></div><div class="ligne"><span class="doux">' + esc(t("fichiers")) + '</span><span class="v">' + e.fichiers + '</span></div><div class="ligne"><span class="doux">' + esc(t("pierre")) +
-      '</span><span class="v"><a href="#/pierre">' + esc(t("lire_pierre")) + '</a> <span class="mono doux" style="font-size:11px">' + esc(window.GG_PIERRE.sha256.slice(0, 16)) + '…</span></span></div><div class="ligne"><span class="doux">' + esc(t("conditions")) +
-      '</span><span class="v"><a href="#/conditions">' + esc(t("lire_conditions")) + '</a></span></div><div class="ligne"><span class="doux">' + esc(t("fenetre_titre")) + '</span><span class="v" style="font-size:12.5px">' + esc(t(modeEnvoi())) + '</span></div><div class="ligne"><span class="doux">' + esc(t("licence")) +
-      '</span><span class="v">AGPL-3.0</span></div>' + (WEB ? "" : '<div class="ligne"><span class="doux">' + esc(t("desinstaller")) + '</span><span class="v" style="font-size:12.5px">' + esc(t(/Mac/.test(navigator.platform) ? "desinst_mac" : /Linux/.test(navigator.platform) ? "desinst_linux" : "desinst_win")) + '</span></div>') + '<p class="doux" style="font-size:12.5px">' + esc(t("apropos_texte")) + "</p></div></div></div>";
+    return tete("reglages", t("d_lg_reglages")) + '<h1>' + esc(t("m_reglages")) + '</h1><div class="cadre"><label for="r-lang">' + esc(t("langue")) + '</label><select class="champ" id="r-lang">' + LANGUES.map(function (l) { return '<option value="' + l[0] + '"' + (l[0] === R.lang ? " selected" : "") + ">" + l[1] + "</option>"; }).join("") +
+      '</select><label for="r-explo">' + esc(t("src_chaine")) + '</label><input class="champ mono" id="r-explo" value="' + esc(R.explo) + '"><div class="note">' + esc(t(WEB ? "explo_note_web" : "explo_note")) + '</div><label for="r-explo2">' + esc(t("src_chaine2")) + '</label><input class="champ mono" id="r-explo2" value="' + esc(R.explo2 || "") + '"><div class="note">' + esc(t("explo2_note")) + '</div><label for="r-caisse">' + esc(t("src_librairie")) + '</label><input class="champ mono" id="r-caisse" value="' + esc(R.caisse) +
+      '"><label for="r-parrain">' + esc(t("code_parrain")) + aide("parrain") + '</label><input class="champ mono" id="r-parrain" value="' + esc(R.parrain || "") + '" placeholder="abcdefgh">' +
+      (R.demo ? "" : '<div class="note" id="r-secours">' + esc(secoursValides().length ? t("secours_connu", { u: secoursValides().join(", ") }) : t("secours_aucun")) + "</div>") +
+      '<label class="case"><input type="checkbox" id="r-demo"' + (R.demo ? " checked" : "") + "> " + esc(t("mode_demo")) + '</label><div class="note">' + esc(t("mode_demo_note")) +
+      '</div><label class="case"><input type="checkbox" id="r-temoin"' + (R.temoin ? " checked" : "") + "> " + esc(t("reg_partage")) + '</label><div class="note">' + esc(R.temoin ? t("reg_partage_n") : t("reg_partage_non")) + " · " + esc(t("te_note")) + ' <a href="#/guide/temoin">' + esc(guide().en_savoir_plus) + " →</a></div>" +
+      '<p class="boutons"><button class="bouton" id="r-garder">' + esc(t("enregistrer")) + '</button> <button class="bouton2" id="r-accueil">' + esc(t("revoir_accueil")) + "</button></p></div>" +
+      '<div class="inter"><span><b>' + esc(t("d_calme")) + "</b><small>" + esc(t("d_calme_n")) + '</small></span><button type="button" class="sw" role="switch" id="r-calme" aria-checked="' + (UI.calme ? "true" : "false") + '" aria-label="' + esc(t("d_calme")) + '"></button></div>' +
+      carteReception() + carteOublier() +
+      '<div class="cadre gl-carte"><b class="gl-titre">' + esc(guide().carte_titre) + '</b><p class="note">' + esc(guide().carte_texte) + '</p><a class="bouton" href="#/guide">' + esc(guide().ouvrir) + "</a></div>" +
+      '<h2>' + esc(t("a_propos")) + '</h2><div class="cadre"><div class="ligne"><span class="doux">' + esc(t("version")) + '</span><span class="v">' + VERSION + (R.demo || WEB ? "" : (function () { var o = officiel(); return o.etat === "officiel" ? " · " + esc(t("prog_court_ok")) : o.etat === "essai" ? " · " + esc(t("prog_court_beta")) : ""; })()) + '</span></div><div class="ligne"><span class="doux">' + esc(t("empreinte_programme")) +
+      '</span><span class="v mono">' + esc(e.empreinte) + (WEB ? '<br><span class="att">' + esc(t("prog_web")) + "</span>" : "") + '</span></div><div class="ligne"><span class="doux">' + esc(t("fichiers")) + '</span><span class="v">' + e.fichiers + '</span></div><div class="ligne"><span class="doux">' + esc(t("pierre")) +
+      '</span><span class="v"><a href="#/pierre">' + esc(t("lire_pierre")) + '</a> <span class="mono doux">' + esc(window.GG_PIERRE.sha256.slice(0, 16)) + '…</span></span></div><div class="ligne"><span class="doux">' + esc(t("conditions")) +
+      '</span><span class="v"><a href="#/conditions">' + esc(t("lire_conditions")) + '</a></span></div><div class="ligne"><span class="doux">' + esc(t("fenetre_titre")) + '</span><span class="v">' + esc(t(modeEnvoi())) + '</span></div><div class="ligne"><span class="doux">' + esc(t("licence")) +
+      '</span><span class="v">AGPL-3.0</span></div>' + (WEB ? "" : '<div class="ligne"><span class="doux">' + esc(t("desinstaller")) + '</span><span class="v">' + esc(t(/Mac/.test(navigator.platform) ? "desinst_mac" : /Linux/.test(navigator.platform) ? "desinst_linux" : "desinst_win")) + '</span></div>') + '<p class="note">' + esc(t("apropos_texte")) + "</p></div>" + jamais(false);
   }
   // un rendu minimal et sur du Markdown des conditions : tout est echappe d'abord ; titres, listes, gras, italique, filets, tableaux
   // la typographie du rendu (le texte et son empreinte restent ceux du fichier publie) : apostrophe typographique ; en francais, espace
@@ -1530,11 +1691,11 @@
   function pageConditions() {
     var cg = window.GG_CG || {}, l = R.lang === "fr" ? "fr" : "en", x = cg[l] || cg.fr;
     if (!x) return '<h1>' + esc(t("conditions")) + '</h1><div class="cadre"><p class="doux">' + esc(t("cg_absentes")) + "</p></div>";
-    return '<div class="sur"><a href="#/reglages">\u2190 ' + esc(t("m_reglages")) + '</a></div><h1>' + esc(t("conditions")) + '</h1><p class="doux" style="font-size:12px">' + esc(t("cg_note", { l: l === "fr" ? "FR" : "EN" })) +
-      ' <span class="mono">SHA-256 ' + esc(String(x.sha256 || "").slice(0, 16)) + '…</span></p><div class="cadre cg-texte" style="font-size:13.5px;line-height:1.6;max-width:900px">' + rendreMd(x.texte, x === cg.fr) + "</div>";
+    return tete("conditions", t("d_lg_conditions")) + '<h1>' + esc(t("conditions")) + '</h1><p class="note">' + esc(t("cg_note", { l: l === "fr" ? "FR" : "EN" })) +
+      ' <span class="mono">SHA-256 ' + esc(String(x.sha256 || "").slice(0, 16)) + '…</span></p><div class="cadre cg-texte">' + rendreMd(x.texte, x === cg.fr) + "</div>";
   }
   function pagePierre() {
-    return '<div class="sur"><a href="#/reglages">← ' + esc(t("m_reglages")) + '</a></div><h1>' + esc(t("pierre")) + '</h1><p class="doux mono" style="font-size:12px">SHA-256 ' + esc(window.GG_PIERRE.sha256) + '</p><div class="cadre" style="white-space:pre-wrap;font-size:13.5px;line-height:1.6;max-width:900px">' + esc(window.GG_PIERRE.texte) + "</div>";
+    return tete("pierre", t("d_lg_pierre")) + '<h1>' + esc(t("pierre")) + '</h1><p class="intro">' + esc(t("d_pierre_sous")) + '</p><div class="cadre"><div class="ligne"><span class="doux">SHA-256</span><span class="v mono">' + esc(window.GG_PIERRE.sha256) + '</span></div><div class="ligne"><span class="doux">' + esc(t("conditions")) + '</span><span class="v"><a href="#/conditions">' + esc(t("lire_conditions")) + '</a></span></div></div><div class="cadre pierre-texte">' + esc(window.GG_PIERRE.texte) + "</div>";
   }
 
   // ================================================================== MASTERPIECE : le COFFRET, les messages, les livres, les chasses
@@ -1578,7 +1739,7 @@
       return '<details class="cadre gl-faq" data-cherche="' + esc(sansAccent(f.q + " " + f.r)) + '"><summary>' + esc(f.q) + "</summary><p>" + esc(f.r) + "</p></details>";
     }).join("");
     setTimeout(filtrerGuide, 0);
-    return '<div class="sur">' + esc(g.sur) + '</div><h1>' + esc(g.titre) + '</h1><p style="max-width:820px">' + esc(g.intro) + "</p>" +
+    return tete("guide", t("d_lg_guide")) + '<div><div class="sur">' + esc(g.sur) + '</div><h1>' + esc(g.titre) + '</h1></div><p class="intro">' + esc(g.intro) + "</p>" +
       '<input class="champ gl-cherche" id="g-cherche" type="search" autocomplete="off" placeholder="' + esc(g.recherche) + '" value="' + esc(G.q) + '">' +
       '<div id="g-parcours"><h2>' + esc(g.t_parcours) + "</h2>" + parcours + "</div>" +
       "<h2>" + esc(g.t_glossaire) + '</h2><div class="gl-liste">' + gloss + "</div>" +
@@ -1755,19 +1916,19 @@
 
   // ------------------------------------------------------------------ la page du COFFRET
   function pageCoffret() {
-    var tete = '<div class="sur">' + esc(t("verrou_a_date")) + '</div><h1>' + esc(t("m_coffret")) + aide("coffret") + "</h1>";
+    var tete_ = tete("coffret", t("d_lg_coffret")) + '<div><div class="sur">' + esc(t("verrou_a_date")) + '</div><h1>' + esc(t("m_coffret")) + aide("coffret") + "</h1></div>";
     if (!MP.coffret) {
-      return tete + '<div class="bandeau">' + esc(t(MP.coffretErreur && MP.coffretErreur !== "absent" ? messageCoffret(MP.coffretErreur) : "coffret_avant")) + "</div>" +
-        (MP.coffretDetail ? '<p class="doux mono" style="font-size:11px">' + esc(MP.coffretDetail) + "</p>" : "") +
+      return tete_ + '<div class="bandeau">' + esc(t(MP.coffretErreur && MP.coffretErreur !== "absent" ? messageCoffret(MP.coffretErreur) : "coffret_avant")) + "</div>" +
+        (MP.coffretDetail ? '<p class="note mono">' + esc(MP.coffretDetail) + "</p>" : "") +
         '<div class="trois">' + ["coffret_p1", "coffret_p2", "coffret_p3"].map(function (k, i) { return '<div class="cadre apparait" style="--i:' + i + '"><div class="grand-no">' + (i + 1) + "</div><p>" + esc(t(k)) + "</p></div>"; }).join("") + "</div>";
     }
     var tous = elements(), ouv = tous.filter(function (e) { return MP.ouverts[cleV(e)] != null; }).length, now = maintenant();
     var pro = tous.filter(function (e) { return MP.ouverts[cleV(e)] == null && e.ouverture_utc > now; }).sort(function (a, b) { return a.ouverture_utc - b.ouverture_utc; })[0];
     var attenteGravure = MP.grave !== "ok" && !MP.coffret.demo ? '<div class="bandeau">' + esc(t(MP.grave === "signature" ? "coffret_signature_ko" : "coffret_gravure_attente")) + "</div>" : "";
-    var bilan = attenteGravure + '<div class="deux"><div class="cadre"><div class="sur">' + esc(t("verrous_ouverts")) + '</div><div class="tresor or">' + ouv + " / " + tous.length + '</div><div class="barre" style="margin-top:8px"><i style="width:' + Math.round(ouv / Math.max(1, tous.length) * 100) + '%"></i></div>' +
-      '<p class="doux" style="font-size:12px">' + esc(t("coffret_empreinte", { h: MP.coffret.demo ? t("demo_court") : String(((M.manifeste || {}).coffret || {}).sha256 || "").slice(0, 16) })) + "</p></div>" +
+    var bilan = attenteGravure + '<div class="deux"><div class="cadre"><div class="sur">' + esc(t("verrous_ouverts")) + '</div><div class="tresor or">' + ouv + " / " + tous.length + '</div><div class="barre"><i style="width:' + Math.round(ouv / Math.max(1, tous.length) * 100) + '%"></i></div>' +
+      '<p class="note">' + esc(t("coffret_empreinte", { h: MP.coffret.demo ? t("demo_court") : String(((M.manifeste || {}).coffret || {}).sha256 || "").slice(0, 16) })) + "</p></div>" +
       '<div class="cadre"><div class="sur">' + esc(t("prochaine_ouverture")) + "</div>" + (pro ? '<div class="compte" data-compte="' + (+pro.ouverture_utc || 0) + '">' + fcompte(pro.ouverture_utc - now) + '</div><div class="doux">' + esc(t(cleOuv(pro), { n: pro.coffre, e: pro.numero || "" })) + " · " + esc(fdate(pro.ouverture_utc, true)) + "</div>" : "<div>" + esc(t("tout_ouvert")) + "</div>") +
-      (MP.erreurDrand ? '<p class="att" style="font-size:12px">' + esc(t("drand_injoignable")) + "</p>" : "") + "</div></div>";
+      (MP.erreurDrand ? '<p class="note att">' + esc(t("drand_injoignable")) + "</p>" : "") + "</div></div>";
     var lignes = "";
     for (var n = 1; n <= 24; n++) {
       var es = tous.filter(function (e) { return e.coffre === n; });
@@ -1776,7 +1937,7 @@
       lignes += '<div class="ligne-coffret apparait" style="--i:' + n + '"><a href="#/coffre/' + n + '" class="lc-n">' + coffreSvg(coffres()[n - 1].etat, 26) + " " + esc(t("coffre_n", { n: n })) + '</a><div class="lc-chips">' +
         es.map(function (e) { return chip(e, nomVerrou(e)); }).join("") + "</div></div>";
     }
-    return tete + '<p style="max-width:820px">' + esc(t("coffret_intro")) + "</p>" + bilan + '<div class="cadre" style="margin-top:14px">' + lignes + "</div>";
+    return tete_ + '<p class="intro">' + esc(t("coffret_intro")) + "</p>" + bilan + '<div class="cadre">' + lignes + "</div>";
   }
 
   // ------------------------------------------------------------------ les messages de l'auteur (signes par la Cave)
@@ -1857,21 +2018,27 @@
     return ancre_ === false ? '<span class="ko">✗ ' + esc(t("msg_pas_auteur")) + "</span>" :
       ancre_ ? '<span class="ok">✓ ' + esc(t("msg_ancre")) + "</span>" : '<span class="att">? ' + esc(t("msg_signe")) + "</span>";
   }
+  var RE_VERSION_MSG = /GodGift Core\s+[0-9A-Za-z.\-]+\s*:\s*(?:empreinte|fingerprint|hash)\s+[0-9a-f]{64}/;
   function pageMessages() {
     var l = MP.messages, sols = solutionsSignees();
-    var tete = '<div class="sur">' + esc(t("la_voix_auteur")) + '</div><h1>' + esc(t("m_messages")) + aide("messages") + "</h1>";
-    if (!l) return tete + '<div class="cadre"><p class="doux">' + esc(t("msg_injoignable")) + "</p></div>";
-    if (!l.length) return tete + '<div class="cadre"><p>' + esc(t("msg_aucun")) + '</p><p class="doux">' + esc(t("msg_comment")) + "</p></div>";
-    return tete + l.map(function (m, i) {
-      var preuve = '<details><summary class="doux" style="font-size:12px">' + esc(t("msg_preuve")) + '</summary><div class="mono doux" style="font-size:11px;word-break:break-all">' + esc(m.adresse) + "<br>" + esc(m.signature) + "</div></details>";
+    var tete_ = tete("messages", t("d_lg_messages")) + '<div><div class="sur">' + esc(t("la_voix_auteur")) + '</div><h1>' + esc(t("m_messages")) + aide("messages") + "</h1></div>";
+    if (!l) return tete_ + '<div class="cadre"><p class="doux">' + esc(t("msg_injoignable")) + "</p></div>";
+    if (!l.length) return tete_ + '<div class="cadre"><p>' + esc(t("msg_aucun")) + '</p><p class="doux">' + esc(t("msg_comment")) + "</p></div>";
+    var filtre = '<div class="bascule" role="group">' + ["tous", "solutions", "versions"].map(function (f) { return '<button type="button" data-filtre-msg="' + f + '" aria-pressed="' + (UI.filtreMsg === f ? "true" : "false") + '">' + esc(t("d_msg_" + f)) + "</button>"; }).join("") + "</div>";
+    var vus = 0, cartes = l.map(function (m, i) {
+      var s = sols.filter(function (x) { return x.m === m; })[0];
+      if (UI.filtreMsg === "solutions" && !s) return "";
+      if (UI.filtreMsg === "versions" && !RE_VERSION_MSG.test(m.texte || "")) return "";
+      vus++;
+      var preuve = '<details><summary class="doux">' + esc(t("msg_preuve")) + '</summary><div class="mono doux">' + esc(m.adresse) + "<br>" + esc(m.signature) + "</div></details>";
       var refuse = !m.valide || (MP.adresseAncree && m.adresse !== MP.adresseAncree);
       if (refuse)   // un message faux, ou d'une autre adresse, reste replie : son texte ne s'affiche que sur demande (hameconnage)
-        return '<details class="cadre message refuse apparait" style="--i:' + i + '"><summary><span class="tag">' + esc(m.forme ? fdateIso(m.date) : String(m.date || "?").slice(0, 10)) + "</span> " + badgeMessage(m) + ' <span class="doux" style="font-size:12px">' + esc(t("msg_replie")) +
+        return '<details class="msg message refuse apparait" style="--i:' + i + '"><summary><span class="tag">' + esc(m.forme ? fdateIso(m.date) : String(m.date || "?").slice(0, 10)) + "</span> " + badgeMessage(m) + ' <span class="doux">' + esc(t("msg_replie")) +
           '</span></summary><div class="txt doux">' + esc(m.texte) + "</div>" + preuve + "</details>";
-      var s = sols.filter(function (x) { return x.m === m; })[0];
-      return '<div class="cadre message apparait" style="--i:' + i + '"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span class="tag">' + esc(fdateIso(m.date)) + "</span>" + badgeMessage(m) + '</div><div class="txt">' + esc(m.texte) + "</div>" +
-        (s ? '<p style="font-size:13px"><b>' + esc(t("sol_titre")) + " · " + esc(t("coffre_n", { n: s.c })) + " · " + esc(t("chasse_n", { n: s.h })) + "</b> · " + badgeSolution(s) + '<br><span class="doux">' + esc(t("sol_note")) + "</span></p>" : "") + preuve + "</div>";
+      return '<div class="msg message apparait' + (s ? " sol" : "") + '" style="--i:' + i + '"><div class="d"><small>' + esc(fdateIso(m.date)) + "</small>" + '<span class="sig">' + badgeMessage(m) + '</span></div><div class="txt">' + esc(m.texte) + "</div>" +
+        (s ? '<p class="note"><b>' + esc(t("sol_titre")) + " · " + esc(t("coffre_n", { n: s.c })) + " · " + esc(t("chasse_n", { n: s.h })) + "</b> · " + badgeSolution(s) + '<br><span class="doux">' + esc(t("sol_note")) + "</span></p>" : "") + preuve + "</div>";
     }).join("");
+    return tete_ + filtre + (vus ? cartes : '<p class="note">' + esc(t("d_msg_aucun_filtre")) + "</p>");
   }
 
   // ------------------------------------------------------------------ les livres : compteur, verifier un exemplaire, mes livres, acheter
@@ -2122,7 +2289,7 @@
         '<span class="v"><input class="champ" style="width:230px;font-size:12px" data-lien="' + i + '" placeholder="' + esc(t("lien_telechargement")) + '" value="' + esc(l.lien || "") + '"> ' + (l.lien && /^https?:\/\//i.test(l.lien) ? '<a class="bouton2" target="_blank" rel="noopener" href="' + esc(l.lien) + '">' + esc(t("lire")) + "</a>" : "") +
         ' <button class="bouton2" data-compagnon="' + i + '">' + esc(t("cp_depuis_livre")) + "</button></span></div>";
     }).join("") : '<p class="doux">' + esc(t("mes_livres_vide")) + "</p>") + "</div>";
-    return '<div class="sur">' + esc(t("les_exemplaires")) + '</div><h1>' + esc(t("m_livres")) + aide("livres") + "</h1>" + compteur + achat + '<div class="deux" style="margin-top:14px">' + verif + mes + "</div>" + carteRoman();
+    return tete("livres", t("d_lg_livres")) + '<div><div class="sur">' + esc(t("les_exemplaires")) + '</div><h1>' + esc(t("m_livres")) + aide("livres") + "</h1></div>" + compteur + achat + verif + mes + carteRoman();
   }
   // ------------------------------------------------------------------ le roman : l'empreinte gravee de chaque edition (AEDE:livre:<fr|en>:<SHA-256 du fichier maitre>)
   // La librairie dit l'empreinte declaree ; la gravure se verifie sur la chaine par son txid ; le fichier maitre (garde par l'auteur et le
@@ -2175,7 +2342,7 @@
     var refus = Object.keys(ANN.refus).filter(function (h) { return ANN.refus[h] !== "ann_contredite"; });
     var bilan = '<p class="doux" style="font-size:12px">' + esc(t("ann_bilan", { l: ANN.lues, v: suivantes.length, r: refus.length })) + "</p>" +
       (refus.length ? '<p class="doux" style="font-size:12px">' + refus.slice(0, 12).map(function (h) { return esc(t("chasse_n", { n: h })) + " : " + esc(t(ANN.refus[h])); }).join("<br>") + "</p>" : "");
-    return '<div class="sur">' + esc(t("les_chasses_sur")) + '</div><h1>' + esc(t("m_chasses")) + aide("chasses") + "</h1>" + alertes +
+    return tete("chasses", t("d_lg_chasses")) + '<div><div class="sur">' + esc(t("les_chasses_sur")) + '</div><h1>' + esc(t("m_chasses")) + aide("chasses") + "</h1></div>" + alertes +
       '<div class="deux"><a class="cadre chasse-carte apparait" style="--i:0" href="#/tableau"><div class="sur">' + esc(t("chasse_n", { n: 1 })) + '</div><h2 style="margin:4px 0">' + esc(t("nom_chasse1")) + '</h2><p>' + esc(t("chasse1_texte")) + '</p><div class="doux">' +
       esc(t("chasse1_etat", { p: pris, n: 24 })) + '</div></a><a class="cadre chasse-carte apparait" style="--i:1" href="#/chasse/0"><div class="sur">' + esc(t("chasse_n", { n: 0 })) + '</div><h2 style="margin:4px 0">' + esc(t("cz_titre")) + '</h2><p>' + esc(t("cz_carte")) + "</p></a>" + cartes +
       '<div class="cadre chasse-carte a-venir apparait" style="--i:' + (suivantes.length + 2) + '"><div class="sur">' + esc(t("chasses_suivantes")) + aide("annonce") + '</div><h2 style="margin:4px 0">…</h2><p class="doux">' + esc(t("chasses_suivantes_texte")) + "</p>" + bilan + "</div></div>";
@@ -2457,18 +2624,18 @@
   function pageChasse(arg) {   // #/chasse/<h> : la chasse zero, ou une chasse annoncee et verifiee
     var h = parseInt(arg, 10); if (!(h >= 0)) h = 0;
     if (h !== 0 && !(ZS[h] && CHASSES[h])) {
-      return '<div class="sur">' + esc(t("ch_sur")) + '</div><h1>' + esc(t("chasse_n", { n: h })) + aide("annonce") + '</h1><div class="bandeau">' +
+      return tete("chasse", t("chasse_n", { n: h })) + '<div><div class="sur">' + esc(t("ch_sur")) + '</div><h1>' + esc(t("chasse_n", { n: h })) + aide("annonce") + '</h1></div><div class="bandeau">' +
         esc(ANN.refus[h] ? t("ch_refusee", { r: t(ANN.refus[h]) }) : t("ch_inconnue")) + '</div><p><a href="#/chasses">← ' + esc(t("m_chasses")) + "</a></p>";
     }
     CZ = ZS[h];
-    return pageChasseZero();
+    return (route().p === "chasse" ? tete("chasse", h === 0 ? t("cz_titre") : CHASSES[h].nom) : "") + pageChasseZero();
   }
   function teteChasse() {   // le titre et l'introduction : la chasse zero, ou une chasse annoncee (sa definition, son annonce)
     var cz = CHASSES[CZ.h];
-    if (CZ.h === 0) return '<div class="sur">' + esc(t("cz_sur")) + '</div><h1>' + esc(t("cz_titre")) + aide("cz") + "</h1><p style=\"max-width:820px\">" + esc(t("cz_intro", { e: cz.euros[0], n: cz.coffres })) + "</p>";
+    if (CZ.h === 0) return '<div><div class="sur">' + esc(t("cz_sur")) + '</div><h1>' + esc(t("cz_titre")) + aide("cz") + '</h1></div><p class="intro">' + esc(t("cz_intro", { e: cz.euros[0], n: cz.coffres })) + "</p>";
     var a = CZ.annonce || {};
-    return '<div class="sur">' + esc(t("ch_sur")) + " · " + esc(t("chasse_n", { n: CZ.h })) + '</div><h1>' + esc(cz.nom) + aide("annonce") + "</h1><p style=\"max-width:820px\">" +
-      esc(t("ch_intro", { n: cz.coffres, e: fsats(sommeEuros(cz)), d: fdate(heureZ(1, 3), true), r: t(cz.parallele ? "ch_rythme_par" : "ch_rythme_mois") })) + '</p><p class="doux mono" style="font-size:12px;word-break:break-all">' +
+    return '<div><div class="sur">' + esc(t("ch_sur")) + " · " + esc(t("chasse_n", { n: CZ.h })) + '</div><h1>' + esc(cz.nom) + aide("annonce") + '</h1></div><p class="intro">' +
+      esc(t("ch_intro", { n: cz.coffres, e: fsats(sommeEuros(cz)), d: fdate(heureZ(1, 3), true), r: t(cz.parallele ? "ch_rythme_par" : "ch_rythme_mois") })) + '</p><p class="note mono">' +
       esc(a.texte || "") + "<br>" + esc(t("ch_annonce_ok", { d: a.temps ? fdate(a.temps, true) : "?" })) + ' <a href="' + esc(webExplo("/tx/" + (a.txid_gravure || ""))) + '" target="_blank" rel="noopener">' + esc(String(a.txid_gravure || "").slice(0, 16)) + "…</a></p>";
   }
   function pageChasseZero() {
@@ -2490,7 +2657,7 @@
       elts.filter(function (e) { return e.ouverture_utc === pro.ouverture_utc && e.type === pro.type && CZ.ouverts[cleV(e)] == null; }).map(function (e) { return esc(t(cleOuv(e), { n: e.coffre, e: e.numero || "" })); }).join(", ") +
       " · " + esc(fdate(pro.ouverture_utc, true)) + "</div>" : "<div>" + esc(t("tout_ouvert")) + "</div>") +
       (CZ.grave !== "ok" ? '<p class="att" style="font-size:12px">' + esc(t(CZ.grave === "signature" ? "coffret_signature_ko" : "coffret_gravure_attente")) + "</p>" : "") + "</div>";
-    var tete2 = '<div class="grille-cz" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">' + cartes + prochaine + "</div>";
+    var tete2 = '<div class="grille-cz">' + cartes + prochaine + "</div>";
     // les textes, coffre par coffre : ses deux enigmes (le 3 et le 17), puis ses deux indices (J+30 et J+182 apres le cri) une fois ouverts,
     // et la solution si l'auteur l'a publiee apres la prise (message signe, verifie contre l'engagement grave ; jamais recopiee dans les reponses)
     var textes = ks.map(function (k, i) {
@@ -2516,7 +2683,7 @@
     var chasser = '<h2>' + esc(t("cz_chasser")) + '</h2><div class="cadre">' + choix + '<label>' + esc(t("reponse_3", { m: mz })) + '</label><input class="champ" id="z-r3" autocomplete="off" spellcheck="false"><div class="doux mono" id="z-v3" style="font-size:12px;min-height:18px"></div><label>' +
       esc(t("reponse_17", { m: mz })) + '</label><input class="champ" id="z-r17" autocomplete="off" spellcheck="false"><div class="doux mono" id="z-v17" style="font-size:12px;min-height:18px"></div><label>' + esc(t("alea_du_cri")) + '</label><input class="champ mono" id="z-alea" autocomplete="off" spellcheck="false" value="' + esc(al) + '" placeholder="' + esc(t("ph_64")) + '"><p><button class="bouton" id="z-calculer"' + (CZ.calcul ? " disabled" : "") + ">" + esc(t("calculer")) + "</button></p>" + res + "</div>";
     var tresors = ks.map(function (k) { return carteTresor(k.adresse); }).join("");
-    return tete + tete2 + tresors + '<div class="deux" style="margin-top:14px">' + textes + "</div>" + chasser + carteArmement(kz ? { n: nz, h: CZ.h, adresse: kz.adresse } : null);
+    return tete + tete2 + tresors + '<div class="deux">' + textes + "</div>" + chasser + carteArmement(kz ? { n: nz, h: CZ.h, adresse: kz.adresse } : null);
   }
   function calculerZ() {
     var Z = CZ, n = coffreZ(Z.coffre, Z) ? Z.coffre : 1, m = motsZ(n, Z), v3 = $("z-r3").value, v17 = $("z-r17").value, r3 = lireReponse(v3, m), r17 = lireReponse(v17, m), a = ($("z-alea").value || "").trim().toLowerCase();
@@ -2612,38 +2779,49 @@
     var r = route(), p = r.p;
     cadre(p);
     var f = { tableau: pageTableau, coffre: function () { return pageCoffre(r.a); }, enigmes: pageEnigmes, verifier: pageVerifier, chasser: function () { return pageChasser(null); },
-      compagnon: pageCompagnon, reseau: pageReseau, reglages: pageReglages, pierre: pagePierre, conditions: pageConditions, coffret: pageCoffret, messages: pageMessages, livres: pageLivres, chasses: pageChasses, chasse: function () { return pageChasse(r.a); }, guide: function () { return pageGuide(r.a); }, plus: pagePlus }[p] || pageTableau;
+      compagnon: pageCompagnon, reseau: pageReseau, reglages: pageReglages, pierre: pagePierre, conditions: pageConditions, coffret: pageCoffret, messages: pageMessages, livres: pageLivres, chasses: pageChasses, chasse: function () { return pageChasse(r.a); }, guide: function () { return pageGuide(r.a); }, plus: pagePlus, adresse: pageAdresse }[p];
+    if (!f) { location.replace("#/tableau"); return; }
     var focus = document.activeElement && document.activeElement.id, val = focus && $(focus) ? $(focus).value : null;
     $("page").classList.toggle("calme", MP.pagePrec === location.hash); MP.pagePrec = location.hash;   // les entrees ne rejouent qu'en changeant de page
+    // la cascade finie, la page devient « calme » : un bloc dont l'animation est terminee garderait un contexte d'empilement (Chromium), et la
+    // bulle « ? » du titre passerait sous le bloc suivant
+    clearTimeout(UI.calmeT); if (!$("page").classList.contains("calme")) UI.calmeT = setTimeout(function () { $("page").classList.add("calme"); }, 1300);
     // la zone Chasser (et la page d'une chasse, qui a son formulaire) n'est jamais envoyee a un service de traduction (audit godgift I7)
-    var chasse = p === "chasser" || p === "chasse";
+    var chasse = p === "chasser" || p === "chasse" || (p === "tableau" && UI.chasse !== "grande");   // audit 1.4.0, 1 : le formulaire de la chasse zero sous Coffres
     $("page").setAttribute("translate", chasse ? "no" : "yes"); $("page").classList.toggle("notranslate", chasse);
     $("page").innerHTML = bandeauFenetre() + f();                               // une fenetre dediee rechargee le dit sur chaque page
     if (focus && $(focus) && val != null && $(focus).tagName !== "SELECT") { $(focus).value = val; $(focus).focus(); }
+    apresRendu();                                                              // la carte en ₿, le halo de la cle, la poussiere d'or
   }
   window.addEventListener("hashchange", function () {
     var r = route(); if (r.p === "guide" && r.a) G.q = "";
     if (r.p === "chasser" && r.a) { H.choix = r.a; H.res = null; history.replaceState(null, "", "#/chasser"); }
     rendre(); document.querySelector(".dedans").scrollTop = 0; allerAuMot(); fermerMot();
-    var pe = $("etat-panneau"); if (pe) { pe.hidden = true; pe.innerHTML = ""; }
+    fermerEtat();
   });
+  function fermerEtat() { var pe = $("etat-panneau"); if (pe && !pe.hidden) { pe.hidden = true; pe.innerHTML = ""; var b = $("etat-details"); if (b) b.setAttribute("aria-expanded", "false"); } }
   document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") fermerMot(); });
   document.addEventListener("click", function (ev) {
     if (!$("accueil").hidden) return accueilClic(ev);
     var md = ev.target.closest("[data-mot]"); if (md) { ev.preventDefault(); return ouvrirMot(md.dataset.mot); }
     if (ev.target.closest("[data-fermer-mot]")) { ev.preventDefault(); return fermerMot(); }
     var de = ev.target.closest("#etat-details");
-    if (de) {
-      var p_ = $("etat-panneau"), ouvert = p_ && !p_.hidden;
-      if (!p_) { p_ = document.createElement("div"); p_.id = "etat-panneau"; p_.className = "etat-panneau"; $("ligne-etat").parentNode.insertBefore(p_, $("ligne-etat").nextSibling); }
-      p_.hidden = ouvert; p_.innerHTML = ouvert ? "" : detailsEtat(); de.setAttribute("aria-expanded", ouvert ? "false" : "true"); de.textContent = t("et_details") + (ouvert ? " ⌄" : " ⌃");
+    if (de) {   // la pastille de l'en-tete ouvre (ou ferme) le panneau d'etat
+      var p_ = $("etat-panneau"), ouvert = !p_.hidden;
+      p_.hidden = ouvert; p_.innerHTML = ouvert ? "" : detailsEtat(); de.setAttribute("aria-expanded", ouvert ? "false" : "true");
       return;
     }
-    var x = ev.target.closest("[data-p],[data-coffre],#rafraichir,#lancer,#rapport,#h-calculer,#h-lire-cri,#h-wif,#cp-envoyer,#r-garder,#r-accueil,#acheter,#ex-verifier,#ex-garder,[data-diffuser],#z-calculer,#r-rec-garder,#r-rec-changer,#r-rec-annuler,#r-rec-copier,#te-relire,[data-temoin],[data-accelerer],[data-envoyer],[data-annuler],[data-confirmer],[data-wif],[data-rec-ok],#roman-verifier,[data-retape],[data-compagnon],[data-ex-verif],[data-oublier]");
+    if (ev.target.closest("#etat-fermer")) return fermerEtat();
+    var vb = ev.target.closest("[data-vue]"); if (vb) { UI.vue = vb.dataset.vue; ecrireR("vue", UI.vue); return rendre(); }
+    var cb = ev.target.closest("[data-chasse-vue]"); if (cb) { UI.chasse = cb.dataset.chasseVue; return rendre(); }
+    var fb = ev.target.closest("[data-filtre-msg]"); if (fb) { UI.filtreMsg = fb.dataset.filtreMsg; return rendre(); }
+    var lb = ev.target.closest("[data-langue]"); if (lb && I18N[lb.dataset.langue]) { R.lang = lb.dataset.langue; ecrireR("lang", R.lang); return rendre(); }
+    if (ev.target.closest("#r-calme")) { UI.calme = !UI.calme; ecrireR("calme", UI.calme); document.documentElement.classList.toggle("calme", UI.calme); return rendre(); }
+    var x = ev.target.closest("[data-p],[data-coffre],#rafraichir,#etat-rafraichir,#lancer,#rapport,#h-calculer,#h-lire-cri,#h-wif,#cp-envoyer,#r-garder,#r-accueil,#acheter,#ex-verifier,#ex-garder,[data-diffuser],#z-calculer,#r-rec-garder,#r-rec-changer,#r-rec-annuler,#r-rec-copier,#te-relire,[data-temoin],[data-accelerer],[data-envoyer],[data-annuler],[data-confirmer],[data-wif],[data-rec-ok],#roman-verifier,[data-retape],[data-compagnon],[data-ex-verif],[data-oublier]");
     if (!x) return;
     if (x.dataset.p) location.hash = "#/" + x.dataset.p;
     else if (x.dataset.coffre) location.hash = "#/coffre/" + x.dataset.coffre;
-    else if (x.id === "rafraichir") { M.pret = false; rendre(); charger(); }
+    else if (x.id === "rafraichir" || x.id === "etat-rafraichir") { M.pret = false; rendre(); charger(); }
     else if (x.id === "lancer") verifier();
     else if (x.id === "rapport") { ev.preventDefault(); rapport(); }
     else if (x.id === "h-calculer") calculer();
@@ -2735,6 +2913,7 @@
   setInterval(function () {   // les comptes a rebours, chaque seconde ; la chaine, toutes les cinq minutes
     var now = maintenant();
     document.querySelectorAll("[data-compte]").forEach(function (el) { var s = +el.dataset.compte - now; el.textContent = fcompte(s); el.classList.toggle("imminent", s > 0 && s < 60); });
+    battreRebours();
     // la chasse n° 1, la chasse zero et chaque chasse annoncee : chaque verrou du s'ouvre seul, page affichee ou non
     [MP].concat(Object.keys(ZS).map(function (h) { return ZS[h]; })).forEach(function (Z) {
       if (Z.coffret && !Z.ouvreEnCours && Date.now() - (Z.dernierEssai || 0) > 1000 && elementsDe(Z).some(function (e) { return e.ouverture_utc <= now && Z.ouverts[cleV(e)] == null; })) { Z.dernierEssai = Date.now(); ouvrirSuite(Z); }

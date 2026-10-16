@@ -12,7 +12,8 @@
 
 | Version | Empreinte du programme (SHA-256 du fichier `SHA256SUMS`) |
 |---|---|
-| 1.3.0 (44 fichiers ; en attente du message signé de l’auteur) | `03f6a9640885aae94a692689ce9217f2fde399bf7274b2b91573242afb936d35` |
+| 1.4.0, la version design (54 fichiers ; en attente du message signé de l’auteur) | `c301d4018fc92f7b2e52482bdd4828b2cb8e4393833e010a342c16b35181a426` |
+| 1.3.0 (44 fichiers ; désignée par le message signé du 16 octobre 2026) | `03f6a9640885aae94a692689ce9217f2fde399bf7274b2b91573242afb936d35` |
 | 1.2.1-beta (43 fichiers) | `d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75` |
 | 1.2.0-beta (remplacée) | `529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3` |
 | 1.1.0-beta (remplacée) | `cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501` |
@@ -60,7 +61,8 @@ Les installateurs Windows officiels seront signés au nom d'Arthur Benjamin Myar
 
 | Version | Program fingerprint (SHA-256 of `SHA256SUMS`) |
 |---|---|
-| 1.3.0 (44 files; awaiting the author’s signed message) | `03f6a9640885aae94a692689ce9217f2fde399bf7274b2b91573242afb936d35` |
+| 1.4.0, the design version (54 files; awaiting the author’s signed message) | `c301d4018fc92f7b2e52482bdd4828b2cb8e4393833e010a342c16b35181a426` |
+| 1.3.0 (44 files; designated by the signed message of 16 October 2026) | `03f6a9640885aae94a692689ce9217f2fde399bf7274b2b91573242afb936d35` |
 | 1.2.1-beta (43 files) | `d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75` |
 | 1.2.0-beta (superseded) | `529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3` |
 | 1.1.0-beta (superseded) | `cee02c06833a6ffdd5d8db19dfb5ce174741100b03ef02448ca1b9226bda5501` |

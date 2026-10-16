@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Banc de GodGift Core dans un vrai Chromium, en file:// comme apres installation (godgift.html, le programme livre).
+Troisieme passe (1.4.0, version design) : cinq onglets en bas (Coffres, Enigmes, Trouver, Messages, Plus) ; Verifier, Compagnon,
+Reseau et Reglages s'ouvrent depuis « Plus » ; la pastille de l'en-tete (#statut) porte l'etat des sources ou « DEMONSTRATION ».
 Seconde passe : le nom officiel « GodGift Core » ; les nombres et les heures selon chaque langue (espace fine, UTC puis Paris) ; les
 textes francais en typographie francaise ; les conditions generales embarquees, ouvertes dans le programme ; Reseau en demonstration."""
 import hashlib, json, os, re, sys, time
@@ -60,7 +62,7 @@ with sync_playwright() as p:
     te = pg.inner_text('#page'); assert re.search(r'3 juin 2027 à 18:15:05 UTC \(20:15:05 à Paris\)', te) and re.search(r'17 janvier 2027 à 18:15:05 UTC \(19:15:05 à Paris\)', te), te[:600]
     vert('heures : en UTC avec les secondes, puis l heure de Paris au meme instant (ete : 20:15:05 ; hiver : 19:15:05), la date en toutes lettres')
     pg.evaluate("location.hash = '#/messages'"); pg.wait_for_timeout(400); tm = pg.inner_text('#page'); assert '3 juin 2027' in tm and '2027-06-03' not in tm; vert('messages : la date en toutes lettres')
-    pg.click('[data-p=verifier]'); pg.click('#lancer'); pg.wait_for_function('!document.querySelector("#lancer").disabled', timeout=20000)
+    pg.click('[data-p=plus]'); pg.click('[data-p=verifier]'); pg.click('#lancer'); pg.wait_for_function('!document.querySelector("#lancer").disabled', timeout=20000)
     assert 'contrôles verts' in pg.inner_text('#page'); pg.screenshot(path=f'{CAP}/08_demo_verifier.png', full_page=True); vert('verification (demo) et bilan')
     with pg.expect_download() as d: pg.click('#rapport')
     assert 'GodGift Core' in open(d.value.path(), encoding='utf-8').read(); vert('rapport de verification exporte')
@@ -73,19 +75,19 @@ with sync_playwright() as p:
     pg.wait_for_function('!document.querySelector("#h-calculer").disabled', timeout=120000)
     assert "Ce n’est pas la clé" in pg.inner_text('#page'); pg.screenshot(path=f'{CAP}/10_demo_chasser_resultat.png', full_page=True); vert('calcul complet, mauvaise reponse reconnue')
     # 6. compagnon
-    pg.click('[data-p=compagnon]'); pg.fill('#cp-a', 'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp'); pg.wait_for_timeout(200)
+    pg.click('[data-p=plus]'); pg.click('[data-p=compagnon]'); pg.fill('#cp-a', 'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp'); pg.wait_for_timeout(200)
     t = pg.inner_text('#page'); assert 'AEDE:compagnon:bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp' in t and '/c/' in t; vert('compagnon : message exact et lien')
     code = pg.evaluate("GG.codeCompagnon('bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp')")
     import base64, hashlib
     assert code == base64.b32encode(hashlib.sha256(b'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp').digest()).decode().lower()[:10]; vert('code compagnon identique a celui de la caisse')
     pg.fill('#cp-a', 'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvq'); pg.wait_for_timeout(100); assert 'invalide' in pg.inner_text('#page'); vert('adresse a somme fausse refusee')
     pg.fill('#cp-a', 'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp'); pg.fill('#cp-s', 'SIGNATURE'); pg.screenshot(path=f'{CAP}/11_demo_compagnon.png', full_page=True)
-    pg.click('[data-p=reseau]'); pg.wait_for_timeout(300); pg.screenshot(path=f'{CAP}/12_demo_reseau.png', full_page=True)
+    pg.click('[data-p=plus]'); pg.click('[data-p=reseau]'); pg.wait_for_timeout(300); pg.screenshot(path=f'{CAP}/12_demo_reseau.png', full_page=True)
     tr = pg.inner_text('#page'); assert 'les témoins ne sont pas lus' in tr and re.search(r'Ce programme\s+1\.\d+\.\d+\S* · [0-9a-f]{16}…', tr), tr[:900]
     vert('Reseau (demonstration) : la ligne « Ce programme » porte la version et l empreinte ; le cadre des temoins dit pourquoi il est vide')
-    pg.click('[data-p=reglages]'); pg.wait_for_timeout(300); pg.screenshot(path=f'{CAP}/13_reglages.png', full_page=True)
+    pg.click('[data-p=plus]'); pg.click('[data-p=reglages]'); pg.wait_for_timeout(300); pg.screenshot(path=f'{CAP}/13_reglages.png', full_page=True)
     pg.click('a[href="#/pierre"]'); pg.wait_for_timeout(300); assert 'Article 6' in pg.inner_text('#page'); vert('la Pierre embarquee se lit')
-    pg.click('[data-p=reglages]'); pg.wait_for_timeout(300); assert 'librairie.angedeleau.com/conditions' not in pg.content()
+    pg.click('[data-p=plus]'); pg.click('[data-p=reglages]'); pg.wait_for_timeout(300); assert 'librairie.angedeleau.com/conditions' not in pg.content()
     pg.click('a[href="#/conditions"]'); pg.wait_for_timeout(300); tc = pg.inner_text('#page')
     assert pg.evaluate('location.hash') == '#/conditions' and 'Conditions générales' in tc and 'Partie A' in tc and 'Partie C' in tc and '{{' not in tc, tc[:300]
     assert pg.evaluate('GG_CG.fr.sha256') == hashlib.sha256(open(CG_FR, 'rb').read()).hexdigest() and pg.evaluate('GG_CG.en.texte.indexOf("Terms and conditions") >= 0')

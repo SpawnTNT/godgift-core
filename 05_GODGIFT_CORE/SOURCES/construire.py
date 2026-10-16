@@ -128,7 +128,7 @@ def images():
         if f.startswith('fond_'):
             os.remove(os.path.join(APP, 'img', f))
     ange = os.path.join(AEDE, 'marketing', 'images_ange')    # les illustrations de l'atmosphere du livre (27 septembre)
-    for n in ('coffre_salle_inondee', 'coffre_quai', 'auteur_bureau_lyon', 'cave_forte', 'vouivre_tete', 'auteur_quai', 'vouivre_vol_2', 'vouivre_rocher'):
+    for n in ('cave_forte',):   # 1.4.0 : les autres fonds de la 1.3.0 ne sont plus utilises (le design a ses propres images)
         im = Image.open(os.path.join(ange, n + '.jpg')).convert('RGB'); im.thumbnail((1600, 1600))
         im.save(os.path.join(APP, 'img', 'fond_' + n + '.jpg'), quality=76, optimize=True)
     for n, src_ in (('accueil_vouivre', 'vouivre_vol_1'), ('accueil_vitrine', 'librairie_vitrine'), ('accueil_sceau', 'cave_sceau_mains')):   # l'accueil : un ecran, une image
@@ -136,8 +136,44 @@ def images():
         im.save(os.path.join(APP, 'img', 'fond_' + n + '.jpg'), quality=80, optimize=True, progressive=True)
     for f in ('cinzel-latin-400-normal', 'cinzel-latin-700-normal', 'cormorant-garamond-latin-600-normal', 'cormorant-garamond-latin-700-normal',
               'cormorant-garamond-latin-600-italic', 'dm-sans-latin-400-normal', 'dm-sans-latin-600-normal', 'dm-sans-latin-700-normal'):
-        shutil.copy(os.path.join(src, 'fonts', f + '.woff2'), os.path.join(APP, 'fonts', f + '.woff2'))
+        if os.path.isfile(os.path.join(src, 'fonts', f + '.woff2')):          # dans la trousse, le site n'est pas la : les polices deja dans app/fonts restent
+            shutil.copy(os.path.join(src, 'fonts', f + '.woff2'), os.path.join(APP, 'fonts', f + '.woff2'))
+        assert os.path.isfile(os.path.join(APP, 'fonts', f + '.woff2')), f'police absente : {f}'
+    # la police mono de la version design (IBM Plex Mono, licence SIL OFL 1.1), livree dans fonts_extra/ a cote de ce fichier
+    for f in ('ibm-plex-mono-latin-400-normal', 'ibm-plex-mono-latin-600-normal'):
+        shutil.copy(os.path.join(ICI, 'fonts_extra', f + '.woff2'), os.path.join(APP, 'fonts', f + '.woff2'))
+    images_design()
     icone()
+
+
+# la version design (DESIGN_2027/MAQUETTE_DESIGN.md) : une image par ecran, en WebP de 960 px de large et moins de 100 Ko chacune ;
+# entree_ange_cle.webp (l'Ange qui tient la cle, 640x360) est deja en WebP : copie telle quelle
+IMAGES_DESIGN = ('adresse_gardien_portable.png', 'coffre_dragon_vol.png', 'compagnon_gardien_vallee.jpg', 'enigmes_cle_six_cylindres.png',
+                 'guide_planche.png', 'messages_auteur_bureau.png', 'pierre_dragon_love.png', 'plus_salle_pas_perdus.png',
+                 'reglages_cle_assemblage.png', 'reseau_gardien_lac.png', 'trouver_cle_serrure.png', 'verifier_ange_pierre.jpg')
+DESIGN_MAX = 100 * 1024
+
+
+def images_design():
+    from PIL import Image
+    src = os.path.join(ICI, '..', 'DESIGN_2027', 'images')
+    if not os.path.isdir(src):
+        src = os.path.join(AEDE, 'godgift', 'DESIGN_2027', 'images')
+    assert os.path.isdir(src), 'DESIGN_2027/images introuvable'
+    for f in os.listdir(os.path.join(APP, 'img')):
+        if f.startswith('design_'):
+            os.remove(os.path.join(APP, 'img', f))
+    shutil.copy(os.path.join(src, 'entree_ange_cle.webp'), os.path.join(APP, 'img', 'design_entree_ange_cle.webp'))
+    for n in IMAGES_DESIGN:
+        im = Image.open(os.path.join(src, n)).convert('RGB')
+        if im.width > 960:
+            im = im.resize((960, round(im.height * 960 / im.width)), Image.LANCZOS)
+        sortie = os.path.join(APP, 'img', 'design_' + os.path.splitext(n)[0] + '.webp')
+        for q in (82, 76, 70, 64, 58, 52, 46, 40, 34, 28):       # la qualite descend jusqu'a tenir sous 100 Ko (la planche du guide descend a 34)
+            im.save(sortie, 'WEBP', quality=q, method=6)
+            if os.path.getsize(sortie) < DESIGN_MAX:
+                break
+        assert os.path.getsize(sortie) < DESIGN_MAX, f'{n} : plus de 100 Ko en WebP'
 
 
 def icone():
@@ -401,6 +437,7 @@ Categories=Game;Network;
 ''')
     ico = os.path.join(b, 'usr', 'share', 'icons', 'hicolor', '256x256', 'apps'); os.makedirs(ico); shutil.copy(os.path.join(APP, 'img', 'icone.png'), os.path.join(ico, 'godgift-core.png'))
     doc = os.path.join(b, 'usr', 'share', 'doc', 'godgift-core'); os.makedirs(doc); shutil.copy(os.path.join(ICI, 'LICENSE'), os.path.join(doc, 'copyright'))
+    shutil.copy(os.path.join(APP, 'fonts', 'OFL.txt'), os.path.join(doc, 'OFL.txt'))
     taille = sum(os.path.getsize(os.path.join(r, f)) for r, _, fs in os.walk(b) for f in fs) // 1024
     os.makedirs(os.path.join(b, 'DEBIAN'))
     ecrire(os.path.join(b, 'DEBIAN', 'control'), f'''Package: godgift-core

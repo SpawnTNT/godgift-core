@@ -17,7 +17,7 @@ var SOMMES = {};      // rempli par construire.py : { "chemin relatif": "sha256 
 var PLUS_TARD = /^img\/fond_/;   // les grandes images de fond : verifiees a la premiere lecture, pas a l'installation
 var CACHE = "gg-" + EMPREINTE.slice(0, 16);
 var TYPES = { html: "text/html; charset=utf-8", js: "text/javascript; charset=utf-8", css: "text/css; charset=utf-8", webmanifest: "application/manifest+json",
-  png: "image/png", jpg: "image/jpeg", ico: "image/x-icon", icns: "application/octet-stream", woff2: "font/woff2" };
+  png: "image/png", jpg: "image/jpeg", ico: "image/x-icon", icns: "application/octet-stream", webp: "image/webp", woff2: "font/woff2" };
 
 function hex(b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return (x < 16 ? "0" : "") + x.toString(16); }).join(""); }
 function chemin(url) {   // l'adresse demandee -> le fichier du programme qu'elle designe, ou null (alors le service web ne s'en mele pas)
