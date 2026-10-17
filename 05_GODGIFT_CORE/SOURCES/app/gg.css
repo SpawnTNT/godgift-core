@@ -530,3 +530,4 @@ nav.onglets .o .point-or{position:static;margin-left:auto;align-self:center}
 .ad-retour{display:flex;align-items:center;gap:10px}.ad-retour .fleche-retour{position:static;flex:none}.ad-retour .jalons{flex:1 1 auto}
 .voir-lien{font-weight:600}
 @media (max-height:700px) and (max-width:1023px){.ad-fil2{display:none}}
+.leg i.semer{background:transparent;border:1px dashed #8f8672}

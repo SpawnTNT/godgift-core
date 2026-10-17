@@ -2926,7 +2926,7 @@
   function tuile(k) {
     var cls = "tuile " + k.v + (k.gros ? " gros" : "");
     var mt = k.etat === "pris" ? t("c_trouve") : k.mt, court = k.sats != null && k.etat !== "a_semer" && k.etat !== "pris" ? fsats(k.sats) : mt;   // le nombre seul : la legende dit « sats »
-    return '<button type="button" class="' + cls + '" data-fiche="' + k.n + '" aria-label="' + esc(t("coffre_n", { n: k.n }) + " · " + t("d_leg_" + k.v) + (k.etat === "pris" ? "" : " · " + mt)) + '">' + coffreSvg(k.etat, 30) + "<b>" + k.n + "</b><small>" + esc(court) + "</small></button>";
+    return '<button type="button" class="' + cls + '" data-fiche="' + k.n + '" aria-label="' + esc(t("coffre_n", { n: k.n }) + " · " + t("d_leg_" + k.v) + (k.etat === "pris" ? "" : " · " + mt + (k.etat === "a_semer" ? " " + t("c_au_semis") : ""))) + '">' + coffreSvg(k.etat, 30) + "<b>" + k.n + "</b><small>" + esc(court) + "</small></button>";
   }
   function pageTableau() {
     var now = maintenant(), pro = prochaine();
@@ -2941,11 +2941,12 @@
     var sur, titre;
     if (UI.chasse === "zero") { sur = t("c_zero_sur"); titre = t("c_zero_titre"); }
     else if (chasseZ) { sur = t("c_chasse_sur", { n: UI.chasse, k: CHASSES[+UI.chasse].coffres }); titre = CHASSES[+UI.chasse].nom; }
-    else { sur = t("c_tableau_sur") + (!M.manifeste ? " · " + t("c_depart", { e: feur(4000) }) : ""); titre = t("c_tableau_titre"); }
+    else { sur = t("c_tableau_sur") + (!M.manifeste ? " · " + t("c_semis_total", { e: feur(4000) }) : ""); titre = t("c_tableau_titre"); }   // avant le semis : un montant prevu, jamais une promesse
     var liste = coffresVue(UI.chasse), grille = '<div class="grille24' + (liste.length <= 3 ? " g3" : "") + '">' + liste.map(tuile).join("") + "</div>";
     var hz = UI.chasse === "zero" ? 0 : +UI.chasse;
-    var leg = '<div class="leg">' + ["jeu", "prendre", "venir", "pris"].map(function (v) { return '<span><i class="' + v + '"></i>' + esc(t("d_leg_" + v)) + "</span>"; }).join("") +
-      (chasseZ ? '<a class="fin" href="#/chasse/' + hz + '">' + esc(t("c_voir_chasse")) + "</a>" : M.manifeste ? '<span class="fin">sats</span>' : "") + "</div>";
+    var presents = {}; liste.forEach(function (k) { presents[k.v] = 1; });
+    var leg = '<div class="leg">' + ["jeu", "prendre", "venir", "pris", "semer"].filter(function (v) { return presents[v]; }).map(function (v) { return '<span><i class="' + v + '"></i>' + esc(t("d_leg_" + v)) + "</span>"; }).join("") +
+      (chasseZ ? '<a class="fin" href="#/chasse/' + hz + '">' + esc(t("c_voir_chasse")) + "</a>" : M.manifeste ? '<span class="fin">sats</span>' : '<span class="fin">' + esc(t("c_leg_semis")) + "</span>") + "</div>";
     var geste = !!tresorSignature(), attente = tresorEnAttente() ? '<div class="bandeau mince ' + (geste ? "att" : "ok") + '"><span>' + esc(t(geste ? "tr_attend" : "tr_en_cours", { o: t("tb_chasser") })) + '</span><a class="bouton" href="#/chasser">' + esc(t("tb_chasser")) + " →</a></div>" : "";
     var alerteMan = M.erreurs.manifChange || M.erreurs.manifeste ? '<div class="bandeau ko">⚠ ' + esc(t(M.erreurs.manifChange ? "manif_change" : "manif_invalide")) + "</div>" : "";
     var qTemoin = !R.demo && R.installe && R.temoin == null ? bandeauCourt("temoin", t("ac4_q") + " " + t("ac4_texte"), '<button class="bouton2" data-temoin="1">' + esc(t("ac4_oui")) + '</button> <button class="bouton2" data-temoin="0">' + esc(t("ac4_non")) + "</button>", "", t("pe_choisir")) : "";
@@ -2958,11 +2959,11 @@
     var h = UI.chasse === "grande" ? 1 : UI.chasse === "zero" ? 0 : +UI.chasse, d = h === 1 ? null : CHASSES[h];
     var t3 = h === 1 ? coffres()[n - 1].t3 : heureDef(d, n, 3), t17 = h === 1 ? coffres()[n - 1].t17 : heureDef(d, n, 17);
     var adr = h === 1 ? (coffres()[n - 1].c || {}).adresse : (ZS[h] && ZS[h].man ? (ZS[h].man.coffres.filter(function (c) { return c.n === n; })[0] || {}).adresse : "");
-    var l = [[t("c_fiche_etat"), t("d_leg_" + k.v)]].concat(k.etat === "pris" ? [] : [[t("c_fiche_montant"), k.mt]]).concat([[t("c_fiche_enigmes"), fjour(t3) + " · " + fjour(t17)]]);
+    var l = [[t("c_fiche_etat"), t("d_leg_" + k.v)]].concat(k.etat === "pris" ? [] : [[t(k.etat === "a_semer" ? "c_fiche_prevu" : "c_fiche_montant"), k.mt]]).concat([[t("c_fiche_enigmes"), fjour(t3) + " · " + fjour(t17)]]);
     if (adr) l.push([t("c_fiche_adresse"), '<span class="mono" style="font-size:.74rem">' + esc(adr.slice(0, 8)) + "…" + esc(adr.slice(-8)) + "</span>"]);
     var boutons = (h === 1 ? '<a class="bouton2" href="#/coffre/' + n + '" data-fermer-mot="1">' + esc(t("c_fiche_voir")) + "</a>" : '<a class="bouton2" href="#/chasse/' + h + '" data-fermer-mot="1">' + esc(t("c_fiche_voir")) + "</a>") +
       ((k.etat === "a_prendre" || k.etat === "en_chasse") && adr ? ' <a class="bouton" href="#/chasser/' + (h === 1 ? n : "Z" + h + ":" + n) + '" data-fermer-mot="1">' + esc(t("c_fiche_trouver")) + "</a>" : "");
-    return { titre: t("coffre_n", { n: n }) + " · " + k.titre, corps: '<div class="cadre kv">' + l.map(function (x) { return '<div class="ligne"><span>' + esc(x[0]) + '</span><span class="v">' + (x[1].indexOf("<") >= 0 ? x[1] : esc(x[1])) + "</span></div>"; }).join("") + '</div><p class="boutons">' + boutons + "</p>" };
+    return { titre: t("coffre_n", { n: n }) + " · " + k.titre, corps: '<div class="cadre kv">' + l.map(function (x) { return '<div class="ligne"><span>' + esc(x[0]) + '</span><span class="v">' + (x[1].indexOf("<") >= 0 ? x[1] : esc(x[1])) + "</span></div>"; }).join("") + "</div>" + (k.etat === "a_semer" ? '<p class="doux" style="font-size:.8rem">' + esc(t("c_semis_note")) + "</p>" : "") + '<p class="boutons">' + boutons + "</p>" };
   }
   // ------------------------------------------------------------------ les enigmes : une a la fois, la plus recente d'abord, ‹ › pour parcourir
   function entierDans(x, a, b) { var n = Number(x); return (typeof x === "number" || typeof x === "string") && String(x) === String(n) && n % 1 === 0 && n >= a && n <= b; }

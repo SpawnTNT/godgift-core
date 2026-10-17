@@ -35,7 +35,7 @@ with sync_playwright() as p:
     assert '4 / 4' in pg.inner_text('#accueil') and pg.evaluate("document.getElementById('ac-suivant').disabled"); pg.wait_for_timeout(1300); pg.screenshot(path=f'{CAP}/02b_accueil_promesses.png')
     pg.click('[data-ac-temoin="0"]'); pg.click('#ac-suivant'); vert('accueil : les deux promesses (JAMAIS, temoin) ; le choix est demande')
     pg.wait_for_timeout(2500); assert not pg.is_visible('#accueil'); vert('accueil termine, reglages retenus')
-    t = pg.inner_text('#page'); assert '4\u202f000\u00a0€' in t and 'À VENIR' in t and pg.locator('.tuile.semer').count() == 24; vert('vraie chasse avant le semis : 24 coffres a semer, 4 000 EUR (espace fine insecable des milliers)')
+    t = pg.inner_text('#page'); assert '4\u202f000\u00a0€' in t and 'À SEMER' in t and 'PRÉVUS AU SEMIS' in t and 'À VENIR' not in t and pg.locator('.tuile.semer').count() == 24; vert('vraie chasse avant le semis : 24 coffres a semer, 4 000 EUR au semis (espace fine insecable des milliers), la legende ne montre que les etats presents et dit « EUR prevus au semis »')
     assert pg.inner_text('.logo').startswith('GodGift Core') and 'GODGIFT' not in pg.evaluate("document.body.innerHTML"); vert('le nom officiel : GodGift Core, deux G majuscules')
     typo = pg.evaluate("""(function () {
         var fr = GG_I18N.fr, m = [];
