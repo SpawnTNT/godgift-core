@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   if (window.top !== window.self) { document.body.textContent = ""; return; }   // jamais dans le cadre d'une autre page
-  var VERSION = "1.4.0";
+  var VERSION = "1.4.1";
   var A = 2027;
   // la version web (https://app.angedeleau.com/, hebergement statique a part) lit la librairie sur angedeleau.com ; installe, sur librairie.angedeleau.com
   var WEB = location.protocol === "https:";
@@ -388,7 +388,7 @@
 
   function cadre(page) {
     document.documentElement.lang = R.lang;
-    $("sous-logo").textContent = VERSION + " · " + t("d_sous");
+    $("sous-logo").innerHTML = esc(VERSION) + '<span class="sous-titre"> · ' + esc(t("d_sous")) + "</span>";   // sur un ecran etroit, le CSS ne garde que la version
     // la pastille : verte quand les deux sources s'accordent, orange en demonstration ou a une seule source, rouge en desaccord ou hors ligne
     var ns = sources().length, cls, txt;
     if (R.demo) { cls = "att"; txt = t("demo_court"); }
@@ -534,6 +534,23 @@
       Object.keys(v).forEach(function (k) { var b = el.querySelector("." + k); if (!b) return; b.textContent = k === "rj" ? v[k] : (v[k] < 10 ? "0" : "") + v[k]; if (k === "rs" && !mouvementReduit()) { b.classList.remove("tic"); void b.offsetWidth; b.classList.add("tic"); } });
     });
   }
+  // 1.4.1 : le fil du chasseur. Trois jalons (adresse, entrainement, chasse) et la prochaine chose a faire, calculee sur l'etat reel :
+  // l'ecran dit quoi faire maintenant ; les details restent derriere un « ? » ou un depliant.
+  function prochaineEtape() {
+    var rv = receptionValide(), adr = !!rv.ok, essai = lireR("essai_fait", false) === true, now = maintenant();
+    var aPrendre = coffres().filter(function (k) { return k.etat === "a_prendre"; })[0], enJeu = coffres().filter(function (k) { return k.etat === "en_chasse"; })[0];
+    var parue = enigmesParues().slice(-1)[0], cz = ZS[0] && ZS[0].coffret && elementsDe(ZS[0]).some(function (e) { return e.type === "enigme" && ZS[0].ouverts[cleV(e)] != null; });
+    var e;
+    if (!adr) e = { n: 1, k: "pe_adresse", lien: "#/adresse", b: "pe_adresse_b" };
+    else if (aPrendre || enJeu) e = { n: 3, k: "pe_mots", lien: "#/chasser/" + (aPrendre || enJeu).n, b: "pe_mots_b", v: { n: (aPrendre || enJeu).n } };
+    else if (parue) e = { n: 3, k: "pe_lire", lien: "#/enigmes", b: "pe_lire_b", v: { n: parue.numero } };
+    else if (cz) e = { n: 3, k: "pe_lire_zero", lien: "#/chasse/0", b: "pe_lire_zero_b" };
+    else if (!essai) e = { n: 2, k: "pe_essai", lien: "#/chasser/A", b: "pe_essai_b" };
+    else e = { n: 3, k: "pe_attendre", lien: "#/enigmes", b: "pe_attendre_b" };
+    var jalons = [["pe_j_adresse", adr], ["pe_j_essai", essai], ["pe_j_chasse", !!(aPrendre || enJeu || parue)]];
+    return '<div class="fil-chasseur"><div class="jalons" aria-hidden="true">' + jalons.map(function (j, i) { return '<span class="' + (j[1] ? "fait" : i + 1 === e.n ? "actif" : "") + '"><i>' + (j[1] ? "✓" : i + 1) + "</i>" + esc(t(j[0])) + "</span>"; }).join("") + "</div>" +
+      '<div class="pe"><span class="sur">' + esc(t("pe_titre")) + '</span><p>' + esc(t(e.k, e.v || {})) + '</p><a class="bouton" href="' + e.lien + '">' + esc(t(e.b)) + " →</a></div></div>";
+  }
   function pageTableau() {
     var cs = coffres(), now = maintenant(), pro = prochaine(), total = 0, restants = 0;
     cs.forEach(function (k) { if (k.etat !== "pris" && k.sats) { total += k.sats; restants++; } });
@@ -569,8 +586,8 @@
     var bas = '<div class="cadre"><div class="sur">' + esc(t("ce_qui_se_passe")) + '</div><div class="fil-ev">' + fil() + "</div></div>";
     var qTemoin = !R.demo && R.installe && R.temoin == null ? '<div class="bandeau">' + esc(t("ac4_q")) + " " + esc(t("ac4_texte")) + ' <span class="boutons"><button class="bouton2" data-temoin="1">' + esc(t("ac4_oui")) + '</button> <button class="bouton2" data-temoin="0">' + esc(t("ac4_non")) + "</button></span></div>" : "";
     var alerteMan = M.erreurs.manifChange || M.erreurs.manifeste ? '<div class="bandeau ko">⚠ ' + esc(t(M.erreurs.manifChange ? "manif_change" : "manif_invalide")) + "</div>" : "";
-    return alerteMan + alerteReception() + qTemoin + (R.demo ? '<div class="bandeau demo">' + esc(t("demo_bandeau")) + "</div>" : "") + (M.manifCache ? '<div class="bandeau">' + esc(t("librairie_tombee")) + "</div>" : "") +
-      trois + vedette + (chasseZ ? "" : chiffres + chips) + segment + formes + vue + (chasseZ ? "" : '<p class="note">' + esc(t("d_note_coffres")) + "</p>") + (chasseZ ? suite.replace(/<h1>/g, '<h2 class="h1-sous">').replace(/<\/h1>/g, "</h2>") : suite) + bas;
+    return alerteMan + alerteReception() + (R.demo ? '<div class="bandeau demo">' + esc(t("demo_bandeau")) + "</div>" : "") + (M.manifCache ? '<div class="bandeau">' + esc(t("librairie_tombee")) + "</div>" : "") +
+      (chasseZ ? trois : prochaineEtape()) + qTemoin + vedette + (chasseZ ? "" : chiffres + chips) + segment + formes + vue + (chasseZ ? "" : '<p class="note">' + esc(t("d_note_coffres")) + "</p>") + (chasseZ ? suite.replace(/<h1>/g, '<h2 class="h1-sous">').replace(/<\/h1>/g, "</h2>") : suite) + bas;
   }
   // la poussiere d'or de la vedette : 46 particules sur un canvas, eteinte en mouvement reduit ; une seule boucle a la fois
   function poussiere() {
@@ -592,7 +609,24 @@
     var IW = 640, IH = 360, FX = .555, FY = .37, w = f.clientWidth, h = f.clientHeight, s = Math.max(w / IW, h / IH), rw = IW * s, rh = IH * s, ox = (w - rw) / 2, oy = (h - rh) * .5;
     g.style.left = (ox + FX * rw) + "px"; g.style.top = (oy + FY * rh) + "px";
   }
-  function apresRendu() { dessinerCarte(); placerGlobe(); poussiere(); }
+  function apresRendu() { plierTextes(); dessinerCarte(); placerGlobe(); poussiere(); }
+  // 1.4.1 : moins de texte a l'ecran. Une intro ou une note longue ne montre que sa premiere phrase ; le reste s'ouvre d'un toucher
+  // (« En savoir plus ») et reste ouvert tant qu'on est sur la page (l'ecran se redessine souvent). Rien n'est retire : tout se lit a la demande.
+  function plierTextes() {
+    var page = $("page"), cle = route().p;
+    UI.deplies = UI.deplies || {};
+    Array.prototype.slice.call(page.querySelectorAll("p.intro, p.note, div.note, p.doux")).forEach(function (el, i) {
+      if (el.id || el.children.length || el.closest("details, .cg, .enig, .msg, .etapes, .feuille-mot, .bandeau")) return;   // un texte d'etat (avec id) reste entier
+      var txt = el.textContent || ""; if (txt.length < 170) return;
+      var m = /^([\s\S]*?[.!?…])\s+(?=\S)/.exec(txt) || /^([\s\S]*?)\s[:;]\s(?=\S)/.exec(txt); if (!m || m[1].length < 30 || txt.length - m[1].length < 50) return;
+      var tete_ = /[.!?…]$/.test(m[1]) ? m[1] : m[1] + " …";
+      var id = cle + "|" + txt.slice(0, 48), d = document.createElement("details"), s = document.createElement("summary"), p = document.createElement(el.tagName);
+      d.className = "suite"; s.textContent = guide().en_savoir_plus || "En savoir plus"; p.className = el.className; p.textContent = txt.slice(m[1].length).trim();
+      if (el.getAttribute("style")) p.setAttribute("style", el.getAttribute("style"));
+      el.textContent = tete_; d.open = !!UI.deplies[id]; d.setAttribute("data-depli", id); d.appendChild(s); d.appendChild(p); el.parentNode.insertBefore(d, el.nextSibling);
+    });
+  }
+  document.addEventListener("toggle", function (ev) { var d = ev.target; if (d && d.dataset && d.dataset.depli) { UI.deplies = UI.deplies || {}; if (d.open) UI.deplies[d.dataset.depli] = 1; else delete UI.deplies[d.dataset.depli]; } }, true);
   window.addEventListener("resize", function () { dessinerCarte(); placerGlobe(); });
   function fil() {
     var ev = [], now = maintenant();
@@ -604,22 +638,24 @@
   }
 
   // ------------------------------------------------------------------ 2. un coffre
+  function ligneDe(x) { return '<div class="ligne"><span class="doux">' + (x[0].indexOf("<") >= 0 ? x[0] : esc(x[0])) + '</span><span class="v">' + (x[1].indexOf("<") >= 0 ? x[1] : esc(x[1])) + "</span></div>"; }
   function pageCoffre(n) {
     n = parseInt(n, 10); if (!(n >= 1 && n <= 24) || String(n) !== String(route().a)) { setTimeout(function () { location.replace("#/tableau"); }, 0); return pageTableau(); }
     var k = coffres()[n - 1], c = k.c, now = maintenant();
     var l = [[t("type"), t("type_" + k.type) + " · " + t("mots_par", { m: MOTS[k.type] })], [t("montant_depart"), feur(k.euros) + (c && c.sats_semes ? " = " + fsats(c.sats_semes) + " sats" : "")],
       [t("enigme_du_3"), fdate(k.t3, true)], [t("enigme_du_17"), fdate(k.t17, true)]];
+    var tech = [];
     if (c) {
-      l.push([t("adresse"), R.demo ? '<span class="mono">' + esc(c.adresse) + "</span>" : '<a href="' + esc(webExplo("/address/" + c.adresse)) + '" target="_blank" class="mono">' + esc(c.adresse) + "</a>"]);
-      l.push([motSimple("empreinte", t("empreinte_alea")), '<span class="mono" style="font-size:12px">' + esc(c.empreinte_alea) + "</span>"]);
-      l.push([motSimple("cri", t("le_cri")), now < k.t17 ? t("cri_attend", { d: fdate(k.t17 + 3600, true) }) : R.demo ? '<span class="mono">' + esc(String(c.cri_txid).slice(0, 16)) + "…</span>" : '<a target="_blank" href="' + esc(webExplo("/tx/" + c.cri_txid)) + '" class="mono">' + esc(String(c.cri_txid).slice(0, 16)) + "…</a>"]);
+      tech.push([t("adresse"), R.demo ? '<span class="mono">' + esc(c.adresse) + "</span>" : '<a href="' + esc(webExplo("/address/" + c.adresse)) + '" target="_blank" class="mono">' + esc(c.adresse) + "</a>"]);
+      tech.push([motSimple("empreinte", t("empreinte_alea")), '<span class="mono" style="font-size:12px">' + esc(c.empreinte_alea) + "</span>"]);
+      tech.push([motSimple("cri", t("le_cri")), now < k.t17 ? t("cri_attend", { d: fdate(k.t17 + 3600, true) }) : R.demo ? '<span class="mono">' + esc(String(c.cri_txid).slice(0, 16)) + "…</span>" : '<a target="_blank" href="' + esc(webExplo("/tx/" + c.cri_txid)) + '" class="mono">' + esc(String(c.cri_txid).slice(0, 16)) + "…</a>"]);
     }
     var en = enigmesParues().filter(function (e) { return e.coffre === n; });
     var montant = k.sats != null && k.etat !== "a_semer" ? fsats(k.sats) + " sats" : feur(k.euros), eur = k.sats != null && k.etat !== "a_semer" && M.prixEur ? "≈ " + feur(k.sats / 1e8 * M.prixEur) : "";
     return tete("coffre", t("d_lg_coffre", { n: n, e: t("d_leg_" + VUE_ETAT[k.etat]) })) +
       '<div class="cadre"><div class="chiffres"><div>' + coffreSvg(k.etat, 44) + '<h1>' + esc(t("tresor_n", { n: n })) + '</h1><div class="' + (k.etat === "a_prendre" ? "or" : k.etat === "en_chasse" ? "eau" : "doux") + '">' + esc(t("e_" + k.etat)) +
       '</div></div><div><div class="grand">' + esc(montant) + '</div><small class="doux">' + esc(eur) + "</small></div></div>" +
-      l.map(function (x) { return '<div class="ligne"><span class="doux">' + (x[0].indexOf("<") >= 0 ? x[0] : esc(x[0])) + '</span><span class="v">' + (x[1].indexOf("<") >= 0 ? x[1] : esc(x[1])) + "</span></div>"; }).join("") + "</div>" +
+      l.map(ligneDe).join("") + (tech.length ? '<details class="suite"><summary>' + esc(t("d_details")) + "</summary>" + tech.map(ligneDe).join("") + "</details>" : "") + "</div>" +
       '<div><h2>' + esc(t("d_les_enigmes_du_coffre")) + '</h2><div class="liste">' + (en.length ? en.map(function (e) { return cadenas(true, t("enigme_n", { n: e.numero }), fdate(e.date_utc, true), esc(texteEnigme(e)) + noteEnigme(e)); }).join("") : '<p class="doux">' + esc(t("aucune_parue")) + "</p>" + (k.etat === "en_chasse" || k.etat === "a_prendre" ? '<p class="note">' + esc(t("gardien_note")) + "</p>" : "")) + "</div></div>" +
       (k.etat === "a_prendre" || k.etat === "en_chasse" ? '<div><a class="bouton" href="#/chasser/' + n + '">' + esc(t("d_six_mots")) + " · " + esc(t("chasser_ce")) + "</a></div>" : "") + blocCoffret(n, 1);
   }
@@ -636,7 +672,7 @@
     var out = "";
     elementsDe(Z).filter(function (e) { return e.coffre === n && e.type !== "enigme"; }).sort(function (a, b) { return a.ouverture_utc - b.ouverture_utc; }).forEach(function (e) {
       var c = contenuDe(Z, e), nom = t(e.type === "indice" ? "v_indice_" + e.rang : "v_" + e.type);
-      if (!c) { out += '<div class="ligne"><span>' + chipDe(Z, e, nom) + '</span><span class="doux">' + esc(t("s_ouvre_le", { d: fdate(e.ouverture_utc, true) })) + "</span></div>"; return; }
+      if (!c) { out += '<div class="ligne"><span>' + chipDe(Z, e, nom) + '</span><span class="doux">' + esc(t("s_ouvre_le", { d: fdate(heureRegle(Z, e), true) })) + "</span></div>"; return; }
       if (e.type === "cri") out += '<div class="ligne"><span>' + chipDe(Z, e, nom) + '</span><span class="v"><span class="mono" style="font-size:12px">' + esc(String(c.txid).slice(0, 16)) + '…</span>' +
         ' <button class="bouton2" style="padding:3px 10px;font-size:11px" data-diffuser="' + n + '" data-chasse="' + h + '"' + (Z.diffusion && Z.diffusion[n] && Z.diffusion[n].enCours ? " disabled" : "") + ">" + esc(etatDiffusion(Z, n)) + "</button></span></div>";
       if (e.type === "indice") out += '<div class="ligne"><span>' + chipDe(Z, e, nom) + '</span><span class="v cg" style="font-size:17px;white-space:pre-wrap;text-align:left">' + esc(texteEnigme(c)) + "</span></div>";
@@ -934,10 +970,10 @@
     var rv = receptionValide();
     var adr = '<p class="note">' + esc(t("d_mon_adresse")) + " " + (rv.ok ? '<code>' + esc(courte(rv.adresse)) + "</code>" : '<code>' + esc(t("d_adresse_non")) + "</code> · " + esc(t("d_adresse_poser"))) + ' <a href="#/adresse">' + esc(t("plus_adresse")) + " →</a></p>";
     return visuel("chasser", t("d_lg_chasser")).replace('class="visuel', 'id="h-cle" class="visuel') + '<div><div class="sur">' + esc(t("outil_chasseur")) + '</div><h1>' + esc(t("m_chasser")) + aide("chasser") + '</h1></div><p class="intro">' + esc(t("chasser_intro")) + "</p>" + carteTresor(null) +
-      '<div class="cadre"><label>' + esc(t("quel_coffre")) + "</label>" + sel + enig + alea + "</div>" +
-      '<div class="cadre mots"><label for="h-r3">' + esc(t("reponse_3", { m: m })) + '</label><input class="champ" id="h-r3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><div class="note mono" id="h-v3"></div><label>' + esc(t("reponse_17", { m: m })) +
+      '<div class="cadre"><span class="tag">1</span> <b>' + esc(t("quel_coffre")) + "</b>" + sel + enig + alea + "</div>" +
+      '<div class="cadre mots"><span class="tag">2</span> <b>' + esc(t("pe_t_mots")) + '</b><label for="h-r3">' + esc(t("reponse_3", { m: m })) + '</label><input class="champ" id="h-r3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><div class="note mono" id="h-v3"></div><label>' + esc(t("reponse_17", { m: m })) +
       '</label><input class="champ" id="h-r17" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><div class="note mono" id="h-v17"></div><div class="boutons"><button class="bouton" id="h-calculer"' + (H.calcul ? " disabled" : "") + ">" + esc(t("calculer")) + '</button></div><p class="note">' + esc(t("calcul_note")) + "</p>" + res + "</div>" +
-      '<ol class="etapes"><li><span>' + esc(t("d_etape_1")) + "</span></li><li><span>" + esc(t("d_etape_2")) + "</span></li><li><span>" + esc(t("d_etape_3")) + "</span></li></ol>" + carteArmement(c) + adr + jamais(true) +
+      '<details class="suite"><summary>' + esc(t("pe_comment")) + '</summary><ol class="etapes"><li><span>' + esc(t("d_etape_1")) + "</span></li><li><span>" + esc(t("d_etape_2")) + "</span></li><li><span>" + esc(t("d_etape_3")) + "</span></li></ol></details>" + carteArmement(c) + adr + jamais(true) +
       '<h2>' + esc(t("dictionnaire")) + '</h2><div class="cadre"><input class="champ" id="h-dico" autocomplete="off" spellcheck="false" aria-label="' + esc(t("dictionnaire")) + '" placeholder="' + esc(t("dico_ph")) + '"><div id="h-dico-r" class="mono note"></div></div>';
   }
   function apercu(id, vid) {
@@ -1259,7 +1295,7 @@
   function apresTrouve(c, k) {
     var rv = receptionValide();
     if (c.essai || R.demo) {                                                   // entrainement : on montre ce qui partirait, sans rien envoyer
-      TR.cleEssai = k;
+      TR.cleEssai = k; if (c.essai && !R.demo) ecrireR("essai_fait", true);  // le fil du chasseur coche « Entrainement »
       return '<div class="cadre tresor-trouve" style="margin-top:12px"><div class="ok cz" style="font-size:20px">✓ ' + esc(t("trouve")) + '</div><p>' + esc(t("trouve_essai")) + "</p>" +
         (rv.ok ? '<p class="ok">' + esc(t("tr_essai_sim", { a: courte(rv.adresse) })) + "</p>" : '<p class="att">' + esc(t("tr_essai_sans")) + ' <a href="#/reglages">' + esc(t("m_reglages")) + "</a></p>") + expert("essai") + "</div>";
     }
@@ -1602,9 +1638,9 @@
     }
     function pastilleDe(h) { return /class="ok"/.test(h) ? "" : /class="ko"/.test(h) ? "ko" : "att"; }
     return tete("reseau", t("d_lg_reseau")) + '<div><div class="sur">' + esc(t("comme_bitcoin")) + '</div><h1>' + esc(t("reseau_titre")) + aide("reseau") + '</h1></div><p class="intro">' + esc(t("reseau_intro")) + '</p><div class="preuves">' +
-      l.map(function (x) { return '<div class="statut"><i class="' + pastilleDe(x[2]) + '"></i><span><b>' + esc(x[0]) + '</b><small class="mono">' + esc(x[1]) + "</small></span><code>" + x[2] + "</code></div>"; }).join("") +
+      l.map(function (x) { return '<div class="statut"><i class="' + pastilleDe(x[2]) + '"></i><span><b>' + esc(x[0]) + '</b><small class="mono">' + esc(x[1]) + "</small></span><code" + (x[2].replace(/<[^>]*>/g, "").length > 40 ? ' class="long"' : "") + ">" + x[2] + "</code></div>"; }).join("") +
       (conc ? '<div class="cadre">' + conc + "</div>" : "") +
-      '<div class="statut"><i class="' + pastilleDe(badgeOfficiel(false)) + '"></i><span><b>' + esc(t("v_programme")) + '</b><small class="mono">' + esc(VERSION + " · " + window.GG_EMPREINTE.empreinte.slice(0, 16) + "…") + "</small></span><code>" + badgeOfficiel(false) + "</code></div></div>" + carteTemoins() +
+      '<div class="statut"><i class="' + pastilleDe(badgeOfficiel(false)) + '"></i><span><b>' + esc(t("v_programme")) + '</b><small class="mono">' + esc(VERSION + " · " + window.GG_EMPREINTE.empreinte.slice(0, 16) + "…") + "</small></span><code" + (WEB ? ' class="long"' : "") + ">" + badgeOfficiel(false) + "</code></div></div>" + carteTemoins() +
       '<h2>' + esc(t("a_venir")) + '</h2><div class="cadre"><b>' + esc(t("miroir_titre")) + '</b><p class="note">' + esc(t("miroir_texte")) + '</p></div><div class="cadre"><b>' + esc(t("noeud_titre")) + '</b><p class="note">' + esc(t("noeud_texte")) + "</p></div>";
   }
 
@@ -1612,14 +1648,13 @@
   // la page « Plus » (telephone) : tout ce que les cinq onglets ne portent pas, nomme par ce que ca fait
   // la salle des pas perdus (« Plus ») : tout ce que les cinq onglets ne portent pas, nomme par ce que ca fait, une icone par ligne
   function pagePlus() {
-    var l = [["verifier", "plus_verifier", "plus_verifier_n"], ["adresse", "plus_adresse", "plus_adresse_n"], ["compagnon", "d_plus_compagnon", "d_plus_compagnon_n"], ["livres", "d_plus_livres", "d_plus_livres_n"],
-      ["reseau", "d_plus_reseau", "d_plus_reseau_n"], ["pierre", "plus_pierre", "plus_pierre_n"], ["guide", "plus_guide", "plus_guide_n"], ["reglages", "plus_reglages", "plus_reglages_n"],
-      ["coffret", "plus_coffret", "plus_coffret_n"], ["chasses", "plus_chasses", "plus_chasses_n"]];
+    var l = [["adresse", "plus_adresse", "plus_adresse_n"], ["guide", "plus_guide", "plus_guide_n"], ["compagnon", "d_plus_compagnon", "d_plus_compagnon_n"], ["livres", "d_plus_livres", "d_plus_livres_n"], ["reglages", "plus_reglages", "plus_reglages_n"]],
+      l2 = [["verifier", "plus_verifier", "plus_verifier_n"], ["reseau", "d_plus_reseau", "d_plus_reseau_n"], ["coffret", "plus_coffret", "plus_coffret_n"], ["chasses", "plus_chasses", "plus_chasses_n"], ["pierre", "plus_pierre", "plus_pierre_n"]];
+    function item(x) { return '<button type="button" class="item" data-p="' + x[0] + '"><span class="ico">' + ICONES[x[0]] + "</span><span><b>" + esc(t(x[1])) + "</b><small>" + esc(t(x[2])) + '</small></span><span class="fleche">›</span></button>'; }
     var langues = '<div class="inter"><span><b>' + esc(t("d_langue")) + '</b><small>' + esc((LANGUES.filter(function (x) { return x[0] === R.lang; })[0] || LANGUES[0])[1]) + '</small></span><div class="formes or" role="group" aria-label="' + esc(t("d_langue")) + '">' +
       LANGUES.map(function (x) { return '<button type="button" data-langue="' + x[0] + '" aria-pressed="' + (x[0] === R.lang ? "true" : "false") + '" title="' + esc(x[1]) + '">' + x[0].toUpperCase() + "</button>"; }).join("") + "</div></div>";
-    return visuel("plus", t("d_lg_plus")) + '<div><div class="sur">' + esc(t("plus_sous")) + '</div><h1>' + esc(t("plus_titre")) + '</h1></div><div class="liste">' + l.map(function (x) {
-      return '<button type="button" class="item" data-p="' + x[0] + '"><span class="ico">' + ICONES[x[0]] + "</span><span><b>" + esc(t(x[1])) + "</b><small>" + esc(t(x[2])) + '</small></span><span class="fleche">›</span></button>';
-    }).join("") + "</div>" + langues + '<p class="pied">' + esc(t("d_plus_pied")) + "<br>GodGift Core " + VERSION + (R.demo || WEB ? "" : " · " + badgeOfficiel(true)) + "</p>";
+    return visuel("plus", t("d_lg_plus")) + '<div><div class="sur">' + esc(t("plus_sous")) + '</div><h1>' + esc(t("plus_titre")) + '</h1></div><div class="liste">' + l.map(item).join("") + "</div>" +
+      '<h2>' + esc(t("pe_pour_verifier")) + '</h2><div class="liste">' + l2.map(item).join("") + "</div>" + langues + '<p class="pied">' + esc(t("d_plus_pied")) + "<br>GodGift Core " + VERSION + (R.demo || WEB ? "" : " · " + badgeOfficiel(true)) + "</p>";
   }
   // les details de l'etat : le panneau que la pastille de l'en-tete ouvre (la chaine, ses deux sources, la librairie, la version et son badge)
   function detailsEtat() {
@@ -1635,8 +1670,8 @@
   }
   // la page « Mon adresse de reception » (Plus) : la meme carte que dans Reglages, seule, avec ses trois regles
   function pageAdresse() {
-    return tete("adresse", t("d_lg_adresse")) + '<h1>' + esc(t("plus_adresse")) + '</h1>' + carteReception() +
-      '<ol class="etapes"><li><span>' + esc(t("rec_signature_note")) + "</span></li><li><span>" + esc(t("rec_rappel")) + "</span></li><li><span>" + esc(t(modeEnvoi())) + "</span></li></ol>";
+    return tete("adresse", t("d_lg_adresse")) + carteReception().replace("<h2>", '<div><div class="sur">' + esc(t("plus_adresse_n")) + "</div><h1>").replace("</h2>", "</h1></div>") +
+      '<ol class="etapes"><li><span>' + esc(t("rec_rappel")) + "</span></li><li><span>" + esc(t(modeEnvoi())) + "</span></li></ol>";
   }
   // un mot du protocole, explique d'un toucher (panneau bas) : on dit la chose, puis son nom dans les regles
   function motSimple(cle, libelle) { return '<button type="button" class="mot" data-mot="' + cle + '">' + esc(libelle || t("mot_" + cle + "_t")) + "</button>"; }
@@ -1718,9 +1753,14 @@
   var AIDE_MOT = { tableau: "etats", enigmes: "enigme", coffret: "coffret", messages: "message", livres: "exemplaire", verifier: "verifier", chasser: "cle", compagnon: "compagnon",
     chasses: "chasse", reseau: "noeud", certifies: "racine", exemplaire: "empreinte", mes_livres: "exemplaire", parrain: "compagnon", cz: "chasse_zero", annonce: "annonce",
     reception: "reception", temoins: "temoin" };
-  function aide(k) {
-    var lien = AIDE_MOT[k] ? '<a class="bq-plus" href="#/guide/' + AIDE_MOT[k] + '">' + esc(guide().en_savoir_plus) + " →</a>" : "";
-    return '<span class="bq" tabindex="0" role="button" aria-label="?">?<span class="bqb">' + esc(t("aide_" + k)) + lien + "</span></span>";
+  // 1.4.1 : le « ? » ouvre une feuille qui monte du bas (la meme que les mots du protocole), plus une bulle qui flotte
+  function aide(k) { return '<button type="button" class="bq" data-aide="' + k + '" aria-label="?">?</button>'; }
+  function ouvrirAide(k, titre) {
+    var f = $("feuille-mot"); if (!f) { f = document.createElement("div"); f.id = "feuille-mot"; f.className = "feuille-mot"; f.setAttribute("role", "dialog"); f.setAttribute("aria-modal", "true"); document.body.appendChild(f); }
+    var lien = AIDE_MOT[k] ? '<a class="bq-plus" href="#/guide/' + AIDE_MOT[k] + '" data-fermer-mot="1">' + esc(guide().en_savoir_plus) + " →</a>" : "";
+    f.innerHTML = '<div class="fm-voile" data-fermer-mot="1"></div><div class="fm-panneau"><div class="fm-poignee"></div><button type="button" class="fm-fermer" data-fermer-mot="1" aria-label="' + esc(t("et_fermer")) + '">✕</button>' +
+      '<h3>' + esc(titre || "?") + '</h3><p class="bqb">' + esc(t("aide_" + k)) + "</p>" + lien + "</div>";
+    f.hidden = false; f.querySelector(".fm-fermer").focus();
   }
 
   // ------------------------------------------------------------------ le guide : premiers pas, glossaire, questions frequentes
@@ -1865,6 +1905,9 @@
     });
   }
   function elementsDe(Z) { return Z && Z.coffret ? Z.coffret.elements : []; }
+  // l'heure que le joueur lit : celle de la regle (la Pierre dit :05), pas la seconde de la ronde drand qui ouvre le verrou (:06).
+  // Le verrou s'ouvre bien a sa ronde ; seul l'affichage suit la Pierre, pour que toutes les heures d'un ecran disent la meme chose.
+  function heureRegle(Z, e) { try { return GGR.heureElement(Z.h, e, Z.h === 1 ? A : (CHASSES[Z.h] || {}).annee); } catch (x) { return e.ouverture_utc; } }
   function elements(type) { return elementsDe(MP).filter(function (e) { return !type || e.type === type; }); }
   function contenuDe(Z, e) {   // le clair d'un verrou ouvert ; il doit dire le meme coffre, le meme numero (enigme) et le meme rang (indice) que son verrou
     var x = e && Z && Z.ouverts[cleV(e)]; if (x == null) return null;
@@ -1912,7 +1955,7 @@
   function chipDe(Z, e, label) {
     var k = cleV(e), c = Z.ouverts[k] != null, now = maintenant(), neuf = Z.nouveau && Z.nouveau[k] && Date.now() - Z.nouveau[k] < 6000;
     var etat = c ? "ouvert" : Z.ouverture[k] ? "ouvre" : e.ouverture_utc <= now ? "du" : "ferme";
-    return '<span class="chip ch-' + etat + (neuf ? " vient" : "") + '" title="' + esc(fdate(e.ouverture_utc, true)) + '">' + (c ? "✓ " : etat === "ferme" ? "🔒 " : "⏳ ") + esc(label) + "</span>";
+    return '<span class="chip ch-' + etat + (neuf ? " vient" : "") + '" title="' + esc(fdate(heureRegle(Z, e), true)) + '">' + (c ? "✓ " : etat === "ferme" ? "🔒 " : "⏳ ") + esc(label) + "</span>";
   }
   function chip(e, label) { return chipDe(MP, e, label); }
   function cleOuv(e) { return e.type === "indice" ? "ouv_indice_" + e.rang : "ouv_" + e.type; }
@@ -1931,7 +1974,7 @@
     var attenteGravure = MP.grave !== "ok" && !MP.coffret.demo ? '<div class="bandeau">' + esc(t(MP.grave === "signature" ? "coffret_signature_ko" : "coffret_gravure_attente")) + "</div>" : "";
     var bilan = attenteGravure + '<div class="deux"><div class="cadre"><div class="sur">' + esc(t("verrous_ouverts")) + '</div><div class="tresor or">' + ouv + " / " + tous.length + '</div><div class="barre"><i style="width:' + Math.round(ouv / Math.max(1, tous.length) * 100) + '%"></i></div>' +
       '<p class="note">' + esc(t("coffret_empreinte", { h: MP.coffret.demo ? t("demo_court") : String(((M.manifeste || {}).coffret || {}).sha256 || "").slice(0, 16) })) + "</p></div>" +
-      '<div class="cadre"><div class="sur">' + esc(t("prochaine_ouverture")) + "</div>" + (pro ? '<div class="compte" data-compte="' + (+pro.ouverture_utc || 0) + '">' + fcompte(pro.ouverture_utc - now) + '</div><div class="doux">' + esc(t(cleOuv(pro), { n: pro.coffre, e: pro.numero || "" })) + " · " + esc(fdate(pro.ouverture_utc, true)) + "</div>" : "<div>" + esc(t("tout_ouvert")) + "</div>") +
+      '<div class="cadre"><div class="sur">' + esc(t("prochaine_ouverture")) + "</div>" + (pro ? '<div class="compte" data-compte="' + (+pro.ouverture_utc || 0) + '">' + fcompte(pro.ouverture_utc - now) + '</div><div class="doux">' + esc(t(cleOuv(pro), { n: pro.coffre, e: pro.numero || "" })) + " · " + esc(fdate(heureRegle(MP, pro), true)) + "</div>" : "<div>" + esc(t("tout_ouvert")) + "</div>") +
       (MP.erreurDrand ? '<p class="note att">' + esc(t("drand_injoignable")) + "</p>" : "") + "</div></div>";
     var lignes = "";
     for (var n = 1; n <= 24; n++) {
@@ -2659,7 +2702,7 @@
     }).join("");
     var prochaine = '<div class="cadre"><div class="sur">' + esc(t("prochaine_ouverture")) + "</div>" + (pro ? '<div class="compte" data-compte="' + (+pro.ouverture_utc || 0) + '">' + fcompte(pro.ouverture_utc - now) + '</div><div class="doux">' +
       elts.filter(function (e) { return e.ouverture_utc === pro.ouverture_utc && e.type === pro.type && CZ.ouverts[cleV(e)] == null; }).map(function (e) { return esc(t(cleOuv(e), { n: e.coffre, e: e.numero || "" })); }).join(", ") +
-      " · " + esc(fdate(pro.ouverture_utc, true)) + "</div>" : "<div>" + esc(t("tout_ouvert")) + "</div>") +
+      " · " + esc(fdate(heureRegle(CZ, pro), true)) + "</div>" : "<div>" + esc(t("tout_ouvert")) + "</div>") +
       (CZ.grave !== "ok" ? '<p class="att" style="font-size:12px">' + esc(t(CZ.grave === "signature" ? "coffret_signature_ko" : "coffret_gravure_attente")) + "</p>" : "") + "</div>";
     var tete2 = '<div class="grille-cz">' + cartes + prochaine + "</div>";
     // les textes, coffre par coffre : ses deux enigmes (le 3 et le 17), puis ses deux indices (J+30 et J+182 apres le cri) une fois ouverts,
@@ -2673,7 +2716,7 @@
       [1, 2].forEach(function (rg) {
         var ind = contenuZ("indice", null, n, CZ, rg), e = elementsDe(CZ).filter(function (y) { return y.type === "indice" && y.coffre === n && y.rang === rg; })[0];
         if (ind) x += '<div style="margin-top:10px"><span class="tag">' + esc(t("v_indice_" + rg)) + '</span><p style="white-space:pre-wrap">' + esc(texteEnigme(ind)) + "</p></div>";
-        else if (e) x += '<div class="doux" style="margin-top:10px;font-size:12px">🔒 ' + esc(t("v_indice_" + rg)) + " · " + esc(t("s_ouvre_le", { d: fdate(e.ouverture_utc, true) })) + "</div>";
+        else if (e) x += '<div class="doux" style="margin-top:10px;font-size:12px">🔒 ' + esc(t("v_indice_" + rg)) + " · " + esc(t("s_ouvre_le", { d: fdate(heureRegle(CZ, e), true) })) + "</div>";
       });
       solutionsSignees().filter(function (s) { return s.h === CZ.h && s.c === n; }).forEach(function (s) {
         x += '<div style="margin-top:10px"><span class="tag">' + esc(t("sol_titre")) + "</span> " + badgeSolution(s) + ' <a href="#/messages">' + esc(fdateIso(s.m.date)) + "</a></div>";
@@ -2808,7 +2851,8 @@
   document.addEventListener("click", function (ev) {
     if (!$("accueil").hidden) return accueilClic(ev);
     var md = ev.target.closest("[data-mot]"); if (md) { ev.preventDefault(); return ouvrirMot(md.dataset.mot); }
-    if (ev.target.closest("[data-fermer-mot]")) { ev.preventDefault(); return fermerMot(); }
+    var ba = ev.target.closest("[data-aide]"); if (ba) { ev.preventDefault(); var ti = ba.closest("h1, h2, .sur, .cadre"); return ouvrirAide(ba.dataset.aide, ti ? (ti.querySelector("h1, h2, b, .sur") || ti).textContent.replace(/\?\s*$/, "").trim() : ""); }
+    if (ev.target.closest("[data-fermer-mot]")) { if (!ev.target.closest("a[href]")) ev.preventDefault(); return fermerMot(); }
     var de = ev.target.closest("#etat-details");
     if (de) {   // la pastille de l'en-tete ouvre (ou ferme) le panneau d'etat
       var p_ = $("etat-panneau"), ouvert = !p_.hidden;

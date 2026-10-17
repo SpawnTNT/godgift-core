@@ -48,7 +48,7 @@ header.haut{display:flex;align-items:center;justify-content:space-between;gap:8p
 .etat-panneau{flex:none;padding:8px 0 0;max-height:46vh;overflow:auto;border-bottom:1px solid var(--filet2)}
 .etat-panneau .cadre{margin-bottom:10px}
 .main{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
-.dedans{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 0 24px;display:grid;grid-auto-rows:max-content;gap:12px;align-content:start}
+.dedans{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 0 24px;display:grid;grid-auto-rows:max-content;gap:12px;align-content:start}
 .dedans>*{min-width:0;margin:0}
 /* la cascade d'entree : chaque bloc monte, l'un apres l'autre ; une page qui se redessine sans changer (une lecture qui arrive) ne la rejoue pas */
 /* 0,3 s et 40 ms de decalage (la maquette disait 0,45 s et 60 ms) : un bloc encore en mouvement fait defiler la page sous le pointeur (Chromium) */
@@ -233,7 +233,7 @@ input::placeholder,textarea::placeholder{color:#4a5566}
 .enig.ouverte .anse{transform:rotate(-28deg) translateY(-3px)}
 .enig .tete b{font:700 .95rem var(--titre);letter-spacing:.04em}.enig .tete small{display:block;font-size:.76rem;color:var(--doux)}
 .enig .texte,.enigme .txt,.cadre .cg{font-family:var(--voix);font-size:1.15rem;line-height:1.5;border-left:2px solid var(--or);padding-left:12px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
-.enig .indices{display:flex;gap:8px;flex-wrap:wrap}.enig .indices span,.chip{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(201,154,62,.3);color:var(--doux);background:rgba(16,20,28,.6);white-space:nowrap}
+.enig .indices{display:flex;gap:8px;flex-wrap:wrap}.enig .indices span,.chip{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(201,154,62,.3);color:var(--doux);background:rgba(16,20,28,.6);max-width:100%;overflow-wrap:anywhere}
 .enig.fermee{opacity:.85}
 .ch-ouvert{border-color:rgba(154,216,168,.7);color:#d9f7e4;background:rgba(40,90,60,.35)}
 .ch-du,.ch-ouvre{border-color:rgba(232,196,106,.8);color:#fbeab8;animation:pulse-eau 1.4s ease-in-out infinite}
@@ -272,10 +272,10 @@ details summary{cursor:pointer}
 .verif .ic .ko{color:#2a0c08}.verif .ic:has(.ko){background:var(--rouge)}
 .verif .ic .att{color:#2a1a06}.verif .ic:has(.att){background:var(--alerte)}
 .verif .t{font-weight:600;font-size:.92rem}.verif .d{font-size:.78rem;color:var(--doux);overflow-wrap:anywhere}
-.statut{display:grid;grid-template-columns:14px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--filet2);border-radius:6px;background:var(--panneau);font-size:.9rem}
+.statut{display:grid;grid-template-columns:14px minmax(45%,1fr) minmax(0,auto);gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--filet2);border-radius:6px;background:var(--panneau);font-size:.9rem}
 .statut i{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}.statut i.att{background:var(--alerte);box-shadow:0 0 8px var(--alerte)}.statut i.ko{background:#e0605a;box-shadow:0 0 8px #e0605a}.statut i.off{background:#57524a;box-shadow:none}
 .statut>span{min-width:0;overflow-wrap:anywhere}
-.statut small{color:var(--doux);font-size:.74rem;display:block}.statut code{font:.72rem var(--mono);color:var(--doux);text-align:right}
+.statut small{color:var(--doux);font-size:.74rem;display:block}.statut code{font:.72rem var(--mono);color:var(--doux);text-align:right;min-width:0;overflow-wrap:anywhere}.statut code.long{grid-column:2/4;text-align:left;font-family:var(--corps);font-size:.8rem;margin-top:2px}
 .inter{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;border:1px solid var(--filet2);border-radius:6px;background:var(--panneau)}
 .inter>span{min-width:0}.inter b{font-weight:600;font-size:.94rem;display:block}.inter small{color:var(--doux);font-size:.76rem}
 .sw{width:44px;height:26px;border-radius:999px;border:1px solid var(--filet);background:#0b1017;position:relative;cursor:pointer;flex:none;padding:0}
@@ -329,17 +329,10 @@ a.chasse-carte:hover{transform:translateY(-3px);box-shadow:0 0 28px rgba(226,184
 .apparait{animation:monte .5s ease both;animation-delay:calc(var(--i,0)*38ms)}
 .attrib{font-size:.76rem}
 /* ---------------------------------------------------------------- la bulle « ? » et la feuille des mots */
-.bq{display:inline-flex;align-items:center;justify-content:center;position:relative;width:20px;height:20px;border-radius:50%;background:linear-gradient(180deg,#f4d98e,#c99a3e);color:#1a1206;font:700 12px var(--corps);cursor:help;margin-left:10px;vertical-align:middle;text-shadow:none;letter-spacing:0;box-shadow:0 0 10px rgba(226,184,92,.45);text-transform:none}
-.bq:hover,.bq:focus{outline:none;box-shadow:0 0 16px rgba(244,217,142,.9)}
-.bqb{display:none;position:absolute;z-index:30;left:50%;top:28px;transform:translateX(-50%);width:min(360px,78vw);background:#0e131b;color:var(--encre);border:1px solid var(--or2);border-radius:6px;padding:12px 14px;font:400 .86rem/1.55 var(--corps);letter-spacing:0;text-transform:none;text-align:left;box-shadow:0 12px 32px rgba(0,0,0,.55),0 0 18px rgba(226,184,92,.18);white-space:normal}
-.bq:hover .bqb,.bq:focus .bqb,.bq:focus-within .bqb{display:block;animation:bulle .18s ease both}
-@keyframes bulle{from{opacity:0;transform:translate(-50%,-4px)}to{opacity:1;transform:translate(-50%,0)}}
-h1 .bq{position:static}h1 .bqb,h1 .bq:hover .bqb,h1 .bq:focus .bqb,h1 .bq:focus-within .bqb{left:0;top:100%;transform:none;animation-name:bulle_h1}
-@keyframes bulle_h1{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-*:has(> .bq:hover),*:has(> .bq:focus),*:has(> .bq:focus-within){position:relative;z-index:60}
-#page>*{position:relative}#page>*:has(.bq:hover),#page>*:has(.bq:focus-within){z-index:70}   /* le bloc anime qui porte la bulle passe au-dessus des blocs suivants, meme pendant la cascade */
-.bq-plus{display:block;margin-top:8px;color:#f4d98e;font-weight:600;text-decoration:none}.bq-plus:hover{text-decoration:underline}
-.bqb::before{content:"";position:absolute;left:0;right:0;top:-10px;height:10px}
+.bq{display:inline-flex;align-items:center;justify-content:center;position:relative;width:20px;height:20px;border-radius:50%;background:linear-gradient(180deg,#f4d98e,#c99a3e);color:#1a1206;font:700 12px var(--corps);margin-left:8px;vertical-align:middle;cursor:pointer;border:none;padding:0;box-shadow:0 0 10px rgba(244,217,142,.5);flex:none}
+.bq:hover,.bq:focus-visible{outline:none;box-shadow:0 0 16px rgba(244,217,142,.9)}
+h1 .bq{position:static}
+.bq-plus{display:block;margin-top:12px;color:#f4d98e;font-weight:600;text-decoration:none}.bq-plus:hover{text-decoration:underline}
 .mot{display:inline-block;padding:11px 3px;margin:-11px -3px;border:0;line-height:inherit;background:none;color:#f1d58a;font:inherit;text-decoration:underline dotted;text-underline-offset:4px;cursor:pointer}
 .mot::after{content:"\00a0ⓘ";font-size:.85em;color:var(--or2)}
 .fm-voile{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.6)}
@@ -399,6 +392,7 @@ h1 .bq{position:static}h1 .bqb,h1 .bq:hover .bqb,h1 .bq:focus .bqb,h1 .bq:focus-
 @media (max-width:480px){#rafraichir{display:none}.marque .n{font-size:.92rem}.verif-chip .texte{max-width:96px}}
 @media (max-width:420px){.salle{gap:8px}.coffre .no{font-size:1.4rem}.rebours{gap:9px}.rebours b{font-size:1.4rem}.segment button{font-size:.72rem;padding:9px 2px}.verif-chip{padding:5px 7px}.marque small{max-width:150px}}
 @media (max-width:360px){.verif-chip .texte{max-width:60px;white-space:nowrap}.marque .n{font-size:.95rem}}
+@media (max-width:430px){.marque small .sous-titre{display:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 html.calme *,html.calme *::before,html.calme *::after{animation:none!important;transition:none!important}
 
@@ -406,3 +400,27 @@ html.calme *,html.calme *::before,html.calme *::after{animation:none!important;t
 
 /* zoom 200 % sur un telephone (195 px CSS) : les cinq onglets tiennent encore */
 @media (max-width:240px){nav.onglets .o{font-size:.5rem;letter-spacing:0;padding-left:0;padding-right:0}nav.onglets .o span{overflow-wrap:anywhere}}
+/* 1.4.1 : les depliants « En savoir plus » et « Details » */
+details.suite{margin:2px 0 0}details.suite>summary{list-style:none;display:inline-block;font:600 .78rem var(--corps);letter-spacing:.04em;color:var(--or);cursor:pointer;padding:4px 0;border-bottom:1px dotted rgba(201,154,62,.5)}
+details.suite>summary::-webkit-details-marker{display:none}details.suite>summary::after{content:" +";}details.suite[open]>summary::after{content:" −";}
+details.suite>p,details.suite>div{margin-top:8px}.cadre details.suite{margin-top:6px}
+/* 1.4.1 : l'ecran d'ordinateur. Les cinq onglets deviennent une colonne a gauche, la page s'elargit, les coffres s'alignent par quatre. */
+@media (min-width:1024px){
+.app{max-width:1120px;display:grid;grid-template-columns:200px minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr);grid-template-areas:"haut haut" "fil fil" "etat etat" "nav main";column-gap:32px}
+header.haut{grid-area:haut}.fil{grid-area:fil}.etat-panneau{grid-area:etat}.main{grid-area:main}
+nav.onglets{grid-area:nav;display:flex;flex-direction:column;align-self:start;gap:4px;padding:18px 0;border-top:none;border-right:1px solid rgba(201,154,62,.25);background:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+nav.onglets .o{grid-template-columns:30px 1fr;justify-items:start;align-items:center;gap:12px;padding:11px 14px 11px 12px;min-height:0;border-top:none;border-left:2px solid transparent;border-radius:0 10px 10px 0;font-size:.76rem;letter-spacing:.08em;text-align:left;width:100%}
+nav.onglets .o.actif{border-top-color:transparent;border-left-color:var(--or);background:rgba(244,200,110,.07)}
+nav.onglets .o.trouver .rond{width:34px;height:34px;margin:0 0 0 -2px;box-shadow:0 0 10px rgba(244,200,110,.35)}
+nav.onglets .o.trouver.actif .rond{transform:none}
+.dedans{padding:20px 6px 48px;gap:14px}.visuel{height:210px}.intro{font-size:1.22rem}
+.deux{grid-template-columns:1fr 1fr}.salle{grid-template-columns:repeat(4,1fr)}
+.marque small .sous-titre{display:inline}
+}
+/* 1.4.1 : le fil du chasseur (prochaine etape et trois jalons) */
+.fil-chasseur{border:1px solid var(--or);border-radius:8px;background:linear-gradient(180deg,rgba(244,200,110,.08),rgba(16,21,29,.6));padding:12px 14px;display:grid;gap:10px}
+.jalons{display:flex;gap:6px;flex-wrap:wrap}.jalons span{display:inline-flex;align-items:center;gap:6px;font:600 .68rem var(--corps);letter-spacing:.08em;text-transform:uppercase;color:var(--doux)}
+.jalons span i{width:18px;height:18px;border-radius:50%;border:1px solid var(--filet2);display:grid;place-items:center;font-style:normal;font-size:.62rem}
+.jalons span.fait{color:var(--ok)}.jalons span.fait i{border-color:var(--ok);color:var(--ok)}.jalons span.actif{color:var(--or-clair)}.jalons span.actif i{background:var(--or);color:var(--nuit);border-color:var(--or)}
+.jalons span+span::before{content:"";width:10px;height:1px;background:var(--filet2);margin-right:2px}
+.pe{display:grid;gap:8px}.pe p{margin:0;font-size:.95rem;line-height:1.5}.pe .bouton{justify-self:start}

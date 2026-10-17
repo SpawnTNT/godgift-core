@@ -481,15 +481,17 @@ async def main():
         PANNE['registre'] = False; REG['exemplaires'].insert(0, dict(sauve_, lien='direct')); await attribution_("Vente attribuée : vente directe")
         assert not [u for m_, u in REQ if E1 in u] and all(m_ == 'GET' for m_, u in REQ)
         vert('I5 : « Mes livres » montre a qui la vente de chaque exemplaire est attribuee (vente directe, ou le compagnon : fin de son lien /c/<code> et son adresse), lu au registre public en entier (une seule lecture GET, sans l empreinte : rien ne part vers la caisse) ; il demande de verifier que c est bien le lien suivi et dit ou le signaler (section 1 des conditions generales) ; lien illisible, empreinte en double, exemplaire absent, registre muet : rien n est affirme')
-        # la bulle « ? » ne deborde plus de la page
+        # 1.4.1 : le « ? » ouvre une feuille qui monte du bas, entierement visible, fermee par Echap
         await pg.set_viewport_size({'width': 1280, 'height': 720})
         for page_, sel in (('livres', '#page h1 .bq'), ('messages', '#page h1 .bq'), ('chasser', '#page h1 .bq'), ('tableau', '#page h1 .bq')):
             await pg.evaluate(f"location.hash = '#/{page_}'"); await pg.wait_for_timeout(400)
-            await pg.hover(sel); await pg.wait_for_timeout(300)
-            dans = await pg.evaluate(f"(function(){{ var z = document.getElementById('page').getBoundingClientRect(), b = document.querySelector('{sel} .bqb').getBoundingClientRect(); return [Math.round(b.left - z.left), Math.round(z.right - b.right), Math.round(b.width)]; }})()")
-            assert dans[0] >= 8 and dans[1] >= 8 and dans[2] > 200, (page_, dans)
+            await pg.click(sel); await pg.wait_for_timeout(300)
+            dans = await pg.evaluate("(function(){ var f = document.getElementById('feuille-mot'); if (!f || f.hidden) return null; var b = f.querySelector('.fm-panneau').getBoundingClientRect(); return [Math.round(b.left), Math.round(innerWidth - b.right), Math.round(b.width), Math.round(innerHeight - b.bottom), (f.querySelector('.bqb') || {}).textContent.length]; })()")
+            assert dans and dans[0] >= 8 and dans[1] >= 8 and dans[2] > 200 and dans[3] >= 0 and dans[4] > 40, (page_, dans)
+            await pg.keyboard.press('Escape'); await pg.wait_for_timeout(150)
+            assert await pg.evaluate("document.getElementById('feuille-mot').hidden")
         await pg.mouse.move(5, 5)
-        vert('bulles « ? » des titres : entierement dans la page (Livres, Messages, Chasser, Tableau)')
+        vert('bulles « ? » des titres : une feuille qui monte du bas, entierement visible, fermee par Echap (Livres, Messages, Chasser, Tableau)')
         # le guide : cinq langues, recherche, renvois, et « En savoir plus » depuis une bulle
         await pg.evaluate("location.hash = '#/guide'"); await pg.wait_for_timeout(500)
         comptes = []
@@ -506,7 +508,7 @@ async def main():
         await pg.fill('#g-cherche', 'zzzzqq'); await pg.wait_for_timeout(200)
         assert await pg.evaluate("!document.getElementById('g-aucun').hidden"); await pg.fill('#g-cherche', 'cri')
         await pg.evaluate("location.hash = '#/coffret'"); await pg.wait_for_timeout(400)
-        await pg.hover('#page h1 .bq'); await pg.wait_for_timeout(250); await pg.hover('#page h1 .bq .bq-plus'); await pg.click('#page h1 .bq .bq-plus'); await pg.wait_for_timeout(500)
+        await pg.click('#page h1 .bq'); await pg.wait_for_timeout(250); await pg.click('#feuille-mot .bq-plus'); await pg.wait_for_timeout(500)
         assert await pg.evaluate("location.hash") == '#/guide/coffret' and await pg.evaluate("!document.getElementById('g-coffret').hidden && document.getElementById('g-coffret').classList.contains('gl-cible')")
         y = await pg.evaluate("(function(){ var z = document.getElementById('page').getBoundingClientRect(), r = document.getElementById('g-coffret').getBoundingClientRect(); return r.top >= z.top && r.bottom <= z.bottom; })()")
         assert y; vert('bulle du COFFRET : « En savoir plus » ouvre le guide sur le mot COFFRET, visible, meme apres une recherche')
