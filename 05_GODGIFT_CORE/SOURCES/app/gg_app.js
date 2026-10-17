@@ -406,7 +406,12 @@
     $("onglets").innerHTML = ONGLETS.map(function (o) {
       var actif = o === onglet, ic = o === "chasser" ? '<span class="rond">' + ICONES.chasser + "</span>" : ICONES[o];
       return '<button type="button" class="o' + (o === "chasser" ? " trouver" : "") + (actif ? " actif" : "") + '" data-p="' + o + '"' + (actif ? ' aria-current="page"' : "") + ">" + ic + "<span>" + esc(t("tb_" + o)) + "</span></button>";
-    }).join("");
+    }).join("") +
+      // 1.4.1, ecran d'ordinateur : le rail a la place, il porte aussi les entrees de Plus (le CSS ne les montre qu'au-dela de 1024 px)
+      '<span class="rail-sep" aria-hidden="true"></span>' + PLUS_ENTREES.map(function (x, i) {
+        var actif = page === x[0];
+        return (i === PLUS_TOUS_LES_JOURS ? '<span class="rail-titre">' + esc(t("pe_pour_verifier")) + "</span>" : "") + '<button type="button" class="o sec' + (actif ? " actif" : "") + '" data-p="' + x[0] + '">' + ICONES[x[0]] + "<span>" + esc(t(x[1])) + "</span></button>";
+      }).join("");
   }
   // le bandeau image d'un ecran (140 px, balayage de lumiere, legende d'or) ; sur une sous-page, la pastille « ‹ » ramene a la page parente
   function visuel(page, legende, retour) {
@@ -584,9 +589,9 @@
     var liste = coffresVue(UI.chasse), vue = UI.vue === "carte" ? vueCarte(liste) : UI.vue === "registre" ? vueRegistre(liste) : vueSalle(liste);
     var suite = chasseZ ? pageChasse(UI.chasse === "zero" ? "0" : UI.chasse) : "";   // la chasse zero (ou une chasse annoncee) : sa page entiere, sous la vue
     var bas = '<div class="cadre"><div class="sur">' + esc(t("ce_qui_se_passe")) + '</div><div class="fil-ev">' + fil() + "</div></div>";
-    var qTemoin = !R.demo && R.installe && R.temoin == null ? '<div class="bandeau">' + esc(t("ac4_q")) + " " + esc(t("ac4_texte")) + ' <span class="boutons"><button class="bouton2" data-temoin="1">' + esc(t("ac4_oui")) + '</button> <button class="bouton2" data-temoin="0">' + esc(t("ac4_non")) + "</button></span></div>" : "";
+    var qTemoin = !R.demo && R.installe && R.temoin == null ? bandeauCourt("temoin", t("ac4_q") + " " + t("ac4_texte"), '<button class="bouton2" data-temoin="1">' + esc(t("ac4_oui")) + '</button> <button class="bouton2" data-temoin="0">' + esc(t("ac4_non")) + "</button>", "", t("pe_choisir")) : "";
     var alerteMan = M.erreurs.manifChange || M.erreurs.manifeste ? '<div class="bandeau ko">⚠ ' + esc(t(M.erreurs.manifChange ? "manif_change" : "manif_invalide")) + "</div>" : "";
-    return alerteMan + alerteReception() + (R.demo ? '<div class="bandeau demo">' + esc(t("demo_bandeau")) + "</div>" : "") + (M.manifCache ? '<div class="bandeau">' + esc(t("librairie_tombee")) + "</div>" : "") +
+    return alerteMan + alerteReception() + (R.demo ? bandeauCourt("demo", t("demo_bandeau"), "", "demo") : "") + (M.manifCache ? '<div class="bandeau">' + esc(t("librairie_tombee")) + "</div>" : "") +
       (chasseZ ? trois : prochaineEtape()) + qTemoin + vedette + (chasseZ ? "" : chiffres + chips) + segment + formes + vue + (chasseZ ? "" : '<p class="note">' + esc(t("d_note_coffres")) + "</p>") + (chasseZ ? suite.replace(/<h1>/g, '<h2 class="h1-sous">').replace(/<\/h1>/g, "</h2>") : suite) + bas;
   }
   // la poussiere d'or de la vedette : 46 particules sur un canvas, eteinte en mouvement reduit ; une seule boucle a la fois
@@ -1647,9 +1652,10 @@
   // ------------------------------------------------------------------ 8. reglages et a propos
   // la page « Plus » (telephone) : tout ce que les cinq onglets ne portent pas, nomme par ce que ca fait
   // la salle des pas perdus (« Plus ») : tout ce que les cinq onglets ne portent pas, nomme par ce que ca fait, une icone par ligne
+  var PLUS_ENTREES = [["adresse", "plus_adresse", "plus_adresse_n"], ["guide", "plus_guide", "plus_guide_n"], ["compagnon", "d_plus_compagnon", "d_plus_compagnon_n"], ["livres", "d_plus_livres", "d_plus_livres_n"], ["reglages", "plus_reglages", "plus_reglages_n"],
+    ["verifier", "plus_verifier", "plus_verifier_n"], ["reseau", "d_plus_reseau", "d_plus_reseau_n"], ["coffret", "plus_coffret", "plus_coffret_n"], ["chasses", "plus_chasses", "plus_chasses_n"], ["pierre", "plus_pierre", "plus_pierre_n"]], PLUS_TOUS_LES_JOURS = 5;
   function pagePlus() {
-    var l = [["adresse", "plus_adresse", "plus_adresse_n"], ["guide", "plus_guide", "plus_guide_n"], ["compagnon", "d_plus_compagnon", "d_plus_compagnon_n"], ["livres", "d_plus_livres", "d_plus_livres_n"], ["reglages", "plus_reglages", "plus_reglages_n"]],
-      l2 = [["verifier", "plus_verifier", "plus_verifier_n"], ["reseau", "d_plus_reseau", "d_plus_reseau_n"], ["coffret", "plus_coffret", "plus_coffret_n"], ["chasses", "plus_chasses", "plus_chasses_n"], ["pierre", "plus_pierre", "plus_pierre_n"]];
+    var l = PLUS_ENTREES.slice(0, PLUS_TOUS_LES_JOURS), l2 = PLUS_ENTREES.slice(PLUS_TOUS_LES_JOURS);
     function item(x) { return '<button type="button" class="item" data-p="' + x[0] + '"><span class="ico">' + ICONES[x[0]] + "</span><span><b>" + esc(t(x[1])) + "</b><small>" + esc(t(x[2])) + '</small></span><span class="fleche">›</span></button>'; }
     var langues = '<div class="inter"><span><b>' + esc(t("d_langue")) + '</b><small>' + esc((LANGUES.filter(function (x) { return x[0] === R.lang; })[0] || LANGUES[0])[1]) + '</small></span><div class="formes or" role="group" aria-label="' + esc(t("d_langue")) + '">' +
       LANGUES.map(function (x) { return '<button type="button" data-langue="' + x[0] + '" aria-pressed="' + (x[0] === R.lang ? "true" : "false") + '" title="' + esc(x[1]) + '">' + x[0].toUpperCase() + "</button>"; }).join("") + "</div></div>";
@@ -1755,6 +1761,18 @@
     reception: "reception", temoins: "temoin" };
   // 1.4.1 : le « ? » ouvre une feuille qui monte du bas (la meme que les mots du protocole), plus une bulle qui flotte
   function aide(k) { return '<button type="button" class="bq" data-aide="' + k + '" aria-label="?">?</button>'; }
+  // un bandeau long devient une ligne (sa premiere phrase) et un bouton qui ouvre la feuille du bas avec tout le texte et ses boutons
+  var FEUILLES = {};
+  function bandeauCourt(id, texte, boutonsHtml, classe, libelle) {
+    var d2 = /^([^.!?…]{8,60}?)\s*:\s/.exec(texte), m = /^([\s\S]*?[.!?…])(\s|$)/.exec(texte), court = d2 ? d2[1] : m && m[1].length < texte.length - 20 ? m[1] : texte;
+    FEUILLES[id] = { titre: court.replace(/[.!?…:]\s*$/, ""), corps: '<p>' + esc(texte) + "</p>" + (boutonsHtml ? '<p class="boutons">' + boutonsHtml + "</p>" : "") };
+    return '<div class="bandeau mince' + (classe ? " " + classe : "") + '"><span>' + esc(court) + '</span><button type="button" class="bouton2" data-feuille="' + id + '">' + esc(libelle || t("pe_detail")) + "</button></div>";
+  }
+  function ouvrirFeuille(titre, corps) {
+    var f = $("feuille-mot"); if (!f) { f = document.createElement("div"); f.id = "feuille-mot"; f.className = "feuille-mot"; f.setAttribute("role", "dialog"); f.setAttribute("aria-modal", "true"); document.body.appendChild(f); }
+    f.innerHTML = '<div class="fm-voile" data-fermer-mot="1"></div><div class="fm-panneau"><div class="fm-poignee"></div><button type="button" class="fm-fermer" data-fermer-mot="1" aria-label="' + esc(t("et_fermer")) + '">✕</button><h3>' + esc(titre) + "</h3>" + corps + "</div>";
+    f.hidden = false; f.querySelector(".fm-fermer").focus();
+  }
   function ouvrirAide(k, titre) {
     var f = $("feuille-mot"); if (!f) { f = document.createElement("div"); f.id = "feuille-mot"; f.className = "feuille-mot"; f.setAttribute("role", "dialog"); f.setAttribute("aria-modal", "true"); document.body.appendChild(f); }
     var lien = AIDE_MOT[k] ? '<a class="bq-plus" href="#/guide/' + AIDE_MOT[k] + '" data-fermer-mot="1">' + esc(guide().en_savoir_plus) + " →</a>" : "";
@@ -2851,6 +2869,7 @@
   document.addEventListener("click", function (ev) {
     if (!$("accueil").hidden) return accueilClic(ev);
     var md = ev.target.closest("[data-mot]"); if (md) { ev.preventDefault(); return ouvrirMot(md.dataset.mot); }
+    var bf = ev.target.closest("[data-feuille]"); if (bf && FEUILLES[bf.dataset.feuille]) { ev.preventDefault(); var fe = FEUILLES[bf.dataset.feuille]; return ouvrirFeuille(fe.titre, fe.corps); }
     var ba = ev.target.closest("[data-aide]"); if (ba) { ev.preventDefault(); var ti = ba.closest("h1, h2, .sur, .cadre"); return ouvrirAide(ba.dataset.aide, ti ? (ti.querySelector("h1, h2, b, .sur") || ti).textContent.replace(/\?\s*$/, "").trim() : ""); }
     if (ev.target.closest("[data-fermer-mot]")) { if (!ev.target.closest("a[href]")) ev.preventDefault(); return fermerMot(); }
     var de = ev.target.closest("#etat-details");
@@ -2906,7 +2925,7 @@
     else if (x.dataset.exVerif) { ev.preventDefault(); location.hash = "#/livres"; verifierExemplaire(x.dataset.exVerif); }   // l'exemplaire de reference, dans le registre grave
     else if (x.dataset.compagnon != null) { var lv = MP.livres[+x.dataset.compagnon]; if (lv) { CP.livre = +x.dataset.compagnon; CP.adresse = lv.propriete || ""; CP.signature = ""; CP.statut = null; CP.statutLu = null; } if (location.hash === "#/compagnon") rendre(); else location.hash = "#/compagnon"; }
     else if (x.id === "te-relire") lireTemoins(true);
-    else if (x.dataset.temoin) { R.temoin = x.dataset.temoin === "1"; ecrireR("temoin", R.temoin); rendre(); if (R.temoin && V.res) publierConstat(); }
+    else if (x.dataset.temoin) { R.temoin = x.dataset.temoin === "1"; ecrireR("temoin", R.temoin); fermerMot(); rendre(); if (R.temoin && V.res) publierConstat(); }
     else if (x.id === "acheter") acheter();
     else if (x.id === "ex-verifier") { MP.exPropriete = null; verifierExemplaire($("ex-emp").value); }
     else if (x.id === "ex-garder" && MP.ex && MP.ex.n) {

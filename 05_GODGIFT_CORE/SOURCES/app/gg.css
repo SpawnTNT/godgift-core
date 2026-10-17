@@ -424,3 +424,12 @@ nav.onglets .o.trouver.actif .rond{transform:none}
 .jalons span.fait{color:var(--ok)}.jalons span.fait i{border-color:var(--ok);color:var(--ok)}.jalons span.actif{color:var(--or-clair)}.jalons span.actif i{background:var(--or);color:var(--nuit);border-color:var(--or)}
 .jalons span+span::before{content:"";width:10px;height:1px;background:var(--filet2);margin-right:2px}
 .pe{display:grid;gap:8px}.pe p{margin:0;font-size:.95rem;line-height:1.5}.pe .bouton{justify-self:start}
+/* 1.4.1 : bandeau en une ligne (le texte complet dans la feuille du bas) ; rail de bureau avec les entrees de Plus */
+.bandeau.mince{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px}.bandeau.mince>span{min-width:0;font-size:.9rem}.bandeau.mince .bouton2{flex:none;padding:5px 12px;font-size:.8rem}
+.fm-panneau .boutons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+nav.onglets .sec,nav.onglets .rail-sep,nav.onglets .rail-titre{display:none}
+@media (min-width:1024px){
+nav.onglets .rail-sep{display:block;height:1px;background:rgba(201,154,62,.25);margin:10px 14px 8px 0}
+nav.onglets .rail-titre{display:block;font:600 .62rem var(--corps);letter-spacing:.14em;text-transform:uppercase;color:var(--doux);padding:12px 12px 4px}
+nav.onglets .sec{display:grid;font-size:.72rem;text-transform:none;letter-spacing:.02em;padding:8px 14px 8px 12px}nav.onglets .sec svg{width:18px;height:18px;opacity:.85}
+}
