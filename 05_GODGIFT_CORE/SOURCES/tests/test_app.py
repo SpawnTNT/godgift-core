@@ -35,7 +35,7 @@ with sync_playwright() as p:
     assert '4 / 4' in pg.inner_text('#accueil') and pg.evaluate("document.getElementById('ac-suivant').disabled"); pg.wait_for_timeout(1300); pg.screenshot(path=f'{CAP}/02b_accueil_promesses.png')
     pg.click('[data-ac-temoin="0"]'); pg.click('#ac-suivant'); vert('accueil : les deux promesses (JAMAIS, temoin) ; le choix est demande')
     pg.wait_for_timeout(2500); assert not pg.is_visible('#accueil'); vert('accueil termine, reglages retenus')
-    t = pg.inner_text('#page'); assert '4\u202f000\u00a0€' in t and 'À SEMER' in t; vert('vraie chasse avant le semis : 24 coffres a semer, 4 000 EUR (espace fine insecable des milliers)')
+    t = pg.inner_text('#page'); assert '4\u202f000\u00a0€' in t and 'À VENIR' in t and pg.locator('.tuile.semer').count() == 24; vert('vraie chasse avant le semis : 24 coffres a semer, 4 000 EUR (espace fine insecable des milliers)')
     assert pg.inner_text('.logo').startswith('GodGift Core') and 'GODGIFT' not in pg.evaluate("document.body.innerHTML"); vert('le nom officiel : GodGift Core, deux G majuscules')
     typo = pg.evaluate("""(function () {
         var fr = GG_I18N.fr, m = [];
@@ -57,9 +57,13 @@ with sync_playwright() as p:
     pg.evaluate("localStorage.setItem('gg.demo','true')"); pg.goto(URL + '#/tableau'); pg.reload(); pg.wait_for_timeout(1200)
     t = pg.inner_text('#page'); assert 'DÉMONSTRATION' in pg.inner_text('#statut') and 'TROUVÉ' in t and 'À PRENDRE' in t and 'EN JEU' in t and 'À VENIR' in t and 'SCELLÉ' not in t and 'EN CHASSE' not in t; vert('demo : les quatre etats des coffres, dans les mots du site (a venir, en jeu, a prendre, trouve)')
     pg.screenshot(path=f'{CAP}/05_demo_tableau.png')
-    pg.click('[data-coffre="5"]'); pg.wait_for_timeout(400); assert 'Trésor 5' in pg.inner_text('#page'); pg.screenshot(path=f'{CAP}/06_demo_coffre5.png'); vert('fiche du coffre 5')
+    pg.click('[data-fiche="5"]'); pg.wait_for_timeout(400); assert 'COFFRE 5' in pg.inner_text('#lat') and 'à prendre' in pg.inner_text('#lat'); pg.screenshot(path=f'{CAP}/06_demo_coffre5_lat.png'); vert('1.5.0 : sur ordinateur, la fiche courte du coffre 5 dans la colonne de droite')
+    pg.set_viewport_size({'width': 390, 'height': 844}); pg.click('[data-fiche="5"]'); pg.wait_for_timeout(400); assert 'coffre 5' in pg.inner_text('.fm-panneau h3').lower(); pg.screenshot(path=f'{CAP}/06_demo_coffre5_feuille.png'); vert('sur telephone, la meme fiche en feuille')
+    pg.click('.fm-panneau a.bouton2'); pg.wait_for_timeout(400); pg.set_viewport_size({'width': 1360, 'height': 860}); assert 'Trésor 5' in pg.inner_text('#page'); pg.screenshot(path=f'{CAP}/06_demo_coffre5.png'); vert('fiche du coffre 5')
     pg.click('[data-p=enigmes]'); pg.wait_for_timeout(400); assert 'Énigme n° 11' in pg.inner_text('#page'); pg.screenshot(path=f'{CAP}/07_demo_enigmes.png'); vert('enigmes parues, compte a rebours')
-    te = pg.inner_text('#page'); assert re.search(r'3 juin 2027 à 18:15:05 UTC \(20:15:05 à Paris\)', te) and re.search(r'17 janvier 2027 à 18:15:05 UTC \(19:15:05 à Paris\)', te), te[:600]
+    te = pg.inner_text('#page'); assert re.search(r'3 juin 2027 à 18:15:05 UTC \(20:15:05 à Paris\)', te), te[:600]
+    for _ in range(10): pg.click('[data-enig="1"]'); pg.wait_for_timeout(120)
+    te = pg.inner_text('#page'); assert 'Énigme n° 1' in te and re.search(r'3 janvier 2027 à 18:15:05 UTC \(19:15:05 à Paris\)', te) and pg.evaluate('document.querySelector(\'[data-enig="1"]\').disabled'), te[:600]
     vert('heures : en UTC avec les secondes, puis l heure de Paris au meme instant (ete : 20:15:05 ; hiver : 19:15:05), la date en toutes lettres')
     pg.evaluate("location.hash = '#/messages'"); pg.wait_for_timeout(400); tm = pg.inner_text('#page'); assert '3 juin 2027' in tm and '2027-06-03' not in tm; vert('messages : la date en toutes lettres')
     pg.click('[data-p=plus]'); pg.click('[data-p=verifier]'); pg.click('#lancer'); pg.wait_for_function('!document.querySelector("#lancer").disabled', timeout=20000)
@@ -67,20 +71,22 @@ with sync_playwright() as p:
     with pg.expect_download() as d: pg.click('#rapport')
     assert 'GodGift Core' in open(d.value.path(), encoding='utf-8').read(); vert('rapport de verification exporte')
     # 5. chasser : dictionnaire, apercu, calcul complet sur le coffre d'essai A (reponse volontairement fausse)
-    pg.click('[data-p=chasser]'); pg.wait_for_timeout(300)
-    pg.fill('#h-dico', 'clef'); assert '0874 clef' in pg.inner_text('#h-dico-r'); pg.fill('#h-dico', '873'); assert 'clé' in pg.inner_text('#h-dico-r'); vert('dictionnaire mot et numero')
+    pg.click('[data-p=chasser]'); pg.wait_for_timeout(300); assert pg.locator('#h-choix').count() == 1 and pg.locator('#h-r3').count() == 0; pg.click('[data-pas-t="2"]'); pg.wait_for_timeout(300)
+    pg.click('[data-feuille="dico"]'); pg.wait_for_timeout(200)
+    pg.fill('#h-dico', 'clef'); assert '0874 clef' in pg.inner_text('#h-dico-r'); pg.fill('#h-dico', '873'); assert 'clé' in pg.inner_text('#h-dico-r'); pg.keyboard.press('Escape'); vert('1.5.0 : Trouver en trois pas ; le dictionnaire en feuille, mot et numero')
     pg.fill('#h-r3', 'abandon 2 3'); assert '0001 abandon · 0002 abandonner · 0003 abattre' in pg.inner_text('#h-v3'); vert('reponse lue en mots et numeros, reaffichee')
     pg.fill('#h-r17', 'zzzz 5 6'); assert 'zzzz' in pg.inner_text('#h-v17'); pg.fill('#h-r17', '4 5 6')
     pg.click('#h-calculer'); pg.wait_for_selector('.barre', timeout=5000); pg.screenshot(path=f'{CAP}/09_demo_chasser_calcul.png')
-    pg.wait_for_function('!document.querySelector("#h-calculer").disabled', timeout=120000)
+    pg.wait_for_function('!document.querySelector(".barre") && !!document.querySelector("[data-pas-t=\'1\']") && !document.querySelector("[data-pas-t=\'1\']").disabled', timeout=120000)
     assert "Ce n’est pas la clé" in pg.inner_text('#page'); pg.screenshot(path=f'{CAP}/10_demo_chasser_resultat.png', full_page=True); vert('calcul complet, mauvaise reponse reconnue')
     # 6. compagnon
-    pg.click('[data-p=plus]'); pg.click('[data-p=compagnon]'); pg.fill('#cp-a', 'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp'); pg.wait_for_timeout(200)
-    t = pg.inner_text('#page'); assert 'AEDE:compagnon:bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp' in t and '/c/' in t; vert('compagnon : message exact et lien')
+    pg.click('[data-p=compagnon]'); pg.wait_for_timeout(200); pg.click('[data-pas-c="2"]'); pg.wait_for_timeout(200); pg.fill('#cp-a', 'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp'); pg.wait_for_timeout(200); assert 'AEDE:compagnon:bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp' in pg.inner_text('#page')
+    pg.fill('#cp-s', 'SIGNATURE'); pg.click('#cp-envoyer'); pg.wait_for_timeout(300)
+    t = pg.inner_text('#page'); assert '/c/' in t and 'LE LIEN' in t; vert('compagnon en trois pas : message exact au pas 2, lien au pas 3')
     code = pg.evaluate("GG.codeCompagnon('bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp')")
     import base64, hashlib
     assert code == base64.b32encode(hashlib.sha256(b'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp').digest()).decode().lower()[:10]; vert('code compagnon identique a celui de la caisse')
-    pg.fill('#cp-a', 'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvq'); pg.wait_for_timeout(100); assert 'invalide' in pg.inner_text('#page'); vert('adresse a somme fausse refusee')
+    pg.click('[data-pas-c="2"]'); pg.wait_for_timeout(200); pg.fill('#cp-a', 'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvq'); pg.wait_for_timeout(100); assert 'invalide' in pg.inner_text('#page'); vert('adresse a somme fausse refusee')
     pg.fill('#cp-a', 'bc1qstr8teku6u56xse27fmds7nfkq255pcqfw8cvp'); pg.fill('#cp-s', 'SIGNATURE'); pg.screenshot(path=f'{CAP}/11_demo_compagnon.png', full_page=True)
     pg.click('[data-p=plus]'); pg.click('[data-p=reseau]'); pg.wait_for_timeout(300); pg.screenshot(path=f'{CAP}/12_demo_reseau.png', full_page=True)
     tr = pg.inner_text('#page'); assert 'les témoins ne sont pas lus' in tr and re.search(r'Ce programme\s+1\.\d+\.\d+\S* · [0-9a-f]{16}…', tr), tr[:900]
@@ -94,7 +100,7 @@ with sync_playwright() as p:
     pg.screenshot(path=f'{CAP}/13b_conditions.png'); vert('conditions generales embarquees (francais et anglais, empreinte du fichier publie) : le bouton les ouvre dans le programme, sans la librairie')
     # 7. les cinq langues
     for l in ('en', 'es', 'de', 'pt', 'fr'):
-        pg.select_option('#langue', l); pg.click('[data-p=tableau]'); pg.wait_for_timeout(200)
+        pg.click('[data-p=plus]'); pg.click('[data-p=reglages]'); pg.wait_for_timeout(200); pg.select_option('#r-lang', l); pg.click('#r-garder'); pg.wait_for_timeout(400); pg.click('[data-p=tableau]'); pg.wait_for_timeout(200)
         pg.screenshot(path=f'{CAP}/14_tableau_{l}.png')
     vert('cinq langues')
     # 8. un ecran etroit (tablette)

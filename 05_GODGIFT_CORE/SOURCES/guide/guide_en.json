@@ -16,21 +16,21 @@
     {
       "titre": "I'm discovering",
       "etapes": [
-        "Open « The board »: the 24 chests of the hunt, one per month, from January 2027 to December 2028. Their colour shows their state.",
-        "Tap a chest: you see its amount, its two riddles once they are out, its cry and, later, its two hints.",
-        "To see a hunt in progress before it begins, tick « Demonstration mode » in Settings, then « Save ». Everything in it is fake.",
-        "Return to the real hunt by unticking this mode, then « Save »."
+        "Open “Chests”: the 24 chests of the hunt, one per month, from January 2027 to December 2028. Their colour shows their state.",
+        "Tap a chest: its card shows its state, its amount and the dates of its two riddles; “See the chest” shows its riddles once they are out, its cry and, later, its two hints.",
+        "To see a hunt in progress before it begins, tick “Demonstration mode” in Settings, then “Save”. Everything in it is fake.",
+        "Return to the real hunt: tap the badge at the top, then “Leave the demonstration” (or untick this mode in Settings, then “Save”)."
       ]
     },
     {
       "titre": "I'm hunting",
       "etapes": [
-        "Before anything else, calmly: save « My receiving address » in Settings, the one of your own wallet, and sign it with that wallet: the signature is required. That is where the treasure will go.",
-        "On the 3rd of the month at 18:15:05 UTC (19:15:05 in Paris in winter, 20:15:05 in summer) the first riddle of the chest comes out; on the 17th, at the same time, the second. Read them in « Riddles ».",
-        "Each answer is made of French words from the list of five thousand: three words per stone riddle, four for a cathedral and the final chest. Check your words in « Find », at the bottom of the page.",
+        "Before anything else, calmly: in More, “My receiving address”, save in three steps the address of your own wallet, and sign it with that wallet: the signature is required. That is where the treasure will go.",
+        "On the 3rd of the month at 18:15:05 UTC (19:15:05 in Paris in winter, 20:15:05 in summer) the first riddle of the chest comes out; on the 17th, at the same time, the second. Read them in “Riddles”.",
+        "Each answer is made of French words from the list of five thousand: three words per stone riddle, four for a cathedral and the final chest. Check your words in “Find”, at step 2: “The list of five thousand”.",
         "One hour after the second riddle comes the cry: it brings the randomness, the last piece of the key. GodGift Core reads it by itself.",
-        "In « Find », choose the chest: GodGift Core prepares it and shows « Armed ». Switch off the internet, type your two answers, then « Compute the key ».",
-        "If it is the right key, switch the internet back on. In the window of the installed app, opened from its icon, GodGift Core signs the transaction at once on your machine and sends it by itself to your address, with a strong offer (about 10% of the treasure in fees); elsewhere (browser, web version, reloaded window), it first has you retype 16 characters of your address, in two pieces drawn at random and hidden on screen, read in your wallet; in « No install », it sends nothing. If someone else found it at the same time, it is the race: « Speed up » doubles the fees at once.",
+        "In “Find”, choose the chest: GodGift Core prepares it and shows “Armed”. Switch off the internet, type your two answers, then “Compute the key”.",
+        "If it is the right key, switch the internet back on. In the window of the installed app, opened from its icon, GodGift Core signs the transaction at once on your machine and sends it by itself to your address, with a strong offer (about 10% of the treasure in fees); elsewhere (browser, web version, reloaded window), it first has you retype 16 characters of your address, in two pieces drawn at random and hidden on screen, read in your wallet; in “No install”, it sends nothing. If someone else found it at the same time, it is the race: “Speed up” doubles the fees at once.",
         "Practise first on practice chests A and B: they are fake, public, and show you exactly what would happen."
       ]
     },
@@ -38,16 +38,16 @@
       "titre": "I'm carrying the book",
       "etapes": [
         "Only the owner of an official copy can be an active companion, and one copy makes only one companion. Buy yours on angedeleau.com, giving a bc1q… address from your wallet: it is its ownership address, printed on its title page. The hunt itself stays free.",
-        "Open « The books », drop the EPUB or PDF of your copy, then « Become a companion with this copy »: the Companion page takes its ownership address; that is where your shares will arrive.",
+        "Open “The books”, drop the EPUB or PDF of your copy, then “Become a companion with this copy”: the Companion page takes its ownership address; that is where your shares will arrive.",
         "Sign the message shown with this address (in Sparrow: Tools, Sign message), paste the signature, then send it: the bookshop gives you a personal link.",
-        "The link stays « pending » until the sale of your copy is settled, then becomes « active »: every book bought through an active link earns you 40% of its price.",
+        "The link stays “pending” until the sale of your copy is settled, then becomes “active”: every book bought through an active link earns you 40% of its price.",
         "Your shares are paid every quarter, in a public transaction that anyone can verify."
       ]
     },
     {
       "titre": "I'm verifying my book",
       "etapes": [
-        "Open « The books ».",
+        "Open “The books”.",
         "Drop your EPUB or your PDF, or type the fingerprint printed on its title page.",
         "GodGift Core finds the copy in the register and recomputes the root engraved on chain: if it is official, it tells you, with its number."
       ]
@@ -55,9 +55,9 @@
     {
       "titre": "I become a witness",
       "etapes": [
-        "In Settings, tick « I become a witness » (or answer yes at the welcome screen).",
-        "At each « Verify everything », and once a day by itself, your GodGift Core publishes its report: block, fingerprints, result. Nothing personal.",
-        "The « Network » tab counts the week's witnesses and flags the slightest disagreement: a different manifest, an unpublished version, a failed check.",
+        "In Settings, tick “I become a witness” (or answer yes at the welcome screen).",
+        "At each “Verify everything”, and once a day by itself, your GodGift Core publishes its report: block, fingerprints, result. Nothing personal.",
+        "In More, “Network and sources” counts the week’s witnesses and flags the slightest disagreement: a different manifest, an unpublished version, a failed check.",
         "Every day, the reports are timestamped in Bitcoin: a dated proof that anyone can verify."
       ]
     }
@@ -114,7 +114,7 @@
     {
       "id": "chasse",
       "mot": "Hunt",
-      "texte": "A complete treasure: its chests, its riddles, its Stone and its COFFRET. L'Ange de l'Eau is hunt no. 1; the next ones will appear by themselves in « The hunts ». Each hunt has its own keys: none can open another.",
+      "texte": "A complete treasure: its chests, its riddles, its Stone and its COFFRET. L'Ange de l'Eau is hunt no. 1; the next ones will appear by themselves in “The hunts”. Each hunt has its own keys: none can open another.",
       "voir": [
         "chasse_zero",
         "annonce",
@@ -142,7 +142,7 @@
     {
       "id": "cle",
       "mot": "Chest key",
-      "texte": "The private key that lets you spend the chest. It is computed at your place from the words of the two answers and the randomness (scrypt: about ten seconds and one gigabyte of memory; a single try bothers nobody, billions would cost a fortune). It is never written, nor shown unless you ask for it (« Expert: show the private key », one minute): GodGift Core uses it to empty the chest into your address, then forgets it.",
+      "texte": "The private key that lets you spend the chest. It is computed on your own device from the words of the two answers and the randomness (scrypt: about ten seconds and one gigabyte of memory; a single try bothers nobody, billions would cost a fortune). It is never written, nor shown unless you ask for it (“Expert: show the private key”, one minute): GodGift Core uses it to empty the chest into your address, then forgets it.",
       "voir": [
         "alea",
         "recuperer",
@@ -173,7 +173,7 @@
     {
       "id": "compagnon",
       "mot": "Companion",
-      "texte": "The owner of an official copy who spreads the word about the novel with a personal link. They declare themselves with the ownership address of their copy: one copy, one companion. Their link stays « pending » until the sale of that copy is settled, then becomes « active ». Every book sold through an active link earns them 40% of the price, paid every quarter to that address. No account, no key to hand over.",
+      "texte": "The owner of an official copy who spreads the word about the novel with a personal link. They declare themselves with the ownership address of their copy: one copy, one companion. Their link stays “pending” until the sale of that copy is settled, then becomes “active”. Every book sold through an active link earns them 40% of the price, paid every quarter to that address. No account, no key to hand over.",
       "voir": [
         "versement",
         "adresse"
@@ -193,7 +193,7 @@
     {
       "id": "demo",
       "mot": "Demonstration mode",
-      "texte": "A hunt imagined on 10 June 2027, with illustrative values and dummy addresses, to see what GodGift Core looks like in the middle of a hunt. No real riddle. Settings: tick or untick « Demonstration mode », then « Save ».",
+      "texte": "A hunt imagined on 10 June 2027, with illustrative values and dummy addresses, to see what GodGift Core looks like in the middle of a hunt. No real riddle. Settings: tick or untick “Demonstration mode”, then “Save”; to leave it, the badge at the top also offers “Leave the demonstration”.",
       "voir": []
     },
     {
@@ -257,7 +257,7 @@
     {
       "id": "exemplaire",
       "mot": "Official copy",
-      "texte": "A digital book sold by the bookshop. It carries its number and its fingerprint on its title page; every quarter, the payout engraves on chain the root of all copies. Drop it into « The books » to verify it.",
+      "texte": "A digital book sold by the bookshop. It carries its number and its fingerprint on its title page; every quarter, the payout engraves on chain the root of all copies. Drop it into “The books” to verify it.",
       "voir": [
         "empreinte",
         "racine"
@@ -293,7 +293,7 @@
     {
       "id": "librairie",
       "mot": "Bookshop",
-      "texte": "The server that sells the digital book in bitcoin and publishes the riddles, the board and the payouts. GodGift Core recounts everything it publishes; if it goes down, GodGift Core opens the COFFRET itself and the « Buy the book » button switches to the backup server the author designated by a signed message.",
+      "texte": "The server that sells the digital book in bitcoin and publishes the riddles, the board and the payouts. GodGift Core recounts everything it publishes; if it goes down, GodGift Core opens the COFFRET itself and the “Buy the book” button switches to the backup server the author designated by a signed message.",
       "voir": [
         "coffret",
         "secours"
@@ -340,7 +340,7 @@
     {
       "id": "pierre",
       "mot": "The Stone of the programme",
-      "texte": "The complete rules of the hunt, in French, engraved on chain before the opening. Nothing can depart from it. Readable in Settings, « Read the Stone »; the general conditions put it in everyday language.",
+      "texte": "The complete rules of the hunt, in French, engraved on chain before the opening. Nothing can depart from it. Readable in Settings, “Read the Stone”; the general conditions put it in everyday language.",
       "voir": [
         "gravure",
         "chasse"
@@ -382,7 +382,7 @@
     {
       "id": "secours",
       "mot": "Backup server",
-      "texte": "A second bookshop, ready to take over the sales if the first one goes down. It is designated in advance by a signed message from the author whose last line is AEDE:secours:https://… (Stone, article 10), or pinned in the program: GodGift Core switches only to it, never to an address merely announced by the bookshop. There are never two active tills at the same time. Without a designated backup server, « Buy the book » sends you to angedeleau.com and says the sale is temporarily unavailable; the hunt goes on.",
+      "texte": "A second bookshop, ready to take over the sales if the first one goes down. It is designated in advance by a signed message from the author whose last line is AEDE:secours:https://… (Stone, article 10), or pinned in the program: GodGift Core switches only to it, never to an address merely announced by the bookshop. There are never two active tills at the same time. Without a designated backup server, “Buy the book” sends you to angedeleau.com and says the sale is temporarily unavailable; the hunt goes on.",
       "voir": [
         "librairie"
       ]
@@ -400,7 +400,7 @@
     {
       "id": "solution",
       "mot": "Signed solution",
-      "texte": "A chest's solution is published only once the chest is taken, by a signed message from the author whose last line is AEDE:solution:… It is checked against the salted commitment engraved at the seeding: GodGift Core shows « seeding commitment kept » or « commitment FALSE ». It never copies these words into your answers and sends nothing.",
+      "texte": "A chest's solution is published only once the chest is taken, by a signed message from the author whose last line is AEDE:solution:… It is checked against the salted commitment engraved at the seeding: GodGift Core shows “seeding commitment kept” or “commitment FALSE”. It never copies these words into your answers and sends nothing.",
       "voir": [
         "message",
         "manifeste",
@@ -419,7 +419,7 @@
     {
       "id": "verifier",
       "mot": "Verify everything",
-      "texte": "The checks run on your machine, trusting nobody: the Stone, the list, the calendar, the manifest and its engraving, the seed transaction, the cries, the payouts, the chests, the COFFRET, every followed hunt (hunt zero included), the messages and the signed solutions, the register, this program and the agreement of the two sources. « Pending » is normal before the seeding.",
+      "texte": "The checks run on your machine, trusting nobody: the Stone, the list, the calendar, the manifest and its engraving, the seed transaction, the cries, the payouts, the chests, the COFFRET, every followed hunt (hunt zero included), the messages and the signed solutions, the register, this program and the agreement of the two sources. “Pending” is normal before the seeding.",
       "voir": [
         "noeud",
         "empreinte",
@@ -448,7 +448,7 @@
     {
       "id": "wif",
       "mot": "Private key (WIF)",
-      "texte": "The form of a private key that wallets accept. GodGift Core now shows it only in the folded « Expert » section: it empties the chest itself. Show it to nobody: whoever sees it can empty the chest before you.",
+      "texte": "The form of a private key that wallets accept. GodGift Core now shows it only in the folded “Expert” section: it empties the chest itself. Show it to nobody: whoever sees it can empty the chest before you.",
       "voir": [
         "cle",
         "recuperer"
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Receiving address",
-      "texte": "The address of your own wallet (even a cold wallet), saved in advance in Settings. The day you find, the treasure goes there by itself. It must be signed by your wallet (a bc1q…, 3… or 1… address): the signature proves it is yours and unmasks a virus that would have swapped the copied address. GodGift Core checks it again right before sending, shows the date it was saved and alerts you if it changed since your last visit. Outside the dedicated window of the installed app, it also has you retype, before each sending, 16 characters of this address, in two pieces drawn at random and hidden on screen, read in your own wallet.",
+      "texte": "The address of your own wallet (even a cold wallet), saved in advance in More, “My receiving address”. The day you find, the treasure goes there by itself. It must be signed by your wallet (a bc1q…, 3… or 1… address): the signature proves it is yours and unmasks a virus that would have swapped the copied address. GodGift Core checks it again right before sending, shows the date it was saved and alerts you if it changed since your last visit. Outside the dedicated window of the installed app, it also has you retype, before each sending, 16 characters of this address, in two pieces drawn at random and hidden on screen, read in your own wallet.",
       "voir": [
         "recuperer",
         "portefeuille",
@@ -467,7 +467,7 @@
     {
       "id": "recuperer",
       "mot": "Recover the treasure",
-      "texte": "When the key of a real chest is found, GodGift Core signs, on your machine, the transaction that sends the whole chest to your signed receiving address, and broadcasts it through both sources. In the dedicated window of the installed app (opened from its icon), it does so at once; elsewhere (browser, web version, reloaded window), only after you have retyped 16 characters of your address, in two pieces drawn at random and hidden on screen, read in your own wallet: if a booby-trapped page had changed the saved address, they would not match, even for a forged address ending the same way. The dedicated window keeps its token in memory only: once reloaded, it no longer sends by itself; reopen it from its icon. In « No install », it sends nothing. Offline, the transaction waits for the network to come back. Fees: right away, even with no competitor, a strong offer of about 10% of the treasure (at most 300 sat/vB), without asking you; beyond that, it asks you; never more than half the treasure. On a phone, the web version checks everything; to recover a treasure, the app installed on a computer remains the safest way.",
+      "texte": "When the key of a real chest is found, GodGift Core signs, on your machine, the transaction that sends the whole chest to your signed receiving address, and broadcasts it through both sources. In the dedicated window of the installed app (opened from its icon), it does so at once; elsewhere (browser, web version, reloaded window), only after you have retyped 16 characters of your address, in two pieces drawn at random and hidden on screen, read in your own wallet: if a booby-trapped page had changed the saved address, they would not match, even for a forged address ending the same way. The dedicated window keeps its token in memory only: once reloaded, it no longer sends by itself; reopen it from its icon. In “No install”, it sends nothing. Offline, the transaction waits for the network to come back. Fees: right away, even with no competitor, a strong offer of about 10% of the treasure (at most 300 sat/vB), without asking you; beyond that, it asks you; never more than half the treasure. On a phone, the web version checks everything; to recover a treasure, the app installed on a computer remains the safest way.",
       "voir": [
         "reception",
         "accelerer",
@@ -477,7 +477,7 @@
     {
       "id": "accelerer",
       "mot": "Speed up",
-      "texte": "If someone else found it at the same time, their transaction may wait before yours. « Speed up » sends the same transaction again, doubling the fees at once, never beyond half the treasure: miners generally take the one that pays most. This is the race, the same for everyone.",
+      "texte": "If someone else found it at the same time, their transaction may wait before yours. “Speed up” sends the same transaction again, doubling the fees at once, never beyond half the treasure: miners generally take the one that pays most. This is the race, the same for everyone.",
       "voir": [
         "recuperer",
         "pris",
@@ -487,7 +487,7 @@
     {
       "id": "officiel",
       "mot": "Published version",
-      "texte": "Your GodGift Core looks for its fingerprint in the author's signed messages. « Published version »: the author published this fingerprint. This badge does not prove your copy is intact (a booby-trapped copy could lie about itself): to be sure, rebuild the program with recompiler_et_comparer.py, or check the installer at angedeleau.com/verifier-installateur. « Unknown version » or « withdrawn »: download the right one from angedeleau.com.",
+      "texte": "Your GodGift Core looks for its fingerprint in the author's signed messages. “Published version”: the author published this fingerprint. This badge does not prove your copy is intact (a booby-trapped copy could lie about itself): to be sure, rebuild the program with recompiler_et_comparer.py, or check the installer at angedeleau.com/verifier-installateur. “Unknown version” or “withdrawn”: download the right one from angedeleau.com.",
       "voir": [
         "installateur",
         "empreinte",
@@ -553,7 +553,7 @@
     {
       "id": "course",
       "mot": "The race",
-      "texte": "Everyone who finds the right answers gets the same key: the chest goes to the first confirmed transaction, generally the one that pays the miners the most fees. That is the rule of the game, and no program can prevent it. GodGift Core pays a strong offer right away, even with no competitor (about 10% of the treasure, at most 300 sat/vB), and doubles at once with « Speed up », never beyond half the treasure; a competitor who bids more, or who clogs the queue with linked transactions, can win.",
+      "texte": "Everyone who finds the right answers gets the same key: the chest goes to the first confirmed transaction, generally the one that pays the miners the most fees. That is the rule of the game, and no program can prevent it. GodGift Core pays a strong offer right away, even with no competitor (about 10% of the treasure, at most 300 sat/vB), and doubles at once with “Speed up”, never beyond half the treasure; a competitor who bids more, or who clogs the queue with linked transactions, can win.",
       "voir": [
         "accelerer",
         "recuperer",
@@ -576,18 +576,18 @@
     },
     {
       "q": "What if the site goes down?",
-      "r": "GodGift Core keeps the COFFRET and opens it itself on time; the cries go out on chain; the « Buy the book » button switches to the backup server the author designated by a signed message (without one, the sale is temporarily unavailable). The hunt goes on."
+      "r": "GodGift Core keeps the COFFRET and opens it itself on time; the cries go out on chain; the “Buy the book” button switches to the backup server the author designated by a signed message (without one, the sale is temporarily unavailable). The hunt goes on."
     },
     {
       "q": "I found the key: what do I do?",
-      "r": "In the window of the installed app, nothing to do: if your signed receiving address is saved, GodGift Core sends the whole chest to it at once. Elsewhere (browser, web version, reloaded window), first retype the 16 requested characters of your address, in two pieces hidden on screen, read in your wallet; in « No install », install GodGift Core and compute the key again. Switch the internet back on if you had cut it. If « Speed up » appears, someone else found it at the same time: it is the race, click it."
+      "r": "In the window of the installed app, nothing to do: if your signed receiving address is saved, GodGift Core sends the whole chest to it at once. Elsewhere (browser, web version, reloaded window), first retype the 16 requested characters of your address, in two pieces hidden on screen, read in your wallet; in “No install”, install GodGift Core and compute the key again. Switch the internet back on if you had cut it. If “Speed up” appears, someone else found it at the same time: it is the race, click it."
     },
     {
       "q": "I'm missing just one word: can I try everything?",
       "r": "Yes, it is allowed. One missing word means five thousand tries, a few hours of computing. The slowness protects against brute force, not against a hunter who has almost found it."
     },
     {
-      "q": "Why « Pending » in Verify?",
+      "q": "Why “Pending” in Verify?",
       "r": "Before the December 2026 seeding, or when the bookshop is not open yet, there is nothing to recount. It is not an error. A check in red, on the other hand, signals a real problem."
     },
     {
@@ -600,7 +600,7 @@
     },
     {
       "q": "How do I know this program is the right one?",
-      "r": "The badge at the top of the screen says « published version » when the author signed this fingerprint; it does not prove your copy is intact. Before installing, check the file on angedeleau.com/verifier-installateur; you can also rebuild everything yourself (recompiler_et_comparer.py). On Windows, the installer will carry the author's signature once signed (Certum)."
+      "r": "The badge at the top of the screen says “published version” when the author signed this fingerprint; it does not prove your copy is intact. Before installing, check the file on angedeleau.com/verifier-installateur; you can also rebuild everything yourself (recompiler_et_comparer.py). On Windows, the installer will carry the author's signature once signed (Certum)."
     },
     {
       "q": "Do I have to be a witness?",
@@ -612,7 +612,7 @@
     },
     {
       "q": "What if two people find it at the same time?",
-      "r": "It is the race, the rule of the game: everyone who finds has the same key, and the chest goes to the first confirmed transaction, generally the one that pays the most fees. GodGift Core pays right away, even with no competitor, a strong offer of about 10% of the treasure (at most 300 sat/vB, without asking you) and « Speed up » doubles at once, never more than half the treasure. A competitor who bids more can win: no program can prevent it."
+      "r": "It is the race, the rule of the game: everyone who finds has the same key, and the chest goes to the first confirmed transaction, generally the one that pays the most fees. GodGift Core pays right away, even with no competitor, a strong offer of about 10% of the treasure (at most 300 sat/vB, without asking you) and “Speed up” doubles at once, never more than half the treasure. A competitor who bids more can win: no program can prevent it."
     },
     {
       "q": "Someone offers me another version of GodGift Core, or help to recover a chest",

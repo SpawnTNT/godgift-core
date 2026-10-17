@@ -16,18 +16,18 @@
     {
       "titre": "Ich entdecke",
       "etapes": [
-        "Öffnen Sie „Die Tafel“: die 24 Truhen der Jagd, eine pro Monat, von Januar 2027 bis Dezember 2028. Ihre Farbe zeigt ihren Zustand.",
-        "Tippen Sie auf eine Truhe: Sie sehen ihren Betrag, ihre beiden Rätsel, sobald sie erschienen sind, ihren Ruf und später ihre zwei Hinweise.",
+        "Öffnen Sie „Truhen“: die 24 Truhen der Jagd, eine pro Monat, von Januar 2027 bis Dezember 2028. Ihre Farbe zeigt ihren Zustand.",
+        "Tippen Sie auf eine Truhe: Die Karte der Truhe zeigt ihren Zustand, ihren Betrag und die Daten ihrer beiden Rätsel; „Truhe ansehen“ zeigt ihre erschienenen Rätsel, ihren Ruf und später ihre zwei Hinweise.",
         "Um eine laufende Jagd zu sehen, bevor sie beginnt, wählen Sie in den Einstellungen „Demonstrationsmodus“ und dann „Speichern“. Alles darin ist fiktiv.",
-        "Zur echten Jagd kehren Sie zurück, indem Sie diesen Modus abwählen und dann „Speichern“ wählen."
+        "Zur echten Jagd kehren Sie so zurück: Tippen Sie oben auf die Plakette und dann auf „Demonstration beenden“ (oder wählen Sie diesen Modus in den Einstellungen ab und dann „Speichern“)."
       ]
     },
     {
       "titre": "Ich jage",
       "etapes": [
-        "Vor allem in aller Ruhe: Speichern Sie in den Einstellungen „Meine Empfangsadresse“, die Adresse Ihrer eigenen Wallet, und signieren Sie sie mit ihr: Die Signatur ist erforderlich. Dorthin geht der Schatz.",
+        "Vor allem in aller Ruhe: Speichern Sie unter Mehr, „Meine Empfangsadresse“, in drei Schritten die Adresse Ihrer eigenen Wallet und signieren Sie sie mit ihr: Die Signatur ist erforderlich. Dorthin geht der Schatz.",
         "Am 3. des Monats um 18:15:05 UTC (19:15:05 in Paris im Winter, 20:15:05 im Sommer) erscheint das erste Rätsel der Truhe, am 17. zur gleichen Uhrzeit das zweite. Lesen Sie sie unter „Rätsel“.",
-        "Jede Antwort besteht aus französischen Wörtern der Liste der Fünftausend: drei Wörter pro Stein-Rätsel, vier bei einer Kathedrale und der letzten Truhe. Prüfen Sie Ihre Wörter unter „Finden“, unten auf der Seite.",
+        "Jede Antwort besteht aus französischen Wörtern der Liste der Fünftausend: drei Wörter pro Stein-Rätsel, vier bei einer Kathedrale und der letzten Truhe. Prüfen Sie Ihre Wörter unter „Finden“, in Schritt 2: „Die Liste der Fünftausend“.",
         "Eine Stunde nach dem zweiten Rätsel erscheint der Ruf: Er bringt den Zufall, das letzte Teil des Schlüssels. GodGift Core liest ihn ganz allein.",
         "Wählen Sie unter „Finden“ die Truhe: GodGift Core bereitet sie vor und zeigt „Bereit“ an. Trennen Sie das Internet, tippen Sie Ihre beiden Antworten und dann „Schlüssel berechnen“.",
         "Ist es der richtige Schlüssel, verbinden Sie das Internet wieder. Im Fenster der installierten Anwendung, über ihr Symbol geöffnet, signiert GodGift Core sofort die Transaktion auf Ihrem Rechner und sendet sie von selbst an Ihre Adresse, mit einem starken Angebot (etwa 10 % des Schatzes als Gebühren); anderswo (Browser, Webversion, neu geladenes Fenster) lässt es Sie zuerst 16 Zeichen Ihrer Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer Wallet; „Ohne Installation“ sendet es nichts. Hat jemand anderes gleichzeitig gefunden, ist es das Rennen: „Beschleunigen“ verdoppelt die Gebühren auf einen Schlag.",
@@ -57,7 +57,7 @@
       "etapes": [
         "Wählen Sie in den Einstellungen „Ich werde Zeuge“ (oder antworten Sie bei der Begrüßung mit Ja).",
         "Bei jedem „Alles prüfen“ und einmal täglich von allein veröffentlicht Ihr GodGift Core seinen Befund: Block, Fingerabdrücke, Ergebnis. Nichts Persönliches.",
-        "Der Reiter „Netz“ zählt die Zeugen der Woche und meldet jede Abweichung: ein anderes Manifest, eine nicht veröffentlichte Version, eine fehlgeschlagene Prüfung.",
+        "Unter Mehr zählt „Netz und Quellen“ die Zeugen der Woche und meldet jede Abweichung: ein anderes Manifest, eine nicht veröffentlichte Version, eine fehlgeschlagene Prüfung.",
         "Jeden Tag werden die Befunde in Bitcoin mit einem Zeitstempel versehen: ein datierter Beweis, den jeder überprüfen kann."
       ]
     }
@@ -193,7 +193,7 @@
     {
       "id": "demo",
       "mot": "Demonstrationsmodus",
-      "texte": "Eine Jagd, wie sie am 10. Juni 2027 aussehen könnte, mit Beispielwerten und fiktiven Adressen, um zu sehen, wie GodGift Core mitten in der Jagd aussieht. Kein echtes Rätsel. Einstellungen: an- oder abwählen, dann „Speichern“.",
+      "texte": "Eine Jagd, wie sie am 10. Juni 2027 aussehen könnte, mit Beispielwerten und fiktiven Adressen, um zu sehen, wie GodGift Core mitten in der Jagd aussieht. Kein echtes Rätsel. Einstellungen: „Demonstrationsmodus“ an- oder abwählen, dann „Speichern“; zum Verlassen bietet die Plakette oben auch „Demonstration beenden“.",
       "voir": []
     },
     {
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Empfangsadresse",
-      "texte": "Die Adresse Ihrer eigenen Wallet (auch einer Cold Wallet), vorab in den Einstellungen gespeichert. An dem Tag, an dem Sie fündig werden, geht der Schatz von allein dorthin. Sie muss von Ihrer Wallet signiert sein (Adresse bc1q…, 3… oder 1…): Die Signatur beweist, dass sie Ihnen gehört, und entlarvt einen Virus, der die kopierte Adresse ausgetauscht hätte. GodGift Core prüft sie unmittelbar vor dem Versand erneut, zeigt ihr Speicherdatum und warnt Sie, wenn sie sich seit Ihrem letzten Besuch geändert hat. Außerhalb des eigenen Fensters der installierten Anwendung lässt es Sie außerdem vor jedem Versand 16 Zeichen dieser Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer eigenen Wallet.",
+      "texte": "Die Adresse Ihrer eigenen Wallet (auch einer Cold Wallet), vorab unter Mehr, „Meine Empfangsadresse“, gespeichert. An dem Tag, an dem Sie fündig werden, geht der Schatz von allein dorthin. Sie muss von Ihrer Wallet signiert sein (Adresse bc1q…, 3… oder 1…): Die Signatur beweist, dass sie Ihnen gehört, und entlarvt einen Virus, der die kopierte Adresse ausgetauscht hätte. GodGift Core prüft sie unmittelbar vor dem Versand erneut, zeigt ihr Speicherdatum und warnt Sie, wenn sie sich seit Ihrem letzten Besuch geändert hat. Außerhalb des eigenen Fensters der installierten Anwendung lässt es Sie außerdem vor jedem Versand 16 Zeichen dieser Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer eigenen Wallet.",
       "voir": [
         "recuperer",
         "portefeuille",

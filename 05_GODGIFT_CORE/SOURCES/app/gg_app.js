@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   if (window.top !== window.self) { document.body.textContent = ""; return; }   // jamais dans le cadre d'une autre page
-  var VERSION = "1.4.1";
+  var VERSION = "1.5.0";
   var A = 2027;
   // la version web (https://app.angedeleau.com/, hebergement statique a part) lit la librairie sur angedeleau.com ; installe, sur librairie.angedeleau.com
   var WEB = location.protocol === "https:";
@@ -382,9 +382,13 @@
     carte: '<svg viewBox="0 0 24 24"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>',
     registre: '<svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2"/><circle cx="4" cy="12" r="1.2"/><circle cx="4" cy="18" r="1.2"/></svg>'
   };
-  var ONGLETS = ["tableau", "enigmes", "chasser", "messages", "plus"];
-  var PARENT = { coffre: "tableau", verifier: "plus", compagnon: "plus", reseau: "plus", reglages: "plus", pierre: "plus", conditions: "plus", coffret: "plus", livres: "plus", chasses: "plus", chasse: "plus", guide: "plus", adresse: "plus", plus: "plus" };
-  function route() { var h = (location.hash || "#/tableau").slice(2).split("/"); return { p: h[0] || "tableau", a: h[1] }; }
+  var ONGLETS = ["tableau", "enigmes", "chasser", "compagnon", "plus"];
+  var PARENT = { messages: "plus", coffre: "tableau", verifier: "plus", reseau: "plus", reglages: "plus", pierre: "plus", conditions: "plus", coffret: "plus", livres: "plus", chasses: "plus", chasse: "plus", guide: "plus", adresse: "plus", plus: "plus" };
+  function route() {
+    var h = (location.hash || "#/tableau").slice(2).split("/"), a = h[1];
+    if (a) { try { a = decodeURIComponent(a); } catch (e) { a = undefined; } }   // audit 1.5.0, F6 : #/coffre/% ne casse plus rien
+    return { p: h[0] || "tableau", a: a };
+  }
 
   function cadre(page) {
     document.documentElement.lang = R.lang;
@@ -398,26 +402,26 @@
     else if (ns < 2 || M.src.etat < 2) { cls = "att"; txt = t("d_une_source"); }
     else { cls = "ok"; txt = t("d_verifie", { n: ns }); }
     var ouvert = $("etat-panneau") && !$("etat-panneau").hidden;
-    $("statut").innerHTML = '<button type="button" class="verif-chip ' + cls + '" id="etat-details" aria-expanded="' + (ouvert ? "true" : "false") + '" aria-label="' + esc(t("d_etat_ouvrir")) + '">' + ICONES.verifier + '<span class="texte">' + esc(txt) + "</span></button>" +
-      '<button type="button" class="haut-bouton" id="rafraichir" title="' + esc(t("et_rafraichir")) + '" aria-label="' + esc(t("et_rafraichir")) + '">↻</button>' +
-      '<select id="langue" aria-label="' + esc(t("d_langue")) + '">' + LANGUES.map(function (l) { return '<option value="' + l[0] + '"' + (l[0] === R.lang ? " selected" : "") + ">" + l[0].toUpperCase() + "</option>"; }).join("") + "</select>";
+    $("statut").innerHTML = '<button type="button" class="verif-chip ' + cls + '" id="etat-details" aria-expanded="' + (ouvert ? "true" : "false") + '" aria-label="' + esc(txt + " · " + t("d_etat_ouvrir")) + '">' + ICONES.verifier + '<span class="texte">' + esc(txt) + "</span></button>" +
+      '<button type="button" class="haut-bouton" id="rafraichir" title="' + esc(t("et_rafraichir")) + '" aria-label="' + esc(t("et_rafraichir")) + '">↻</button>';
     if (ouvert) $("etat-panneau").innerHTML = detailsEtat();
     var onglet = PARENT[page] || page;
     $("onglets").innerHTML = ONGLETS.map(function (o) {
       var actif = o === onglet, ic = o === "chasser" ? '<span class="rond">' + ICONES.chasser + "</span>" : ICONES[o];
-      return '<button type="button" class="o' + (o === "chasser" ? " trouver" : "") + (actif ? " actif" : "") + '" data-p="' + o + '"' + (actif ? ' aria-current="page"' : "") + ">" + ic + "<span>" + esc(t("tb_" + o)) + "</span></button>";
+      return '<button type="button" class="o' + (o === "chasser" ? " trouver" : "") + (actif ? " actif" : "") + '" data-p="' + o + '"' + (actif ? ' aria-current="page"' : "") + ">" + ic + "<span>" + esc(t("tb_" + o)) + "</span>" + (o === "plus" && messagesNouveaux() ? '<i class="point-or" aria-hidden="true"></i>' : "") + "</button>";
     }).join("") +
       // 1.4.1, ecran d'ordinateur : le rail a la place, il porte aussi les entrees de Plus (le CSS ne les montre qu'au-dela de 1024 px)
       '<span class="rail-sep" aria-hidden="true"></span>' + PLUS_ENTREES.map(function (x, i) {
         var actif = page === x[0];
-        return (i === PLUS_TOUS_LES_JOURS ? '<span class="rail-titre">' + esc(t("pe_pour_verifier")) + "</span>" : "") + '<button type="button" class="o sec' + (actif ? " actif" : "") + '" data-p="' + x[0] + '">' + ICONES[x[0]] + "<span>" + esc(t(x[1])) + "</span></button>";
+        return (i === PLUS_TOUS_LES_JOURS ? '<span class="rail-titre">' + esc(t("pe_pour_verifier")) + "</span>" : "") + '<button type="button" class="o sec' + (actif ? " actif" : "") + '" data-p="' + x[0] + '">' + ICONES[x[0]] + "<span>" + esc(t(x[1])) + "</span>" + (x[0] === "messages" && messagesNouveaux() ? '<i class="point-or" aria-hidden="true"></i>' : "") + "</button>";
       }).join("");
+    rendreLat(page);
   }
   // le bandeau image d'un ecran (140 px, balayage de lumiere, legende d'or) ; sur une sous-page, la pastille « ‹ » ramene a la page parente
   function visuel(page, legende, retour) {
     return '<div class="visuel v-' + page + '">' + (retour ? '<a class="fleche-retour" href="#/' + retour + '" aria-label="' + esc(t("d_retour")) + '">‹</a>' : "") + "<b>" + esc(legende) + "</b></div>";
   }
-  var PARENT_RETOUR = { coffre: "tableau", verifier: "plus", compagnon: "plus", reseau: "plus", reglages: "plus", pierre: "plus", conditions: "plus", coffret: "plus", livres: "plus", chasses: "plus", chasse: "chasses", guide: "plus", adresse: "plus" };
+  var PARENT_RETOUR = { coffre: "tableau", verifier: "plus", messages: "plus", reseau: "plus", reglages: "plus", pierre: "plus", conditions: "plus", coffret: "plus", livres: "plus", chasses: "plus", chasse: "chasses", guide: "plus", adresse: "plus" };
   function tete(page, legende) { return visuel(page, legende, PARENT_RETOUR[page]); }
   function hote(u) { try { return new URL(u).host; } catch (e) { return u; } }
 
@@ -556,7 +560,7 @@
     return '<div class="fil-chasseur"><div class="jalons" aria-hidden="true">' + jalons.map(function (j, i) { return '<span class="' + (j[1] ? "fait" : i + 1 === e.n ? "actif" : "") + '"><i>' + (j[1] ? "✓" : i + 1) + "</i>" + esc(t(j[0])) + "</span>"; }).join("") + "</div>" +
       '<div class="pe"><span class="sur">' + esc(t("pe_titre")) + '</span><p>' + esc(t(e.k, e.v || {})) + '</p><a class="bouton" href="' + e.lien + '">' + esc(t(e.b)) + " →</a></div></div>";
   }
-  function pageTableau() {
+  function pageTableau14() {
     var cs = coffres(), now = maintenant(), pro = prochaine(), total = 0, restants = 0;
     cs.forEach(function (k) { if (k.etat !== "pris" && k.sats) { total += k.sats; restants++; } });
     var chasses = chassesAffichables(), ids = chasses.map(function (c) { return c.id; });
@@ -696,7 +700,7 @@
   function texteEnigme(e) { return R.lang === "fr" ? e.texte_fr : (e.texte_en || e.texte_fr); }
 
   // ------------------------------------------------------------------ 3. les enigmes
-  function pageEnigmes() {
+  function pageEnigmes14() {
     var pub = enigmesParues().slice().reverse(), pro = prochaine(), now = maintenant();
     var tete_ = tete("enigmes", t("d_lg_enigmes")) + '<div><div class="sur">' + esc(t("les_48")) + " · " + motSimple("coffret") + '</div><h1>' + esc(t("m_enigmes")) + aide("enigmes") + "</h1></div>";
     // la prochaine enigme, toutes chasses confondues : avant le 3 janvier 2027, c'est l'une des deux de la chasse zero (3 et 17 novembre 2026, article 8 bis)
@@ -955,11 +959,12 @@
   function cibleChasse() {
     var e = ESSAIS.filter(function (x) { return x.id === H.choix; })[0];
     if (e) return { n: e.n, type: TYPES[e.n - 1], alea: e.alea, adresse: e.adresse, essai: e };
+    var z = cibleZ(H.choix); if (z) return z;
     var n = parseInt(H.choix, 10), k = coffres()[n - 1];
     if (!k || !k.c) return null;
     return { n: n, type: k.type, alea: H.alea[n] || aleaDuCoffret(n) || "", adresse: k.c.adresse };
   }
-  function pageChasser(arg) {
+  function pageChasser14(arg) {
     if (arg) { H.choix = arg; H.res = null; }
     var cs = coffres(), opts = ESSAIS.map(function (e) { return [e.id, t(e.nom)]; });
     cs.forEach(function (k) { if (k.c && (k.etat === "a_prendre" || k.etat === "en_chasse")) opts.push([String(k.n), t("coffre_n", { n: k.n }) + " · " + t("e_" + k.etat)]); });
@@ -990,21 +995,22 @@
   function calculer() {
     var c = cibleChasse(); if (!c) return; var m = MOTS[c.type];
     var r3 = lireReponse($("h-r3").value, m), r17 = lireReponse($("h-r17").value, m);
-    if (!c.essai) { var a = ($("h-alea").value || "").trim().toLowerCase(); H.alea[c.n] = a; c.alea = a; }
+    H.v3 = $("h-r3").value; H.v17 = $("h-r17").value;
+    if (!c.essai) { var a = ($("h-alea").value || "").trim().toLowerCase(); if (c.Z) c.Z.aleas[c.n] = a; else H.alea[c.n] = a; c.alea = a; }
     if (r3.err.length || r17.err.length) { H.res = '<p class="ko">' + esc(t("reponse_incomplete")) + "</p>"; return rendre(); }
     if (!/^[0-9a-f]{64}$/.test(c.alea)) { H.res = '<p class="ko">' + esc(t("alea_invalide")) + "</p>"; return rendre(); }
     // l'alea tape ou lu doit etre celui que le manifeste grave engage (audit protocole M3) : un faux cri ne fait pas perdre dix secondes
-    if (!c.essai && !GGR.aleaTenu(M.manifeste, c.n, c.alea)) { H.res = '<p class="ko">' + esc(t("alea_faux")) + "</p>"; return rendre(); }
-    var ch = C.chaineCoffre(c.n, r3.nums, r17.nums, c.alea), v3 = $("h-r3").value, v17 = $("h-r17").value;
-    H.calcul = true; H.prog = 0; H.res = null; rendre(); $("h-r3").value = v3; $("h-r17").value = v17; apercu("h-r3", "h-v3"); apercu("h-r17", "h-v17");
-    C.cleCoffre(c.n, ch, function (p) { H.prog = p; var b = document.querySelector(".barre i"); if (b) b.style.width = Math.round(p * 100) + "%"; }).then(function (k) {
+    if (!c.essai && !GGR.aleaTenu(c.Z ? c.Z.man : M.manifeste, c.n, c.alea)) { H.res = '<p class="ko">' + esc(t("alea_faux")) + "</p>"; return rendre(); }
+    var ch = C.chaineCoffre(c.n, r3.nums, r17.nums, c.alea, c.Z ? c.h : undefined), v3 = $("h-r3").value, v17 = $("h-r17").value;
+    H.calcul = true; H.prog = 0; H.res = null; E15.pasT = 3; rendre();
+    C.cleCoffre(c.n, ch, function (p) { H.prog = p; var b = document.querySelector(".barre i"); if (b) b.style.width = Math.round(p * 100) + "%"; }, null, c.Z ? c.h : undefined).then(function (k) {
       var adr = C.adresseDeCle(k);
       if (adr === c.adresse) H.res = apresTrouve(c, k);
       else {
         H.res = '<div class="cadre" style="margin-top:12px"><div class="ko">✗ ' + esc(t("pas_la_cle")) + '</div><p class="doux mono" style="font-size:12px">' + esc(t("adresse_obtenue")) + " " + esc(adr) + "<br>" + esc(t("adresse_attendue")) + " " + esc(c.adresse) + "</p></div>";
       }
     }, function (e) { H.res = '<p class="ko">' + esc(e.message === "memoire" ? t("memoire") : String(e.message || e)) + "</p>"; }).then(function () {
-      H.calcul = false; rendre(); $("h-r3").value = v3; $("h-r17").value = v17; apercu("h-r3", "h-v3"); apercu("h-r17", "h-v17");
+      H.calcul = false; rendre(); if ($("h-r3")) { $("h-r3").value = v3; $("h-r17").value = v17; apercu("h-r3", "h-v3"); apercu("h-r17", "h-v17"); }
     });
   }
 
@@ -1149,7 +1155,7 @@
   // la transaction n'est tenue pour sure qu'a 3 confirmations vues par les deux sources ; alors seulement la cle est oubliee.
   // La cle ne vit qu'en memoire ; elle n'est jamais ecrite ; elle n'est affichee que sur demande (Expert), puis effacee.
   var AUTO_TAUX_MAX = 300, AUTO_PART_MAX = 0.10, CONFS_SURES = 3, PREP_FRAICHE = 5 * 60000, RECUL_MAX = 300000;
-  var TR = { cles: {}, cibles: {}, dest: {}, prep: {}, envois: lireR("envois", null) || {}, boucles: {}, msg: {}, compte: {}, confirmer: {}, gen: {}, recul: {}, cleEssai: null, retape: {}, suite: {} };
+  var TR = { cles: {}, cibles: {}, dest: {}, prep: {}, envois: lireR("envois", null) || {}, boucles: {}, msg: {}, compte: {}, confirmer: {}, gen: {}, recul: {}, cleEssai: null, retape: {}, suite: {}, retapeSaisie: {} };   // retapeSaisie : en memoire seulement
   (function () { var e = lireR("envoi", null); if (e && e.adresse && !TR.envois[e.n + ":" + e.adresse]) { TR.envois[e.n + ":" + e.adresse] = e; ecrireR("envois", TR.envois); } })();
   // le nombre propre a l'installation : RENOUVELE a chaque enregistrement d'une adresse (contre-audit N7) : la signature d'une ancienne
   // adresse ne vaut plus des qu'une autre est enregistree. Pendant une saisie, le nombre neuf attend (TR.recNonce) ; il ne devient le nombre
@@ -1238,7 +1244,7 @@
     if (TR.recErr) return rendre();
     ecrireR("reception_nonce", nonceSaisie());                                 // le nombre neuf devient le nombre courant : l'ancienne signature ne vaut plus
     R.reception = { adresse: a, signature: sig, preuve: "signee", date: new Date().toISOString().slice(0, 10) };
-    ecrireR("reception", R.reception); TR.editRec = false; TR.recSaisie = TR.recSig = TR.recNonce = null;
+    ecrireR("reception", R.reception); TR.editRec = false; TR.recSaisie = TR.recSig = TR.recNonce = null; E15.pasA = 3;
     scellerReception();                                                        // enregistree dans la fenetre dediee : elle y porte le sceau du jeton
     receptionReconnue();                                                       // c'est le chasseur qui vient de la signer et de l'enregistrer
     rendre();
@@ -1302,7 +1308,7 @@
     if (c.essai || R.demo) {                                                   // entrainement : on montre ce qui partirait, sans rien envoyer
       TR.cleEssai = k; if (c.essai && !R.demo) ecrireR("essai_fait", true);  // le fil du chasseur coche « Entrainement »
       return '<div class="cadre tresor-trouve" style="margin-top:12px"><div class="ok cz" style="font-size:20px">✓ ' + esc(t("trouve")) + '</div><p>' + esc(t("trouve_essai")) + "</p>" +
-        (rv.ok ? '<p class="ok">' + esc(t("tr_essai_sim", { a: courte(rv.adresse) })) + "</p>" : '<p class="att">' + esc(t("tr_essai_sans")) + ' <a href="#/reglages">' + esc(t("m_reglages")) + "</a></p>") + expert("essai") + "</div>";
+        (rv.ok ? '<p class="ok">' + esc(t("tr_essai_sim", { a: courte(rv.adresse) })) + "</p>" : '<p class="att">' + esc(t("tr_essai_sans")) + ' <a href="#/adresse">' + esc(t("plus_adresse")) + "</a></p>") + expert("essai") + "</div>";
     }
     trouveReel(c, k);
     return '<div class="cadre tresor-trouve" style="margin-top:12px"><div class="ok cz" style="font-size:22px">✓ ' + esc(t("trouve")) + '</div><p>' + esc(t(SANS_INSTALLER ? "tr_sans_installer" : receptionScellee() ? "tr_trouve_envoi" : "tr_trouve_retape")) + "</p>" + expert(cleDe(c)) + "</div>";
@@ -1332,6 +1338,7 @@
       TR.msg[kk] = { e: "ko", d: t("tr_retape_faux"), retape: true }; return rendreSiChasse();
     }
     delete TR.morceaux[rv.adresse];                                           // la prochaine retape portera sur deux autres morceaux
+    delete TR.retapeSaisie[kk];
     TR.retape[kk] = rv.adresse; TR.dest[kk] = rv.adresse;
     if (FENETRE) scellerReception();                                           // dans la fenetre dediee, l'adresse retapee devient celle de la fenetre
     var s = TR.suite[kk] || {}; delete TR.suite[kk]; TR.msg[kk] = null;
@@ -1493,7 +1500,7 @@
       var e = TR.envois[kk], m = TR.msg[kk], id = kk.replace(/\W/g, "_"), x = "";
       if (TR.compte[kk]) x += '<p class="att" style="font-size:15px">' + esc(t("tr_compte")) + ' <b id="tr-compte-' + id + '">' + Math.ceil((TR.compte[kk] - Date.now()) / 1000) + '</b> s</p><div class="rec-adr">' + groupesEnvoi(TR.dest[kk]) + '</div>' + (R.reception && R.reception.adresse === TR.dest[kk] && R.reception.date ? '<p class="doux" style="font-size:12px">' + esc(t("rec_date", { d: fdateIso(R.reception.date) })) + "</p>" : "") + '<p><button class="bouton" data-envoyer="' + esc(kk) + '">' + esc(t("tr_envoyer_maintenant")) + '</button> <button class="bouton2" data-annuler="' + esc(kk) + '">' + esc(t("tr_annuler")) + "</button></p>";
       if (TR.confirmer[kk]) { var cf = TR.confirmer[kk]; x += '<p class="att">' + esc(t("tr_confirmer", { f: fsats(cf.frais), p: Math.round(cf.frais / cf.total * 100), t: Math.round(cf.frais / cf.vt) })) + (cf.secours ? " " + esc(t("tr_frais_secours")) : "") + '</p><div class="rec-adr petit">' + groupesEnvoi(TR.dest[kk] || "") + '</div><p><button class="bouton" data-confirmer="' + esc(kk) + '">' + esc(t("tr_envoyer_frais")) + "</button></p>"; }
-      if (m) x += '<p class="' + esc(m.e) + '">' + esc(m.d) + (m.attenteAdresse ? ' <a href="#/reglages">' + esc(t("m_reglages")) + "</a>" : "") + "</p>";
+      if (m) x += '<p class="' + esc(m.e) + '">' + esc(m.d) + (m.attenteAdresse ? ' <a href="#/adresse">' + esc(t("plus_adresse")) + "</a>" : "") + "</p>";
       if (m && m.retape) x += carteRetape(kk, id);
       if (TR.annule && TR.annule[kk] && !e) x += '<p><button class="bouton" data-envoyer="' + esc(kk) + '">' + esc(t("tr_envoyer_maintenant")) + "</button></p>";
       if (e) {
@@ -1502,7 +1509,7 @@
           confirmee: ["ok", "🏆 " + t(e.fini ? "tr_confirmee" : "tr_confirmee_attente", { b: fsats(e.bloc || 0), c: e.confs || 1 })], concurrence: ["ko", "⚠ " + t("tr_concurrence", { f: fsats(e.concurrent ? e.concurrent.frais : 0) })], perdu: ["ko", "✗ " + t("tr_perdu")] };
         var y = etats[e.etat] || etats.a_diffuser;
         x += '<p class="' + y[0] + '" style="font-size:15px">' + esc(y[1]) + '</p><p class="doux" style="font-size:12px">' + esc(t("tr_detail", { m: fsats(e.montant), f: fsats(e.frais), v: e.vt })) + " · " + lien + "</p>" +
-          (e.etat === "diffusee" || e.etat === "concurrence" || e.etat === "a_diffuser" ? '<button class="bouton" data-accelerer="' + esc(kk) + '">' + esc(t("tr_accelerer")) + " · " + esc(fsats(fraisAccel(e))) + " sats (" + Math.round(fraisAccel(e) / e.total * 100) + " %)</button>" : "");
+          (e.etat === "diffusee" || e.etat === "concurrence" || e.etat === "a_diffuser" ? '<button class="bouton" data-accelerer="' + esc(kk) + '">' + esc(t("tr_accelerer")) + " · " + esc(fsats(fraisAccel(e))) + " sats (" + pc(Math.round(fraisAccel(e) / e.total * 100)) + ")</button>" : "");
       }
       if (x) h += '<div class="cadre tresor-etat"><div class="sur">' + esc(t("tr_titre")) + " · " + esc(t("coffre_n", { n: kk.split(":")[0] })) + "</div>" + x + "</div>";
     });
@@ -1513,8 +1520,9 @@
     var rv = receptionValide(), pz = rv.ok ? morceaux(rv.adresse) : null;
     if (!pz) return "";
     var a = pz[0] + 1, c = pz[1] + 1, champ = function (nom, de, n) {
-      return '<label style="display:flex;flex-direction:column;gap:2px;font-size:12px">' + esc(t("tr_retape_morceau", { a: de, b: de + 7 })) + '<input class="champ mono" id="' + nom + id + '" data-morceau="' + n +
-        '" maxlength="12" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="width:12ch"></label>';
+      var v = (TR.retapeSaisie[kk] || {})[n] || "";
+      return '<label style="display:flex;flex-direction:column;gap:2px;font-size:12px">' + esc(t("tr_retape_morceau", { a: de, b: de + 7 })) + '<input class="champ mono" id="' + nom + id + '" data-morceau="' + n + '" data-kk="' + esc(kk) +
+        '" value="' + esc(v) + '" maxlength="12" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="width:12ch"></label>';
     };
     return '<div class="retape"><p style="font-size:13px;margin:6px 0">' + esc(t("tr_retape_label", { a: a, b: a + 7, c: c, d: c + 7 })) + '</p><div class="rec-adr petit">' + groupesEnvoi(rv.adresse) + "</div>" +
       '<div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">' + champ("tr-retape-", a, 1) + champ("tr-retape2-", c, 2) +
@@ -1525,7 +1533,7 @@
     var rv = receptionValide();
     if (c.essai || R.demo) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + '</div><p class="note">' + esc(rv.ok ? t("tr_essai_arme", { a: courte(rv.adresse) }) : t("tr_essai_sans")) + (rv.ok ? "" : ' <a href="#/adresse">' + esc(t("plus_adresse")) + " →</a>") + "</p></div>";
     if (SANS_INSTALLER) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + '</div><p class="att">' + esc(t("fenetre_sans_installer")) + "</p></div>";
-    if (!rv.ok) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + '</div><p class="att">⚠ ' + esc(t(R.reception ? "rec_err_" + rv.raison : "tr_pas_arme")) + ' <a href="#/reglages">' + esc(t("m_reglages")) + "</a></p></div>";
+    if (!rv.ok) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + '</div><p class="att">⚠ ' + esc(t(R.reception ? "rec_err_" + rv.raison : "tr_pas_arme")) + ' <a href="#/adresse">' + esc(t("plus_adresse")) + "</a></p></div>";
     if (TR.recAlerte) return '<div class="cadre arme"><div class="sur">' + esc(t("tr_titre")) + "</div>" + alerteReception() + "</div>";
     var kk = cleDe(c), pr = TR.prep[kk], etat;
     if (!pr || pr.enCours) { if (!pr) setTimeout(function () { preparer(c); }, 0); etat = '<span class="doux">' + esc(t("tr_prep_encours")) + "</span>"; }
@@ -1601,7 +1609,7 @@
     for (var i = 0; i < b.length && s.length < 10; i++) { v = (v << 8) | b[i]; bits += 8; while (bits >= 5 && s.length < 10) { bits -= 5; s += A32[(v >>> bits) & 31]; } }
     return s;
   }
-  function pageCompagnon() {
+  function pageCompagnon14() {
     var a = CP.adresse, okA = /^bc1q[02-9ac-hj-np-z]{38}$/.test(a) && C.adresseValide(a), msg = okA ? "AEDE:compagnon:" + a : "";
     if (okA) statutCompagnon(a);
     var lv = CP.livre != null ? MP.livres[CP.livre] : null;
@@ -1615,7 +1623,7 @@
       (inf.depuis ? " " + esc(t("cp_actif_depuis", { d: fdateIso(inf.depuis) })) : "") + (inf.n ? " · " + esc(t("cp_ref", { n: inf.n })) : "") + (CP.statut === "actif" ? "." : "") +
       (inf.emp ? ' <span class="mono" style="font-size:11px">' + esc(inf.emp.slice(0, 16)) + '…</span> <a href="#/livres" data-ex-verif="' + esc(inf.emp) + '">' + esc(t("cp_ref_verifier")) + " \u2192</a>" : "") + "</p>" +
       (inf.emp && lv && lv.emp && lv.emp !== inf.emp ? '<p class="att" style="font-size:12px">' + esc(t("cp_ref_autre")) + "</p>" : "") : "";
-    var px = prixLivre(), part = function (pc) { return pc + "\u00a0%" + (px ? " · " + fsats(Math.floor(px * pc / 100)) + " sats" : ""); };   // sans prix lu : les pourcentages seuls
+    var px = prixLivre(), part = function (n) { return pc(n) + (px ? " · " + fsats(Math.floor(px * n / 100)) + " sats" : ""); };   // sans prix lu : les pourcentages seuls
     var parts = '<div class="cadre"><div class="sur">' + esc(t("par_livre")) + '</div><div class="ligne"><span>' + esc(t("prix_livre")) + '</span><span class="v" id="cp-prix">' + (px ? fsats(px) + " sats" : esc(t("prix_inconnu"))) + '</span></div><div class="ligne"><span class="or">' + esc(t("part_compagnon")) +
       '</span><span class="v or">' + part(40) + '</span></div><div class="ligne"><span>' + esc(t("part_tresor")) + '</span><span class="v">' + part(20) + '</span></div><div class="ligne"><span>' + esc(t("part_auteur")) +
       '</span><span class="v">' + part(40) + '</span></div><p class="doux" style="font-size:12px">' + esc(t("parts_note")) + "</p></div>";
@@ -1652,9 +1660,7 @@
   // ------------------------------------------------------------------ 8. reglages et a propos
   // la page « Plus » (telephone) : tout ce que les cinq onglets ne portent pas, nomme par ce que ca fait
   // la salle des pas perdus (« Plus ») : tout ce que les cinq onglets ne portent pas, nomme par ce que ca fait, une icone par ligne
-  var PLUS_ENTREES = [["adresse", "plus_adresse", "plus_adresse_n"], ["guide", "plus_guide", "plus_guide_n"], ["compagnon", "d_plus_compagnon", "d_plus_compagnon_n"], ["livres", "d_plus_livres", "d_plus_livres_n"], ["reglages", "plus_reglages", "plus_reglages_n"],
-    ["verifier", "plus_verifier", "plus_verifier_n"], ["reseau", "d_plus_reseau", "d_plus_reseau_n"], ["coffret", "plus_coffret", "plus_coffret_n"], ["chasses", "plus_chasses", "plus_chasses_n"], ["pierre", "plus_pierre", "plus_pierre_n"]], PLUS_TOUS_LES_JOURS = 5;
-  function pagePlus() {
+  function pagePlus14() {
     var l = PLUS_ENTREES.slice(0, PLUS_TOUS_LES_JOURS), l2 = PLUS_ENTREES.slice(PLUS_TOUS_LES_JOURS);
     function item(x) { return '<button type="button" class="item" data-p="' + x[0] + '"><span class="ico">' + ICONES[x[0]] + "</span><span><b>" + esc(t(x[1])) + "</b><small>" + esc(t(x[2])) + '</small></span><span class="fleche">›</span></button>'; }
     var langues = '<div class="inter"><span><b>' + esc(t("d_langue")) + '</b><small>' + esc((LANGUES.filter(function (x) { return x[0] === R.lang; })[0] || LANGUES[0])[1]) + '</small></span><div class="formes or" role="group" aria-label="' + esc(t("d_langue")) + '">' +
@@ -1672,22 +1678,28 @@
     else l.push([t("et_version"), "v" + VERSION + " · " + badgeOfficiel(true) + (WEB ? "" : "<br>" + badgeOfficiel(false))]);
     return '<div class="cadre"><div class="sur">' + esc(t("et_titre")) + "</div>" + l.map(function (x) { return '<div class="ligne"><span class="doux">' + esc(x[0]) + '</span><span class="v">' + x[1] + "</span></div>"; }).join("") +
       (M.erreurs.explo && M.derniere ? '<p class="note">' + esc(t("et_hors_ligne", { d: fheure(M.derniere / 1000) })) + "</p>" : "") +
-      '<p class="boutons"><button class="bouton2" id="etat-rafraichir">↻ ' + esc(t("et_rafraichir")) + '</button><a class="bouton2" href="#/verifier">' + esc(t("tout_verifier")) + '</a><button class="bouton2" id="etat-fermer">' + esc(t("et_fermer")) + "</button></p></div>";
+      '<p class="boutons">' + (R.demo ? '<button class="bouton" id="quitter-demo">' + esc(t("d_quitter_demo")) + "</button>" : "") + '<button class="bouton2" id="etat-rafraichir">↻ ' + esc(t("et_rafraichir")) + '</button><a class="bouton2" href="#/verifier">' + esc(t("tout_verifier")) + '</a><button class="bouton2" id="etat-fermer">' + esc(t("et_fermer")) + "</button></p></div>";
   }
   // la page « Mon adresse de reception » (Plus) : la meme carte que dans Reglages, seule, avec ses trois regles
-  function pageAdresse() {
+  function pageAdresse14() {
     return tete("adresse", t("d_lg_adresse")) + carteReception().replace("<h2>", '<div><div class="sur">' + esc(t("plus_adresse_n")) + "</div><h1>").replace("</h2>", "</h1></div>") +
       '<ol class="etapes"><li><span>' + esc(t("rec_rappel")) + "</span></li><li><span>" + esc(t(modeEnvoi())) + "</span></li></ol>";
   }
   // un mot du protocole, explique d'un toucher (panneau bas) : on dit la chose, puis son nom dans les regles
   function motSimple(cle, libelle) { return '<button type="button" class="mot" data-mot="' + cle + '">' + esc(libelle || t("mot_" + cle + "_t")) + "</button>"; }
   function ouvrirMot(cle) {
-    var f = $("feuille-mot"); if (!f) { f = document.createElement("div"); f.id = "feuille-mot"; f.className = "feuille-mot"; f.setAttribute("role", "dialog"); f.setAttribute("aria-modal", "true"); document.body.appendChild(f); }
-    f.innerHTML = '<div class="fm-voile" data-fermer-mot="1"></div><div class="fm-panneau"><div class="fm-poignee"></div><button type="button" class="fm-fermer" data-fermer-mot="1" aria-label="' + esc(t("et_fermer")) + '">✕</button>' +
-      '<h3>' + esc(t("mot_" + cle + "_t")) + '</h3><p class="doux" style="font-size:12.5px;margin:2px 0 8px">' + esc(t("dans_regles") + t("mot_" + cle + "_r")) + "</p><p>" + esc(t("mot_" + cle + "_d")) + "</p></div>";
-    f.hidden = false; f.querySelector(".fm-fermer").focus();
+    var f = feuilleEl();
+    f.innerHTML = teteFeuille(t("mot_" + cle + "_t")) + '<p class="doux" style="font-size:12.5px;margin:2px 0 8px">' + esc(t("dans_regles") + t("mot_" + cle + "_r")) + "</p><p>" + esc(t("mot_" + cle + "_d")) + "</p></div>";
+    montrerFeuille(f);
   }
-  function fermerMot() { var f = $("feuille-mot"); if (f) { f.hidden = true; f.innerHTML = ""; } }
+  function fermerMot() {
+    var f = $("feuille-mot"); if (f) { f.hidden = true; f.innerHTML = ""; }
+    if ($("app")) $("app").removeAttribute("inert");
+    if (FEUILLE.ouverte) {
+      FEUILLE.ouverte = false; var a = FEUILLE.avant; FEUILLE.avant = null;
+      if (a && a.focus && document.body.contains(a)) { try { a.focus({ preventScroll: true }); } catch (e) { } }
+    }
+  }
   function carteOublier() {
     var p0 = lireR("manif_premier_0", null), p1 = lireR("manif_premier_1", null);
     if (!p0 && !p1 && !M.oublie) return "";
@@ -1760,7 +1772,9 @@
     chasses: "chasse", reseau: "noeud", certifies: "racine", exemplaire: "empreinte", mes_livres: "exemplaire", parrain: "compagnon", cz: "chasse_zero", annonce: "annonce",
     reception: "reception", temoins: "temoin" };
   // 1.4.1 : le « ? » ouvre une feuille qui monte du bas (la meme que les mots du protocole), plus une bulle qui flotte
-  function aide(k) { return '<button type="button" class="bq" data-aide="' + k + '" aria-label="?">?</button>'; }
+  function aide(k, titre) {
+    return '<button type="button" class="bq" data-aide="' + k + '"' + (titre ? ' data-titre="' + esc(titre) + '"' : "") + ' aria-label="' + esc(titre ? t("d_aide_de", { t: titre }) : t("d_aide")) + '">?</button>';
+  }
   // un bandeau long devient une ligne (sa premiere phrase) et un bouton qui ouvre la feuille du bas avec tout le texte et ses boutons
   var FEUILLES = {};
   function bandeauCourt(id, texte, boutonsHtml, classe, libelle) {
@@ -1768,17 +1782,44 @@
     FEUILLES[id] = { titre: court.replace(/[.!?…:]\s*$/, ""), corps: '<p>' + esc(texte) + "</p>" + (boutonsHtml ? '<p class="boutons">' + boutonsHtml + "</p>" : "") };
     return '<div class="bandeau mince' + (classe ? " " + classe : "") + '"><span>' + esc(court) + '</span><button type="button" class="bouton2" data-feuille="' + id + '">' + esc(libelle || t("pe_detail")) + "</button></div>";
   }
-  function ouvrirFeuille(titre, corps) {
-    var f = $("feuille-mot"); if (!f) { f = document.createElement("div"); f.id = "feuille-mot"; f.className = "feuille-mot"; f.setAttribute("role", "dialog"); f.setAttribute("aria-modal", "true"); document.body.appendChild(f); }
-    f.innerHTML = '<div class="fm-voile" data-fermer-mot="1"></div><div class="fm-panneau"><div class="fm-poignee"></div><button type="button" class="fm-fermer" data-fermer-mot="1" aria-label="' + esc(t("et_fermer")) + '">✕</button><h3>' + esc(titre) + "</h3>" + corps + "</div>";
-    f.hidden = false; f.querySelector(".fm-fermer").focus();
+  // audit 1.5.0, A2 et S2 : une feuille porte le nom de son titre, garde le focus en elle, rend la page inerte et rend le focus au
+  // bouton qui l'a ouverte ; sur Trouver (et la page d'une chasse), elle n'est jamais envoyee a un service de traduction
+  var FEUILLE = { ouverte: false, avant: null };
+  function feuilleEl() {
+    var f = $("feuille-mot");
+    if (!f) { f = document.createElement("div"); f.id = "feuille-mot"; f.className = "feuille-mot"; f.setAttribute("role", "dialog"); f.setAttribute("aria-modal", "true"); document.body.appendChild(f); }
+    f.setAttribute("aria-labelledby", "fm-titre");
+    return f;
+  }
+  function teteFeuille(titre) { return '<div class="fm-voile" data-fermer-mot="1"></div><div class="fm-panneau"><div class="fm-poignee"></div><button type="button" class="fm-fermer" data-fermer-mot="1" aria-label="' + esc(t("et_fermer")) + '">✕</button><h3 id="fm-titre">' + esc(titre) + "</h3>"; }
+  function montrerFeuille(f, sansTraduction) {
+    var p = route().p, nt = !!sansTraduction || p === "chasser" || p === "chasse";
+    f.setAttribute("translate", nt ? "no" : "yes"); f.classList.toggle("notranslate", nt);
+    if (!FEUILLE.ouverte) FEUILLE.avant = document.activeElement;
+    FEUILLE.ouverte = true;
+    if ($("app")) $("app").setAttribute("inert", "");
+    f.hidden = false; var b = f.querySelector(".fm-fermer"); if (b) b.focus();
+  }
+  function ouvrirFeuille(titre, corps, sansTraduction) {
+    var f = feuilleEl(); f.innerHTML = teteFeuille(titre) + corps + "</div>"; montrerFeuille(f, sansTraduction);
+  }
+  // ce que le « ? » d'un ecran ajoute a sa phrase d'aide : ce qui a disparu de l'ecran sans disparaitre de l'application
+  function pc(n) { return R.lang === "en" ? n + "%" : n + "\u00a0%"; }
+  function aidePlus(k) {
+    if (k === "tableau") { var fe = fil(); return fe ? "<h4>" + esc(t("c_evenements")) + '</h4><div class="fil-ev">' + fe + "</div>" : ""; }
+    if (k === "compagnon") {
+      return '<div class="cadre kv"><div class="ligne"><span class="or">' + esc(t("part_compagnon")) + '</span><span class="v or">' + pc(40) + '</span></div><div class="ligne"><span>' + esc(t("part_tresor")) +
+        '</span><span class="v">' + pc(20) + '</span></div><div class="ligne"><span>' + esc(t("part_auteur")) + '</span><span class="v">' + pc(40) + '</span></div></div><p class="doux">' + esc(t("parts_note")) + "</p>";
+    }
+    if (k === "enigmes") return (R.lang !== "fr" ? '<p class="note">' + esc(t("fr_fait_foi")) + "</p>" : "") + '<p class="note">' + esc(t("gardien_note")) + "</p>";
+    if (k === "mots") return '<p class="note">' + esc(t("alea_note")) + '</p><p class="note">' + esc(t("calcul_note")) + "</p>";
+    return "";
   }
   function ouvrirAide(k, titre) {
-    var f = $("feuille-mot"); if (!f) { f = document.createElement("div"); f.id = "feuille-mot"; f.className = "feuille-mot"; f.setAttribute("role", "dialog"); f.setAttribute("aria-modal", "true"); document.body.appendChild(f); }
+    var f = feuilleEl();
     var lien = AIDE_MOT[k] ? '<a class="bq-plus" href="#/guide/' + AIDE_MOT[k] + '" data-fermer-mot="1">' + esc(guide().en_savoir_plus) + " →</a>" : "";
-    f.innerHTML = '<div class="fm-voile" data-fermer-mot="1"></div><div class="fm-panneau"><div class="fm-poignee"></div><button type="button" class="fm-fermer" data-fermer-mot="1" aria-label="' + esc(t("et_fermer")) + '">✕</button>' +
-      '<h3>' + esc(titre || "?") + '</h3><p class="bqb">' + esc(t("aide_" + k)) + "</p>" + lien + "</div>";
-    f.hidden = false; f.querySelector(".fm-fermer").focus();
+    f.innerHTML = teteFeuille(titre || t("d_aide")) + '<p class="bqb">' + esc(t("aide_" + k)) + "</p>" + aidePlus(k) + lien + "</div>";
+    montrerFeuille(f, k === "mots" || k === "cle");
   }
 
   // ------------------------------------------------------------------ le guide : premiers pas, glossaire, questions frequentes
@@ -2084,7 +2125,7 @@
       ancre_ ? '<span class="ok">✓ ' + esc(t("msg_ancre")) + "</span>" : '<span class="att">? ' + esc(t("msg_signe")) + "</span>";
   }
   var RE_VERSION_MSG = /GodGift Core\s+[0-9A-Za-z.\-]+\s*:\s*(?:empreinte|fingerprint|hash)\s+[0-9a-f]{64}/;
-  function pageMessages() {
+  function pageMessages14() {
     var l = MP.messages, sols = solutionsSignees();
     var tete_ = tete("messages", t("d_lg_messages")) + '<div><div class="sur">' + esc(t("la_voix_auteur")) + '</div><h1>' + esc(t("m_messages")) + aide("messages") + "</h1></div>";
     if (!l) return tete_ + '<div class="cadre"><p class="doux">' + esc(t("msg_injoignable")) + "</p></div>";
@@ -2298,7 +2339,7 @@
     var fen = window.open("about:blank", "_blank"), lg = R.lang === "fr" ? "fr" : "en";
     adresseAchat().then(function (b) {
       MP.achatIndispo = !b;   // sans librairie ni secours valide : angedeleau.com, et la page le dit ; la chasse continue
-      var u = b ? b + (R.parrain ? "/c/" + encodeURIComponent(R.parrain) : "/livre") + "?lang=" + lg : SITE_VITRINE + "/?lang=" + lg;
+      var u = b ? b + (R.parrain ? "/c/" + encodeURIComponent(R.parrain) : "/acheter") + "?lang=" + lg : SITE_VITRINE + "/?lang=" + lg;
       if (fen) fen.location = u; else window.open(u, "_blank");
       rendre();
     });
@@ -2745,8 +2786,8 @@
     var al = CZ.aleas[nz] != null ? CZ.aleas[nz] : (aleaZ(nz) || "");
     var res = CZ.calcul ? '<div style="margin-top:12px"><div class="barre"><i style="width:' + Math.round(CZ.prog * 100) + '%"></i></div><div class="doux" style="font-size:12px;margin-top:4px">' + esc(t("calcul_en_cours")) + "</div></div>" : (CZ.res || "");
     var choix = '<label>' + esc(t("quel_coffre")) + '</label><select class="champ" id="z-coffre"' + (CZ.calcul ? " disabled" : "") + ">" + ks.map(function (k) { return '<option value="' + k.n + '"' + (k.n === nz ? " selected" : "") + ">" + esc(t("coffre_n", { n: k.n })) + "</option>"; }).join("") + "</select>";
-    var chasser = '<h2>' + esc(t("cz_chasser")) + '</h2><div class="cadre">' + choix + '<label>' + esc(t("reponse_3", { m: mz })) + '</label><input class="champ" id="z-r3" autocomplete="off" spellcheck="false"><div class="doux mono" id="z-v3" style="font-size:12px;min-height:18px"></div><label>' +
-      esc(t("reponse_17", { m: mz })) + '</label><input class="champ" id="z-r17" autocomplete="off" spellcheck="false"><div class="doux mono" id="z-v17" style="font-size:12px;min-height:18px"></div><label>' + esc(t("alea_du_cri")) + '</label><input class="champ mono" id="z-alea" autocomplete="off" spellcheck="false" value="' + esc(al) + '" placeholder="' + esc(t("ph_64")) + '"><p><button class="bouton" id="z-calculer"' + (CZ.calcul ? " disabled" : "") + ">" + esc(t("calculer")) + "</button></p>" + res + "</div>";
+    var chasser = '<h2>' + esc(t("cz_chasser")) + '</h2><div class="cadre">' + choix + '<label>' + esc(t("reponse_3", { m: mz })) + '</label><input class="champ" id="z-r3" autocomplete="off" spellcheck="false" value="' + esc(CZ.v3 || "") + '"><div class="doux mono" id="z-v3" style="font-size:12px;min-height:18px"></div><label>' +
+      esc(t("reponse_17", { m: mz })) + '</label><input class="champ" id="z-r17" autocomplete="off" spellcheck="false" value="' + esc(CZ.v17 || "") + '"><div class="doux mono" id="z-v17" style="font-size:12px;min-height:18px"></div><label>' + esc(t("alea_du_cri")) + '</label><input class="champ mono" id="z-alea" autocomplete="off" spellcheck="false" value="' + esc(al) + '" placeholder="' + esc(t("ph_64")) + '"><p><button class="bouton" id="z-calculer"' + (CZ.calcul ? " disabled" : "") + ">" + esc(t("calculer")) + "</button></p>" + res + "</div>";
     var tresors = ks.map(function (k) { return carteTresor(k.adresse); }).join("");
     return tete + tete2 + tresors + '<div class="deux">' + textes + "</div>" + chasser + carteArmement(kz ? { n: nz, h: CZ.h, adresse: kz.adresse } : null);
   }
@@ -2840,6 +2881,354 @@
   });
 
   // ------------------------------------------------------------------ rendu et evenements
+  // ================================================================== 1.5.0 : une idee par ecran (maquette du 17 octobre 2026)
+  // Les cinq ecrans (Coffres, Enigmes, Trouver, Compagnon, Plus) tiennent dans la hauteur du telephone : le titre dit quoi, un bouton
+  // d'or dit comment, le detail attend derriere « ? » ou dans une feuille. Trouver, Compagnon et Mon adresse avancent en trois pas.
+  // Les fonctions de la 1.4 qui rendaient ces pages restent (suffixe 14) : les sous-pages et les bancs s'en servent encore.
+  var E15 = { enig: 0, pasT: 1, pasC: 1, pasA: 1, coffreFeuille: null, cpEnvoi: false, cpErr: "" };
+  var ECRANS_PRINCIPAUX = { tableau: 1, enigmes: 1, chasser: 1, compagnon: 1, plus: 1 };
+  function teteEcran(sur, titre, k) { return '<div class="tete-ecran"><div><span class="sur">' + esc(sur) + '</span><h1 tabindex="-1" aria-describedby="pas-vh">' + esc(titre) + "</h1></div>" + (k ? aide(k, titre) : "") + "</div>"; }
+  function filPas(libelles, p) {
+    return '<p class="vh" id="pas-vh">' + esc(t("d_etape_sur", { p: p, n: libelles.length }) + " · " + t(libelles[p - 1])) + "</p>" +
+      '<div class="jalons" aria-hidden="true">' + libelles.map(function (l, i) { var n = i + 1; return '<span class="' + (p > n ? "fait" : p === n ? "actif" : "") + '"><i>' + (p > n ? "✓" : n) + "</i>" + esc(t(l)) + "</span>"; }).join("") + "</div>";
+  }
+  // la sortie de la demonstration ne garde rien de la demonstration : ni compagnon, ni messages, ni point d'or (F9, contre-audit 10)
+  function sortieDemo() {
+    CP.statut = null; CP.statutLu = null; CP.info = null; CP.signature = ""; CP.nom = ""; CP.adresse = ""; CP.livre = null; E15.pasC = 1; E15.cpErr = "";
+    MP.messages = null; MP.adresseAncree = null; MP.msgVusDemo = null;
+  }
+  function focusTitre() { var h = document.querySelector("#page .tete-ecran h1"); if (h) { try { h.focus({ preventScroll: true }); } catch (e) { } } }   // A6
+  // un tresor attend un geste (retape, frais a confirmer, compte a rebours) ou un envoi n'est pas fini : l'ecran le montre partout
+  function tresorSignature() {
+    return Object.keys(TR.compte).concat(Object.keys(TR.confirmer), Object.keys(TR.msg).filter(function (k) { return TR.msg[k] && TR.msg[k].retape; })).sort().join(",");
+  }
+  function tresorEnAttente() {
+    return !!tresorSignature() || Object.keys(TR.envois).some(function (k) { var e = TR.envois[k]; return e && !e.fini && e.etat !== "perdu"; });
+  }
+  // le fil du chasseur en une ligne (les trois jalons) et la prochaine chose a faire sur une ligne : le texte, un bouton
+  function etapeCourte() {
+    var rv = receptionValide(), adr = !!rv.ok, essai = lireR("essai_fait", false) === true;
+    var aPrendre = coffres().filter(function (k) { return k.etat === "a_prendre"; })[0], enJeu = coffres().filter(function (k) { return k.etat === "en_chasse"; })[0];
+    var parue = enigmesParues().slice(-1)[0], cz = ZS[0] && ZS[0].coffret && elementsDe(ZS[0]).some(function (e) { return e.type === "enigme" && ZS[0].ouverts[cleV(e)] != null; });
+    var e;
+    if (!adr) e = { n: 1, k: "pe_adresse", lien: "#/adresse", b: "pe_adresse_b" };
+    else if (aPrendre || enJeu) e = { n: 3, k: "pe_mots", lien: "#/chasser/" + (aPrendre || enJeu).n, b: "pe_mots_b", v: { n: (aPrendre || enJeu).n } };
+    else if (parue) e = { n: 3, k: "pe_lire", lien: "#/enigmes", b: "pe_lire_b", v: { n: parue.numero } };
+    else if (cz) e = { n: 3, k: "pe_lire_zero", lien: "#/chasse/0", b: "pe_lire_zero_b" };
+    else if (!essai) e = { n: 2, k: "pe_essai", lien: "#/chasser/A", b: "pe_essai_b" };
+    else e = { n: 3, k: "pe_attendre", lien: "#/enigmes", b: "pe_attendre_b" };
+    var jalons = [["pe_j_adresse", adr], ["pe_j_essai", essai], ["pe_j_chasse", !!(aPrendre || enJeu || parue)]];
+    var fil_ = '<div class="fil-ch"><p class="vh">' + esc(t("d_etape_sur", { p: e.n, n: 3 }) + " · " + t(jalons[e.n - 1][0])) + '</p><div class="jalons" aria-hidden="true">' + jalons.map(function (j, i) { return '<span class="' + (j[1] ? "fait" : i + 1 === e.n ? "actif" : "") + '"><i>' + (j[1] ? "✓" : i + 1) + "</i>" + esc(t(j[0])) + "</span>"; }).join("") + "</div>" + aide("fil", t("pe_titre")) + "</div>";
+    var texte = t(e.k, e.v || {}), court = (/^([\s\S]*?[.!?…])(\s|$)/.exec(texte) || [0, texte])[1], bouton = t(e.b, e.v || {});
+    var ligne = '<div class="cadre pe-ligne"><span>' + esc(court) + '</span><a class="bouton" href="' + esc(e.lien) + '">' + esc(bouton) + " →</a></div>";
+    return { fil: fil_, ligne: ligne, texte: texte, lien: e.lien, bouton: bouton };
+  }
+  function tuile(k) {
+    var cls = "tuile " + k.v + (k.gros ? " gros" : "");
+    var mt = k.etat === "pris" ? t("c_trouve") : k.mt, court = k.sats != null && k.etat !== "a_semer" && k.etat !== "pris" ? fsats(k.sats) : mt;   // le nombre seul : la legende dit « sats »
+    return '<button type="button" class="' + cls + '" data-fiche="' + k.n + '" aria-label="' + esc(t("coffre_n", { n: k.n }) + " · " + t("d_leg_" + k.v) + (k.etat === "pris" ? "" : " · " + mt)) + '">' + coffreSvg(k.etat, 30) + "<b>" + k.n + "</b><small>" + esc(court) + "</small></button>";
+  }
+  function pageTableau() {
+    var now = maintenant(), pro = prochaine();
+    var chasses = chassesAffichables(), ids = chasses.map(function (c) { return c.id; });
+    if (ids.indexOf(UI.chasse) < 0) UI.chasse = "grande";
+    var ic = ids.indexOf(UI.chasse), chasseZ = UI.chasse !== "grande", et = etapeCourte();
+    var segment = '<div class="segment" role="group" aria-label="' + esc(t("d_quelle_chasse")) + '" style="--n:' + chasses.length + ';--i:' + ic + '"><span class="glisse"></span>' +
+      chasses.map(function (c) { return '<button type="button" data-chasse-vue="' + esc(c.id) + '" aria-pressed="' + (c.id === UI.chasse ? "true" : "false") + '">' + esc(c.nom) + "</button>"; }).join("") + "</div>";
+    var pt = prochaineToutes(pro, now);
+    var vedette = '<div class="vedette v15"><div class="ange"><div class="fond"><div class="globe"></div></div><canvas id="poussiere" aria-hidden="true"></canvas></div><div class="vtxt">' +
+      (pt ? '<p class="quand"><span class="qt">' + esc(t("prochaine_enigme")) + " · " + esc(pt.titre) + '<br></span><a href="' + esc(pt.lien) + '">' + esc(fdate(pt.d, true)) + "</a></p>" + rebours(pt.d, now) : '<p class="quand">' + esc(t("prochaine_enigme")) + " · " + esc(t("chasse_finie")) + "</p>") + "</div></div>";
+    var sur, titre;
+    if (UI.chasse === "zero") { sur = t("c_zero_sur"); titre = t("c_zero_titre"); }
+    else if (chasseZ) { sur = t("c_chasse_sur", { n: UI.chasse, k: CHASSES[+UI.chasse].coffres }); titre = CHASSES[+UI.chasse].nom; }
+    else { sur = t("c_tableau_sur") + (!M.manifeste ? " · " + t("c_depart", { e: feur(4000) }) : ""); titre = t("c_tableau_titre"); }
+    var liste = coffresVue(UI.chasse), grille = '<div class="grille24' + (liste.length <= 3 ? " g3" : "") + '">' + liste.map(tuile).join("") + "</div>";
+    var hz = UI.chasse === "zero" ? 0 : +UI.chasse;
+    var leg = '<div class="leg">' + ["jeu", "prendre", "venir", "pris"].map(function (v) { return '<span><i class="' + v + '"></i>' + esc(t("d_leg_" + v)) + "</span>"; }).join("") +
+      (chasseZ ? '<a class="fin" href="#/chasse/' + hz + '">' + esc(t("c_voir_chasse")) + "</a>" : M.manifeste ? '<span class="fin">sats</span>' : "") + "</div>";
+    var geste = !!tresorSignature(), attente = tresorEnAttente() ? '<div class="bandeau mince ' + (geste ? "att" : "ok") + '"><span>' + esc(t(geste ? "tr_attend" : "tr_en_cours", { o: t("tb_chasser") })) + '</span><a class="bouton" href="#/chasser">' + esc(t("tb_chasser")) + " →</a></div>" : "";
+    var alerteMan = M.erreurs.manifChange || M.erreurs.manifeste ? '<div class="bandeau ko">⚠ ' + esc(t(M.erreurs.manifChange ? "manif_change" : "manif_invalide")) + "</div>" : "";
+    var qTemoin = !R.demo && R.installe && R.temoin == null ? bandeauCourt("temoin", t("ac4_q") + " " + t("ac4_texte"), '<button class="bouton2" data-temoin="1">' + esc(t("ac4_oui")) + '</button> <button class="bouton2" data-temoin="0">' + esc(t("ac4_non")) + "</button>", "", t("pe_choisir")) : "";
+    return alerteMan + alerteReception() + attente + (M.manifCache ? '<div class="bandeau">' + esc(t("librairie_tombee")) + "</div>" : "") +
+      et.fil + segment + et.ligne + qTemoin + vedette + teteEcran(sur, titre, "tableau") + grille + leg;
+  }
+  // la fiche d'un coffre, en feuille (telephone) ou dans la colonne de droite (ordinateur) : l'etat, le montant, les dates, l'adresse
+  function ficheCourte(n) {
+    var liste = coffresVue(UI.chasse), k = liste.filter(function (x) { return x.n === n; })[0]; if (!k) return "";
+    var h = UI.chasse === "grande" ? 1 : UI.chasse === "zero" ? 0 : +UI.chasse, d = h === 1 ? null : CHASSES[h];
+    var t3 = h === 1 ? coffres()[n - 1].t3 : heureDef(d, n, 3), t17 = h === 1 ? coffres()[n - 1].t17 : heureDef(d, n, 17);
+    var adr = h === 1 ? (coffres()[n - 1].c || {}).adresse : (ZS[h] && ZS[h].man ? (ZS[h].man.coffres.filter(function (c) { return c.n === n; })[0] || {}).adresse : "");
+    var l = [[t("c_fiche_etat"), t("d_leg_" + k.v)]].concat(k.etat === "pris" ? [] : [[t("c_fiche_montant"), k.mt]]).concat([[t("c_fiche_enigmes"), fjour(t3) + " · " + fjour(t17)]]);
+    if (adr) l.push([t("c_fiche_adresse"), '<span class="mono" style="font-size:.74rem">' + esc(adr.slice(0, 8)) + "…" + esc(adr.slice(-8)) + "</span>"]);
+    var boutons = (h === 1 ? '<a class="bouton2" href="#/coffre/' + n + '" data-fermer-mot="1">' + esc(t("c_fiche_voir")) + "</a>" : '<a class="bouton2" href="#/chasse/' + h + '" data-fermer-mot="1">' + esc(t("c_fiche_voir")) + "</a>") +
+      ((k.etat === "a_prendre" || k.etat === "en_chasse") && adr ? ' <a class="bouton" href="#/chasser/' + (h === 1 ? n : "Z" + h + ":" + n) + '" data-fermer-mot="1">' + esc(t("c_fiche_trouver")) + "</a>" : "");
+    return { titre: t("coffre_n", { n: n }) + " · " + k.titre, corps: '<div class="cadre kv">' + l.map(function (x) { return '<div class="ligne"><span>' + esc(x[0]) + '</span><span class="v">' + (x[1].indexOf("<") >= 0 ? x[1] : esc(x[1])) + "</span></div>"; }).join("") + '</div><p class="boutons">' + boutons + "</p>" };
+  }
+  // ------------------------------------------------------------------ les enigmes : une a la fois, la plus recente d'abord, ‹ › pour parcourir
+  function entierDans(x, a, b) { var n = Number(x); return (typeof x === "number" || typeof x === "string") && String(x) === String(n) && n % 1 === 0 && n >= a && n <= b; }
+  function enigmesToutes() {   // la grande chasse et chaque chasse chargee (la chasse zero), les parues seulement, les plus recentes d'abord
+    var l = enigmesParues().filter(function (e) { return entierDans(e.coffre, 1, 24) && entierDans(e.numero, 1, 48); }).map(function (e) {
+      return { h: 1, numero: +e.numero, coffre: +e.coffre, d: e.date_utc, texte: texteEnigme(e), fr: e.texte_fr, note: noteEnigme(e), lien: "#/coffre/" + (+e.coffre) };
+    });
+    Object.keys(ZS).forEach(function (h) {
+      var Z = ZS[h]; if (!Z || !Z.coffret) return;
+      elementsDe(Z).filter(function (e) { return e.type === "enigme" && Z.ouverts[cleV(e)] != null && entierDans(e.coffre, 1, 999) && entierDans(e.numero, 1, 1998); }).forEach(function (e) {
+        var c = contenuDe(Z, e); if (!c) return;
+        l.push({ h: +h, numero: +e.numero, coffre: +e.coffre, d: heureRegle(Z, e) || e.ouverture_utc, texte: texteEnigme(c), fr: c.texte_fr, note: "", lien: "#/chasse/" + (+h) });
+      });
+    });
+    return l.sort(function (a, b) { return b.d - a.d; });
+  }
+  function pageEnigmes() {
+    var l = enigmesToutes(), pro = prochaine(), now = maintenant(), pt = prochaineToutes(pro, now);
+    if (E15.enig >= l.length) E15.enig = 0;
+    var e = l[E15.enig], tete_ = visuel("enigmes", t("d_lg_enigmes"));
+    var corps;
+    if (!e) corps = teteEcran(t("en_aucune_sur"), t("m_enigmes"), "enigmes") + '<div class="cadre souple"><p>' + esc(pt ? t("aucune_enigme", { d: fdate(pt.d, true) }) : t("chasse_finie")) + '</p><p class="doux">' + esc(t("regle_enigmes")) + "</p></div>";
+    else {
+      var ch = e.h === 0 ? t("d_seg_zero") : e.h === 1 ? t("d_seg_grande") : (CHASSES[e.h] || {}).nom || t("chasse_n", { n: e.h });
+      corps = teteEcran(t("en_sur", { c: ch, i: E15.enig + 1, n: l.length }), t("enigme_n", { n: e.numero }), "enigmes") +
+        '<div class="enig enigme ouverte une"><small class="doux"><a href="' + esc(e.lien) + '">' + esc(t("coffre_n", { n: e.coffre })) + "</a> · " + esc(fdate(e.d, true)) + '</small><div class="txt">' + esc(e.texte) + "</div>" + e.note +
+        (R.lang !== "fr" && e.fr ? '<details><summary class="doux">' + esc(t("en_lire_fr")) + '</summary><div class="texte">' + esc(e.fr) + "</div></details>" : "") +
+        '<div class="nav"><button type="button" class="bouton2" data-enig="1"' + (E15.enig >= l.length - 1 ? " disabled" : "") + ">" + esc(t("en_prec")) + '</button><button type="button" class="bouton2" data-enig="-1"' + (E15.enig <= 0 ? " disabled" : "") + ">" + esc(t("en_suiv")) + "</button></div></div>";
+    }
+    var proch = pt ? '<div class="cadre proch"><span>' + esc(t("en_prochaine", { d: fdate(pt.d, true) })) + '</span><span class="compte" data-compte="' + pt.d + '">' + esc(fcompte(pt.d - now)) + "</span></div>" : "";
+    var bas = '<div class="bas"><span class="doux">' + esc(t("en_trouve_q")) + '</span><a class="bouton" href="#/chasser">' + esc(t("en_trouver")) + "</a></div>";
+    return tete_ + corps + proch + bas;
+  }
+  // ------------------------------------------------------------------ Trouver : 1 le coffre, 2 vos mots, 3 la cle (un pas par ecran)
+  function ciblesTrouver() {   // les coffres d'essai, les coffres de la chasse zero (et des chasses annoncees) en jeu, ceux de la grande chasse en jeu
+    var opts = ESSAIS.map(function (e) { return [e.id, t(e.nom)]; });
+    Object.keys(ZS).map(Number).sort().forEach(function (h) {
+      var Z = ZS[h], d = CHASSES[h]; if (!Z || !Z.man || !Z.etat || !d) return;
+      Z.man.coffres.forEach(function (k) {
+        var now = maintenant(), t3 = heureDef(d, k.n, 3), pris = !!(Z.depenses && Z.depenses[k.n]);
+        if (pris || now < t3) return;
+        opts.push(["Z" + h + ":" + k.n, (h === 0 ? t("tr_chasse_zero", { n: k.n }) : d.nom + " · " + t("coffre_n", { n: k.n }))]);
+      });
+    });
+    coffres().forEach(function (k) { if (k.c && (k.etat === "a_prendre" || k.etat === "en_chasse")) opts.push([String(k.n), t("coffre_n", { n: k.n }) + " · " + t("e_" + k.etat)]); });
+    return opts;
+  }
+  function cibleZ(choix) {   // "Z<h>:<n>" : un coffre d'une chasse chargee
+    var m = /^Z(\d+):(\d+)$/.exec(choix || ""); if (!m) return null;
+    var h = +m[1], n = +m[2], Z = ZS[h], d = CHASSES[h]; if (!Z || !Z.man || !d) return null;
+    var k = Z.man.coffres.filter(function (c) { return c.n === n; })[0]; if (!k) return null;
+    return { n: n, h: h, Z: Z, type: d.types[n - 1], alea: Z.aleas[n] != null ? Z.aleas[n] : (aleaZ(n, Z) || ""), adresse: k.adresse };
+  }
+  function enigmesDeCible(c) {   // les deux textes a lire au pas 1 : ceux de l'essai, du coffre (chasse zero), ou de la grande chasse
+    if (!c) return [];
+    if (c.essai) return [[t("enigme_du_3"), c.essai.e3], [t("enigme_du_17"), c.essai.e17]];
+    if (c.Z) { var n = c.n; return [[2 * n - 1, 3], [2 * n, 17]].map(function (p) { var x = contenuZ("enigme", p[0], null, c.Z); return [t("enigme_n", { n: p[0] }) + " · " + fjour(heureDef(CHASSES[c.h], n, p[1])), x ? texteEnigme(x) : "🔒"]; }); }
+    return enigmesParues().filter(function (e) { return e.coffre === c.n; }).map(function (e) { return [t("enigme_n", { n: e.numero }) + " · " + fjour(e.date_utc), texteEnigme(e)]; });
+  }
+  // la regle JAMAIS en une ligne (sa premiere phrase) ; « Lire » ouvre la feuille avec la regle entiere et le renvoi au guide
+  function jamaisCourt() {
+    var h = bandeauCourt("jamais", phraseJamais(), '<a class="bouton2" href="#/guide/jamais" data-fermer-mot="1">' + esc(guide().en_savoir_plus) + " →</a>", "ko", t("pe_detail"));
+    FEUILLES.jamais.corps = FEUILLES.jamais.corps.replace("</p>", '</p><p class="doux">' + esc(t("jamais_3")) + "</p>");   // ce que GodGift Core fait lui-meme
+    return h;
+  }
+  function pageChasser(arg) {
+    if (arg) { H.choix = arg; H.res = null; E15.pasT = 1; }
+    var opts = ciblesTrouver(), p = E15.pasT;
+    if (H.calcul) p = 3;
+    // F12 : au choix, une cible qui n'est pas dans la liste (forgee, prise, a venir) devient la premiere de la liste
+    if (p === 1 && opts.length && !opts.some(function (o) { return o[0] === H.choix; })) { H.choix = opts[0][0]; H.res = null; }
+    var c = cibleChasse(), m = c ? MOTS[c.type] : 3;
+    // F1 : un tresor qui attend un geste (retape, frais, compte a rebours) ou un envoi en cours se montre a chaque pas, en tete
+    var tresor = carteTresor(null);
+    var fil_ = filPas(["tr_pas1", "tr_pas2", "tr_pas3"], p) + tresor;
+    var tete_ = visuel("chasser", t("d_lg_chasser")).replace('class="visuel', 'id="h-cle" class="visuel'), corps;
+    if (p === 1) {
+      var sel = '<select class="champ" id="h-choix" aria-label="' + esc(t("quel_coffre")) + '">' + opts.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (o[0] === H.choix ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join("") + "</select>";
+      var enigs = enigmesDeCible(c);
+      corps = fil_ + teteEcran(t("tr_sur1"), t("tr_t1"), "chasser") + sel +
+        '<div class="cadre enigs-pas souple">' + (enigs.length ? enigs.map(function (x) { return '<div><small class="doux">' + esc(x[0]) + '</small><p class="cg">' + esc(x[1]) + "</p></div>"; }).join("") : '<p class="doux">' + esc(c ? t("aucune_parue") : t("tr_sans_cible")) + "</p>") +
+          (c && !c.essai ? carteArmement(c) : "") + "</div>" +   // un vrai coffre : la preparation part des le choix, avant de couper internet («  Arme  »)
+        jamaisCourt() + '<div class="bas"><span class="cg">' + esc(c && c.essai ? t("tr_essai_court") : t("tr_vrai_court")) + '</span><button type="button" class="bouton" data-pas-t="2"' + (c ? "" : " disabled") + ">" + esc(t("d_suivant")) + "</button></div>";
+    } else if (p === 2) {
+      var alea = c && !c.essai ? '<div><div class="lib-ligne"><label for="h-alea">' + esc(t("tr_alea")) + "</label>" + (c.h === 1 || !c.h ? '<button class="bouton2 petit" id="h-lire-cri">' + esc(t("lire_cri")) + "</button>" : "") +
+        '</div><input class="champ mono" id="h-alea" autocomplete="off" spellcheck="false" value="' + esc(c.alea) + '" placeholder="' + esc(t("ph_64")) + '"></div>' : "";
+      corps = fil_ + teteEcran(c && c.essai ? t(c.essai.nom) : (c ? t("coffre_n", { n: c.n }) + " · " : "") + t("mots_par", { m: m }), t("tr_t2"), "mots") +
+        '<div><label for="h-r3">' + esc(t("tr_r3", { m: m })) + '</label><input class="champ" id="h-r3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="' + esc(H.v3 || "") + '"><div class="note mono" id="h-v3"></div></div>' +
+        '<div><label for="h-r17">' + esc(t("tr_r17", { m: m })) + '</label><input class="champ" id="h-r17" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="' + esc(H.v17 || "") + '"><div class="note mono" id="h-v17"></div></div>' + alea +
+        (H.res && /class="ko"/.test(H.res) ? '<div class="erreur-pas">' + H.res + "</div>" : "") +
+        '<div class="cadre fin-pas"><span>' + esc(t("tr_manque")) + '</span><button type="button" class="bouton2" data-feuille="dico">' + esc(t("tr_liste")) + "</button></div>" +
+        '<div class="bas"><button type="button" class="bouton2" data-pas-t="1">' + esc(t("d_precedent")) + '</button><button type="button" class="bouton" id="h-calculer">' + esc(t("tr_calculer")) + "</button></div>";
+      FEUILLES.dico = { titre: t("dictionnaire"), corps: '<input class="champ" id="h-dico" autocomplete="off" spellcheck="false" aria-label="' + esc(t("dictionnaire")) + '" placeholder="' + esc(t("dico_ph")) + '"><div id="h-dico-r" class="mono note" style="margin-top:8px;min-height:60px"></div>' };
+    } else {
+      var res = H.calcul ? '<div class="cadre"><div class="barre"><i style="width:' + Math.round(H.prog * 100) + '%"></i></div><p class="note">' + esc(t("calcul_en_cours")) + "</p></div>" : (H.res || "");
+      corps = fil_ + teteEcran(c ? (c.essai ? t(c.essai.nom) : t("coffre_n", { n: c.n })) : "", t("tr_t3"), "cle") + (tresor ? "<div>" + res + "</div>" : '<div class="souple" style="overflow:auto">' + res + (c && !c.essai ? carteArmement(c) : "") + "</div>") + jamaisCourt() +
+        '<div class="bas"><button type="button" class="bouton2" data-pas-t="2"' + (H.calcul ? " disabled" : "") + ">" + esc(t("d_precedent")) + '</button><button type="button" class="bouton2" data-pas-t="1"' + (H.calcul ? " disabled" : "") + ">" + esc(t("tr_recommencer")) + "</button></div>";
+    }
+    return tete_ + corps;
+  }
+  // ------------------------------------------------------------------ Compagnon : 1 l'exemplaire, 2 la signature, 3 le lien
+  function pageCompagnon() {
+    var a = CP.adresse, okA = /^bc1q[02-9ac-hj-np-z]{38}$/.test(a) && C.adresseValide(a), msg = okA ? "AEDE:compagnon:" + a : "", p = E15.pasC;
+    if (okA) statutCompagnon(a);
+    if (p === 3 && !okA) p = 2;
+    var declare = CP.statut === "actif" || CP.statut === "en_attente" || CP.statut === "suspendu";
+    var lv = CP.livre != null ? MP.livres[CP.livre] : null, fil_ = filPas(["cp_pas1", "cp_pas2", "cp_pas3"], p), corps;
+    if (p === 1) {
+      var ligneLivre = MP.livres.length ? MP.livres.map(function (l, i) {
+        return '<div class="ligne"><span>' + esc(t("cp_livre_choisi", { n: l.n })) + '</span><span class="v"><button type="button" class="' + (CP.livre === i ? "bouton" : "bouton2") + '" data-compagnon="' + i + '">' + esc(CP.livre === i ? "✓" : t("cp_choisir")) + "</button></span></div>";
+      }).join("") : '<div class="ligne"><span>' + esc(t("cp_exemplaire_verifie")) + '</span><span class="v att">' + esc(t("cp_aucun_ici")) + "</span></div>";
+      corps = visuel("compagnon", t("d_lg_compagnon")) + fil_ + teteEcran(t("cp_sur1"), t("cp_t1"), "compagnon") +
+        '<div class="cadre kv">' + ligneLivre + '<div class="ligne"><span>' + esc(t("cp_propriete")) + '</span><span class="v mono" style="font-size:.78rem">' + (okA ? esc(courte(a)) : "bc1q… (" + esc(t("cp_page_titre")) + ")") + "</span></div></div>" +
+        '<p class="cg">' + esc(t("cp_pas_livre")) + "</p>" + partsLigne() +
+        '<div class="bas"><a class="bouton2" href="#/livres">' + esc(t("cp_acheter")) + '</a><button type="button" class="bouton" data-pas-c="2">' + esc(t("cp_jai")) + "</button></div>";
+    } else if (p === 2) {
+      corps = fil_ + teteEcran(t("cp_sur2"), t("cp_t2"), "compagnon") +
+        '<div><label for="cp-a">' + esc(t("cp_adresse")) + '</label><input class="champ mono" id="cp-a" value="' + esc(a) + '" placeholder="bc1q…" autocomplete="off" spellcheck="false">' + (a && !okA ? '<div class="ko" style="font-size:12px">' + esc(t("adresse_invalide")) + "</div>" : "") +
+        (lv && lv.propriete && okA && a !== lv.propriete ? '<div class="att" style="font-size:12px">' + esc(t("cp_autre_adresse")) + "</div>" : "") +
+        statutHtml(okA, lv) + "</div>" +
+        '<div><label>' + esc(t("cp_signature")) + '</label><div class="champ mono champ-lu" id="cp-msg">' + esc(msg || "AEDE:compagnon:bc1q…") + '</div>' + (okA ? '<button type="button" class="bouton2" style="margin-top:6px" data-copier="cp-msg">' + esc(t("cp_copier_msg")) + "</button>" : "") + "</div>" +
+        '<div><label for="cp-s">' + esc(t("signature_collee")) + '</label><textarea class="champ" id="cp-s" rows="2"' + (okA ? "" : " disabled") + ">" + esc(CP.signature) + "</textarea></div>" +
+        (declare ? "" : '<input class="champ" id="cp-nom" maxlength="40" autocomplete="off" spellcheck="false" value="' + esc(CP.nom || "") + '" placeholder="' + esc(t("cp_nom")) + '" aria-label="' + esc(t("cp_nom") + " · " + t("cp_nom_ph")) + '">') +
+        (E15.cpErr ? '<p class="ko" style="font-size:.86rem">' + esc(E15.cpErr) + "</p>" : "") +
+        '<div class="bas"><button type="button" class="bouton2" data-pas-c="1">' + esc(t("d_precedent")) + '</button><button type="button" class="bouton" id="cp-envoyer"' + (E15.cpEnvoi ? " disabled" : "") + ">" + esc(E15.cpEnvoi ? t("cp_envoi") : t("cp_obtenir")) + "</button></div>";
+    } else {
+      var lien = okA ? R.caisse.replace(/\/$/, "") + "/c/" + codeCompagnon(a) : "", inf = CP.statut === "actif" && CP.info ? CP.info : {};
+      var etat = CP.statut === "actif" ? '<span class="ok">✓ ' + esc(t("cp_court_actif")) + (inf.depuis ? " · " + esc(t("cp_actif_depuis", { d: fdateIso(inf.depuis) })) : "") + "</span>" :
+        CP.statut === "suspendu" ? '<span class="ko">' + esc(t("cp_statut_suspendu")) + "</span>" : '<span class="att">◷ ' + esc(t("cp_court_attente")) + "</span>";
+      corps = fil_ + teteEcran(t("cp_sur3"), t("cp_t3"), "compagnon") +
+        '<div class="cadre centre">' + etat + '<div class="mono" style="font-size:.85rem;margin-top:6px;user-select:all" id="cp-lien">' + esc(lien) + "</div>" + (CP.statut === "actif" ? "" : '<p class="doux" style="font-size:.8rem">' + esc(t("cp_attente_texte")) + "</p>") + "</div>" +
+        '<div class="cadre kv">' + (inf.n ? '<div class="ligne"><span>' + esc(t("cp_ref", { n: inf.n })) + '</span><span class="v mono" style="font-size:.74rem">' + esc((inf.emp || "").slice(0, 16)) + "…</span></div>" : "") +
+        '<div class="ligne"><span>' + esc(t("prix_livre")) + '</span><span class="v" id="cp-prix">' + (prixLivre() ? fsats(prixLivre()) + " sats" : esc(t("prix_inconnu"))) + '</span></div><div class="ligne"><span class="or">' + esc(t("part_compagnon")) + '</span><span class="v or">' + pc(40) + (prixLivre() ? " · " + fsats(Math.floor(prixLivre() * 40 / 100)) + " sats" : "") + '</span></div><div class="ligne"><span>' + esc(t("cp_parts")) + '</span><span class="v">' + esc(t("cp_trimestriel")) + "</span></div></div>" +
+        '<p class="doux" style="font-size:.8rem;text-align:center"><button type="button" class="lien-etat" data-pas-c="2">' + esc(t("ad_changer")) + '</button> · <a href="#/conditions">' + esc(t("conditions")) + "</a></p>" +
+        '<div class="bas"><button type="button" class="bouton2" data-copier="cp-lien">' + esc(t("cp_copier_lien")) + '</button><a class="bouton" href="' + esc(R.caisse.replace(/\/$/, "") + "/vitrine?c=" + (okA ? codeCompagnon(a) : "")) + '" target="_blank" rel="noopener">' + esc(t("cp_vitrine")) + "</a></div>";
+    }
+    return corps;
+  }
+  // la part du compagnon, en une ligne : 40 % du prix que la caisse publie (jamais un nombre ecrit ici, N6) ; sans prix lu, la phrase sans nombre
+  function partsLigne() {
+    var px = prixLivre();
+    return '<div class="cadre kv"><div class="ligne"><span>' + esc(t("prix_livre")) + '</span><span class="v" id="cp-prix">' + (px ? fsats(px) + " sats" : esc(t("prix_inconnu"))) + '</span></div><div class="ligne"><span class="or">' + esc(t("part_compagnon")) + '</span><span class="v or">' + pc(40) + (px ? " · " + fsats(Math.floor(px * 40 / 100)) + " sats" : "") + '</span></div><div class="ligne"><span>' + esc(t("part_tresor")) + '</span><span class="v">' + pc(20) + (px ? " · " + fsats(Math.floor(px * 20 / 100)) + " sats" : "") + "</span></div></div>";
+  }
+  // le statut publie par la librairie (actif depuis, exemplaire de reference et son empreinte), comme en 1.4
+  function statutHtml(okA, lv) {
+    var inf = CP.statut === "actif" && CP.info ? CP.info : {};
+    if (!(okA && CP.statut)) return "";
+    var voir = CP.statut === "actif" || CP.statut === "en_attente" ? '<button type="button" class="lien-etat voir-lien" data-pas-c="3">' + esc(t("cp_voir_lien")) + "</button> " : "";   // F7 : le lien sans redeclarer
+    return '<p class="' + (CP.statut === "actif" ? "ok" : CP.statut === "suspendu" ? "ko" : "att") + '" style="font-size:12.5px">' + voir + '<span id="cp-statut">' + esc(t("cp_statut_" + CP.statut)) +
+      (inf.depuis ? " " + esc(t("cp_actif_depuis", { d: fdateIso(inf.depuis) })) : "") + (inf.n ? " · " + esc(t("cp_ref", { n: inf.n })) : "") + (CP.statut === "actif" ? "." : "") +
+      (inf.emp ? ' <span class="mono" style="font-size:11px">' + esc(inf.emp.slice(0, 16)) + '…</span> <a href="#/livres" data-ex-verif="' + esc(inf.emp) + '">' + esc(t("cp_ref_verifier")) + " \u2192</a>" : "") + "</span></p>" +
+      (inf.emp && lv && lv.emp && lv.emp !== inf.emp ? '<p class="att" style="font-size:12px">' + esc(t("cp_ref_autre")) + "</p>" : "");
+  }
+  // la declaration part directement a la librairie (POST /compagnon, reponse JSON) : plus d'onglet a ouvrir
+  function declarerCompagnon() {
+    var a = CP.adresse, okA = /^bc1q[02-9ac-hj-np-z]{38}$/.test(a) && C.adresseValide(a);
+    if (!okA) { E15.cpErr = t("adresse_invalide"); return rendre(); }
+    if (!CP.signature) { E15.cpErr = t("rec_err_sans_signature"); return rendre(); }
+    if (R.demo) { E15.cpErr = ""; CP.statut = "en_attente"; E15.pasC = 3; return rendre(); }
+    var nomOk = String(CP.nom || "").replace(/\s+/g, " ").trim();
+    if (nomOk && (nomOk.length > 40 || /[<>"\/\\@#$%*+=:;!?(){}\[\]|~^`_]/.test(nomOk))) { E15.cpErr = t("cp_nom_invalide"); return rendre(); }
+    E15.cpEnvoi = true; E15.cpErr = ""; rendre(); var focusApres = false;
+    var nom = String(CP.nom || "").replace(/\s+/g, " ").trim();
+    if (nom && (nom.length > 40 || /[<>"\/\\@#$%*+=:;!?(){}\[\]|~^`_]/.test(nom))) { E15.cpErr = t("cp_nom_invalide"); return rendre(); }
+    var corps = "json=1&adresse=" + encodeURIComponent(a) + "&signature=" + encodeURIComponent(CP.signature) + (nom ? "&nom=" + encodeURIComponent(nom) : "");   // F8 : le nom de vitrine
+    fetch(R.caisse.replace(/\/$/, "") + "/compagnon", { method: "POST", body: corps, headers: { "Content-Type": "application/x-www-form-urlencoded" }, credentials: "omit" })
+      .then(function (r) { return r.json().then(function (j) { return j; }, function () { return { ok: false, erreur: "HTTP " + r.status }; }); }).then(function (j) {   // F16
+        E15.cpEnvoi = false;
+        if (j && j.ok === true) { CP.statutLu = null; CP.statut = j.actif ? "actif" : "en_attente"; E15.pasC = 3; focusApres = true; }
+        else if (j && typeof j.erreur === "string" && /^nom de vitrine/.test(j.erreur)) E15.cpErr = t("cp_nom_refuse");
+        else E15.cpErr = t("cp_envoi_ko", { e: j && typeof j.erreur === "string" ? j.erreur.slice(0, 300) : "?" });
+        rendre(); if (focusApres) focusTitre();
+      }).catch(function () { E15.cpEnvoi = false; E15.cpErr = t("cp_reseau_ko"); rendre(); });
+  }
+  // ------------------------------------------------------------------ Plus : par importance ; les messages y vivent, avec le point d'or
+  var PLUS_ENTREES = [["adresse", "plus_adresse", "plus_adresse_n"], ["messages", "plus_messages", "plus_messages_n"], ["livres", "d_plus_livres", "d_plus_livres_n"], ["guide", "plus_guide", "plus_guide_n"], ["reglages", "plus_reglages", "plus_reglages_n"],
+    ["verifier", "plus_verifier", "plus_verifier_n"], ["reseau", "d_plus_reseau", "d_plus_reseau_n"], ["coffret", "plus_coffret", "plus_coffret_n"], ["chasses", "plus_chasses", "plus_chasses_n"], ["pierre", "plus_pierre", "plus_pierre_n"]], PLUS_TOUS_LES_JOURS = 5;
+  function messagesValides() { return (MP.messages || []).filter(function (m) { return m.valide && (R.demo || (MP.adresseAncree && m.adresse === MP.adresseAncree)); }); }
+  function idMsg(m) { return String(m.signature || "").slice(0, 32) + "|" + String(m.date || ""); }
+  function msgVus() { if (R.demo) return MP.msgVusDemo || (MP.msgVusDemo = []); var v = lireR("msg_vus", []); return Array.isArray(v) ? v : []; }   // la demonstration ne laisse rien
+  function messagesNouveaux() { var vus = msgVus(); return messagesValides().filter(function (m) { return vus.indexOf(idMsg(m)) < 0; }).length; }
+  function marquerMessagesVus(liste) {
+    var vus = msgVus(), avant = vus.length;
+    (liste || []).forEach(function (m) { var i = idMsg(m); if (vus.indexOf(i) < 0) vus.push(i); });
+    if (!R.demo && vus.length !== avant) ecrireR("msg_vus", vus.slice(-500));
+  }
+  function pagePlus() {
+    var l = PLUS_ENTREES.slice(0, PLUS_TOUS_LES_JOURS), l2 = PLUS_ENTREES.slice(PLUS_TOUS_LES_JOURS), neufs = messagesNouveaux();
+    function item(x) {
+      var sous = t(x[2]);
+      if (x[0] === "messages" && neufs) sous = '<b class="or">' + esc(t(neufs > 1 ? "plus_messages_neufs" : "plus_messages_neuf", { n: neufs })) + "</b> · " + esc(sous); else sous = esc(sous);
+      return '<button type="button" class="item" data-p="' + x[0] + '"><span class="ico">' + ICONES[x[0]] + "</span><span><b>" + esc(t(x[1])) + "</b><small>" + sous + '</small></span><span class="fleche">›</span></button>';
+    }
+    return '<h1 class="vh">' + esc(t("tb_plus")) + "</h1>" + visuel("plus", t("d_lg_plus")) + '<div class="liste">' + l.map(item).join("") + "</div>" +
+      '<div class="sur">' + esc(t("pe_pour_verifier")) + '</div><div class="items-verif">' + l2.map(function (x) { return '<button type="button" class="bouton2" data-p="' + x[0] + '">' + esc(t(x[1])) + "</button>"; }).join("") + "</div>" +
+      '<p class="pied">' + esc(t("d_plus_pied")) + "<br>GodGift Core " + VERSION + (R.demo || WEB ? "" : " · " + badgeOfficiel(true)) + "</p>";
+  }
+  function pageMessages() {
+    var l = MP.messages, sols = solutionsSignees();
+    var tete_ = tete("messages", t("d_lg_messages")) + teteEcran(t("la_voix_auteur"), t("m_messages"), "messages"), affiches = [];
+    if (!l) return tete_ + '<div class="cadre"><p class="doux">' + esc(t("msg_injoignable")) + "</p></div>";
+    if (!l.length) return tete_ + '<div class="cadre"><p>' + esc(t("msg_aucun")) + '</p><p class="doux">' + esc(t("msg_comment")) + "</p></div>";
+    var filtre = '<div class="bascule" role="group">' + ["tous", "solutions", "versions"].map(function (f) { return '<button type="button" data-filtre-msg="' + f + '" aria-pressed="' + (UI.filtreMsg === f ? "true" : "false") + '">' + esc(t("d_msg_" + f)) + "</button>"; }).join("") + "</div>";
+    var vus = 0, lignes = l.map(function (m, i) {
+      var s = sols.filter(function (x) { return x.m === m; })[0];
+      if (UI.filtreMsg === "solutions" && !s) return "";
+      if (UI.filtreMsg === "versions" && !RE_VERSION_MSG.test(m.texte || "")) return "";
+      vus++;
+      var refuse = !m.valide || (MP.adresseAncree && m.adresse !== MP.adresseAncree), ligne1 = String(m.texte || "").split("\n")[0].slice(0, 90);
+      if (!refuse) affiches.push(m);
+      // S3 : un message refuse ne prend jamais la voix de l'auteur : un bandeau rouge, le texte replie, en gris
+      var texteMsg = refuse ? '<div class="bandeau ko" style="margin-top:8px">✗ ' + esc(t("msg_replie")) + '</div><details><summary class="doux">' + esc(t("msg_voir_texte")) + '</summary><div class="doux" style="white-space:pre-wrap;font-size:.86rem">' + esc(m.texte) + "</div></details>"
+        : '<div class="txt cg" style="margin-top:8px;white-space:pre-wrap;font-size:1.05rem">' + esc(m.texte) + "</div>";
+      FEUILLES["msg" + i] = { titre: fdateIso(m.date), corps: '<p class="sig">' + badgeMessage(m) + "</p>" + texteMsg +
+        (s ? '<p class="note"><b>' + esc(t("sol_titre")) + " · " + esc(t("coffre_n", { n: s.c })) + " · " + esc(t("chasse_n", { n: s.h })) + "</b> · " + badgeSolution(s) + '<br><span class="doux">' + esc(t("sol_note")) + "</span></p>" : "") +
+        '<details style="margin-top:8px"><summary class="doux">' + esc(t("msg_preuve")) + '</summary><div class="mono doux" style="font-size:.72rem">' + esc(m.adresse) + "<br>" + esc(m.signature) + "</div></details>" };
+      return '<button type="button" class="msg-ligne' + (s ? " sol" : "") + (refuse ? " refuse" : "") + '" data-feuille="msg' + i + '"><span><span class="t">' + esc(refuse ? t("msg_replie") : ligne1) + "</span><small>" + esc(m.forme ? fdateIso(m.date) : String(m.date || "?").slice(0, 10)) + (s ? " · " + esc(t("sol_titre")) : "") + '</small></span><span class="tag">' + (refuse ? "✗" : s ? "✓" : "✉") + "</span></button>";
+    }).join("");
+    marquerMessagesVus(affiches);
+    return tete_ + filtre + '<div class="liste msgs">' + (vus ? lignes : '<p class="note">' + esc(t("d_msg_aucun_filtre")) + "</p>") + "</div>";
+  }
+  // ------------------------------------------------------------------ Mon adresse : 1 l'adresse, 2 la signature, 3 enregistrer
+  function pageAdresse() {
+    var rv = receptionValide(), p = rv.ok && !TR.editRec ? 3 : E15.pasA;
+    if (p === 3 && !rv.ok) p = 1;                                              // F5 : une adresse devenue invalide ramene au pas 1
+    var fil_ = filPas(["ad_pas1", "ad_pas2", "ad_pas3"], p), corps;
+    var a = TR.recSaisie || (receptionScellee() && R.reception && R.reception.adresse) || "", ok = a && window.GGTX.decoderAdresse(a);
+    if (p === 1) {
+      corps = visuel("adresse", t("d_lg_adresse"), "plus") + fil_ + teteEcran(t("ad_sur1"), t("ad_t1"), "reception") +
+        (R.reception && !rv.ok ? '<p class="ko">⚠ ' + esc(t("rec_err_" + rv.raison)) + "</p>" : "") +
+        '<div><label for="r-rec-adr">' + esc(t("ad_label")) + '</label><input class="champ mono" id="r-rec-adr" spellcheck="false" autocomplete="off" value="' + esc(a) + '" placeholder="bc1q…">' + (ok ? '<div class="rec-adr petit">' + groupes(a) + "</div>" : "") + "</div>" +
+        '<p class="cg">' + esc(t("ad_une_fois")) + "</p>" + (TR.recErr ? '<p class="ko">' + esc(TR.recErr) + "</p>" : "") +
+        '<div class="bas">' + (rv.ok ? '<button type="button" class="bouton2" id="r-rec-annuler">' + esc(t("d_precedent")) + "</button>" : "<span></span>") + '<button type="button" class="bouton" data-pas-a="2">' + esc(t("d_suivant")) + "</button></div>";
+    } else if (p === 2) {
+      corps = fil_ + teteEcran(t("ad_sur2"), t("ad_t2"), "signature") +
+        '<div><label>' + esc(t("rec_message")) + '</label><div class="champ mono champ-lu" id="r-rec-msg">' + esc(ok ? messageSaisie(a) : "AEDE:reception:…") + '</div><button type="button" class="bouton2" style="margin-top:6px" id="r-rec-copier">' + esc(t("rec_copier")) + "</button></div>" +
+        '<div><label for="r-rec-sig">' + esc(t("rec_signature")) + '</label><textarea class="champ" id="r-rec-sig" rows="2" spellcheck="false" autocomplete="off" placeholder="' + esc(t("rec_signature_ph")) + '">' + esc(TR.recSig || "") + '</textarea><div class="doux" style="font-size:12px">' + esc(t("rec_signature_note")) + "</div></div>" +
+        '<input type="hidden" id="r-rec-adr" value="' + esc(a) + '">' + (TR.recErr ? '<p class="ko">' + esc(TR.recErr) + "</p>" : "") +
+        '<div class="bas"><button type="button" class="bouton2" data-pas-a="1">' + esc(t("d_precedent")) + '</button><button type="button" class="bouton" id="r-rec-garder">' + esc(t("ad_verifier")) + "</button></div>";
+    } else {
+      corps = '<div class="ad-retour"><a class="fleche-retour" href="#/plus" aria-label="' + esc(t("d_retour")) + '">‹</a>' + fil_ + "</div>" + teteEcran(t("ad_sur3"), t("ad_t3"), "reception") + alerteReception() +
+        '<div class="cadre centre"><span class="ok">✓ ' + esc(t("rec_prouvee")) + '</span><div class="rec-adr" style="justify-content:center">' + groupesEnvoi(rv.adresse) + "</div>" + (rv.date ? '<p class="doux" style="font-size:.8rem">' + esc(t("rec_date", { d: fdateIso(rv.date) })) + "</p>" : "") + "</div>" +
+        (lireR("essai_fait", false) === true ? "" : '<p class="cg ad-fil2">' + esc(t("ad_fil_2")) + "</p>") + '<p class="doux" style="font-size:12px" id="rec-fenetre">' + esc(t(modeEnvoi())) + "</p>" +
+        '<div class="bas"><button type="button" class="bouton2" id="r-rec-changer">' + esc(t("ad_changer")) + '</button><a class="bouton" href="#/tableau">' + esc(t("ad_vers_coffres")) + "</a></div>";
+    }
+    return corps;
+  }
+  // ------------------------------------------------------------------ la colonne de droite (ordinateur) : ce que le telephone met en feuille
+  function rendreLat(page) {
+    var el = $("lat"); if (!el) return;
+    var h = "";
+    if (page === "tableau") {
+      var et = etapeCourte();
+      h += "<h5>" + esc(t("pe_titre")) + '</h5><div class="cadre"><p>' + esc(et.texte) + '</p><a class="bouton" href="' + et.lien + '">' + esc(et.bouton) + " →</a></div>";
+      if (E15.coffreFeuille) { var f = ficheCourte(E15.coffreFeuille); if (f) h += "<h5>" + esc(f.titre) + "</h5>" + f.corps; }
+      h += "<h5>" + esc(t("c_evenements")) + '</h5><div class="cadre"><div class="fil-ev">' + fil() + "</div></div>";
+    }
+    var k = { tableau: "tableau", enigmes: "enigmes", chasser: "chasser", compagnon: "compagnon", plus: null, messages: "messages", adresse: "reception", coffre: "tableau", verifier: "verifier", reseau: "reseau", coffret: "coffret", livres: "livres", chasses: "chasses", chasse: "cz" }[page];
+    if (k) h += "<h5>" + esc(t("lat_aide")) + '</h5><div class="cadre"><p class="bqb">' + esc(t("aide_" + k)) + "</p>" + (AIDE_MOT[k] ? '<a class="bq-plus" href="#/guide/' + AIDE_MOT[k] + '">' + esc(guide().en_savoir_plus) + " →</a>" : "") + "</div>";
+    el.innerHTML = h; el.hidden = !h;
+  }
+  function ouvrirFiche(n) {
+    E15.coffreFeuille = n;
+    if (window.matchMedia && window.matchMedia("(min-width:1024px)").matches) { rendreLat(route().p); return; }
+    var f = ficheCourte(n); if (f) ouvrirFeuille(f.titre, f.corps);
+  }
   function rendre() {
     var r = route(), p = r.p;
     cadre(p);
@@ -2847,6 +3236,7 @@
       compagnon: pageCompagnon, reseau: pageReseau, reglages: pageReglages, pierre: pagePierre, conditions: pageConditions, coffret: pageCoffret, messages: pageMessages, livres: pageLivres, chasses: pageChasses, chasse: function () { return pageChasse(r.a); }, guide: function () { return pageGuide(r.a); }, plus: pagePlus, adresse: pageAdresse }[p];
     if (!f) { location.replace("#/tableau"); return; }
     var focus = document.activeElement && document.activeElement.id, val = focus && $(focus) ? $(focus).value : null;
+    var surTitre = !!(document.activeElement && document.activeElement.matches && document.activeElement.matches("#page .tete-ecran h1"));
     $("page").classList.toggle("calme", MP.pagePrec === location.hash); MP.pagePrec = location.hash;   // les entrees ne rejouent qu'en changeant de page
     // la cascade finie, la page devient « calme » : un bloc dont l'animation est terminee garderait un contexte d'empilement (Chromium), et la
     // bulle « ? » du titre passerait sous le bloc suivant
@@ -2854,23 +3244,44 @@
     // la zone Chasser (et la page d'une chasse, qui a son formulaire) n'est jamais envoyee a un service de traduction (audit godgift I7)
     var chasse = p === "chasser" || p === "chasse" || (p === "tableau" && UI.chasse !== "grande");   // audit 1.4.0, 1 : le formulaire de la chasse zero sous Coffres
     $("page").setAttribute("translate", chasse ? "no" : "yes"); $("page").classList.toggle("notranslate", chasse);
+    $("page").classList.toggle("ecran", !!ECRANS_PRINCIPAUX[p]);               // 1.5.0 : les cinq ecrans tiennent dans la hauteur, sans defilement
     $("page").innerHTML = bandeauFenetre() + f();                               // une fenetre dediee rechargee le dit sur chaque page
     if (focus && $(focus) && val != null && $(focus).tagName !== "SELECT") { $(focus).value = val; $(focus).focus(); }
+    if (surTitre) focusTitre();                                               // contre-audit 9 : un rendu en arriere-plan ne fait pas perdre le titre
+    if (p === "messages") cadre(p);                                            // F10 : le point d'or s'eteint des que les messages sont lus
+    if (p === "chasser") {                                                     // F1 : la retape, les frais ou le compte a rebours viennent a l'ecran
+      var sigT = tresorSignature();
+      if (sigT && sigT !== UI.tresorSig) { var cib = document.querySelector('#page [id^="tr-retape-"], #page [data-confirmer], #page [id^="tr-compte-"]'); if (cib && cib.scrollIntoView) cib.scrollIntoView({ block: "center" }); }
+      UI.tresorSig = sigT;
+    }
+    if ($("h-r3") && $("h-r3").value) apercu("h-r3", "h-v3"); if ($("h-r17") && $("h-r17").value) apercu("h-r17", "h-v17");
+    if ($("z-r3") && $("z-r3").value) apercuZ("z-r3"); if ($("z-r17") && $("z-r17").value) apercuZ("z-r17");
     apresRendu();                                                              // la carte en ₿, le halo de la cle, la poussiere d'or
   }
   window.addEventListener("hashchange", function () {
     var r = route(); if (r.p === "guide" && r.a) G.q = "";
-    if (r.p === "chasser" && r.a) { H.choix = r.a; H.res = null; history.replaceState(null, "", "#/chasser"); }
+    if (r.p === "chasser" && r.a) { H.choix = r.a; H.res = null; E15.pasT = 1; history.replaceState(null, "", "#/chasser"); }
+    if (r.p === "compagnon" || r.p === "adresse") { E15.cpErr = ""; TR.recErr = null; }
+    if (r.p !== "adresse" && r.p !== "reglages") TR.editRec = false;          // F4 : quitter l'ecran annule une modification commencee
+    if (r.p === "enigmes") E15.enig = 0;                                       // F14 : on revient a la plus recente
     rendre(); document.querySelector(".dedans").scrollTop = 0; allerAuMot(); fermerMot();
     fermerEtat();
   });
   function fermerEtat() { var pe = $("etat-panneau"); if (pe && !pe.hidden) { pe.hidden = true; pe.innerHTML = ""; var b = $("etat-details"); if (b) b.setAttribute("aria-expanded", "false"); } }
-  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") fermerMot(); });
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape") return fermerMot();
+    if (ev.key !== "Tab" || !FEUILLE.ouverte) return;                         // A2 : la tabulation tourne dans la feuille
+    var f = $("feuille-mot"), l = f ? Array.prototype.filter.call(f.querySelectorAll('a[href],button:not([disabled]),input:not([type="hidden"]),textarea,select,summary'), function (x) { return x.offsetParent !== null; }) : [];
+    if (!l.length) return;
+    var i = l.indexOf(document.activeElement);
+    if (ev.shiftKey && i <= 0) { ev.preventDefault(); l[l.length - 1].focus(); }
+    else if (!ev.shiftKey && (i === l.length - 1 || i < 0)) { ev.preventDefault(); l[0].focus(); }
+  });
   document.addEventListener("click", function (ev) {
     if (!$("accueil").hidden) return accueilClic(ev);
     var md = ev.target.closest("[data-mot]"); if (md) { ev.preventDefault(); return ouvrirMot(md.dataset.mot); }
     var bf = ev.target.closest("[data-feuille]"); if (bf && FEUILLES[bf.dataset.feuille]) { ev.preventDefault(); var fe = FEUILLES[bf.dataset.feuille]; return ouvrirFeuille(fe.titre, fe.corps); }
-    var ba = ev.target.closest("[data-aide]"); if (ba) { ev.preventDefault(); var ti = ba.closest("h1, h2, .sur, .cadre"); return ouvrirAide(ba.dataset.aide, ti ? (ti.querySelector("h1, h2, b, .sur") || ti).textContent.replace(/\?\s*$/, "").trim() : ""); }
+    var ba = ev.target.closest("[data-aide]"); if (ba) { ev.preventDefault(); if (ba.dataset.titre) return ouvrirAide(ba.dataset.aide, ba.dataset.titre); var ti = ba.closest(".tete-ecran, h1, h2, .sur, .cadre"); return ouvrirAide(ba.dataset.aide, ti ? (ti.querySelector("h1, h2, b, .sur") || ti).textContent.replace(/\?\s*$/, "").trim() : ""); }
     if (ev.target.closest("[data-fermer-mot]")) { if (!ev.target.closest("a[href]")) ev.preventDefault(); return fermerMot(); }
     var de = ev.target.closest("#etat-details");
     if (de) {   // la pastille de l'en-tete ouvre (ou ferme) le panneau d'etat
@@ -2879,11 +3290,21 @@
       return;
     }
     if (ev.target.closest("#etat-fermer")) return fermerEtat();
+    if (ev.target.closest("#quitter-demo")) {   // 1.5.0 : la demonstration se quitte depuis la pastille, sans rien laisser (F9) ; sans recharger (le jeton de la fenetre dediee vit en memoire)
+      R.demo = false; ecrireR("demo", false); fermerEtat(); sortieDemo();
+      V.res = null; M.pret = false; rendre(); return charger();
+    }
     var vb = ev.target.closest("[data-vue]"); if (vb) { UI.vue = vb.dataset.vue; ecrireR("vue", UI.vue); return rendre(); }
-    var cb = ev.target.closest("[data-chasse-vue]"); if (cb) { UI.chasse = cb.dataset.chasseVue; return rendre(); }
+    var cb = ev.target.closest("[data-chasse-vue]"); if (cb) { UI.chasse = cb.dataset.chasseVue; E15.coffreFeuille = null; return rendre(); }
     var fb = ev.target.closest("[data-filtre-msg]"); if (fb) { UI.filtreMsg = fb.dataset.filtreMsg; return rendre(); }
     var lb = ev.target.closest("[data-langue]"); if (lb && I18N[lb.dataset.langue]) { R.lang = lb.dataset.langue; ecrireR("lang", R.lang); return rendre(); }
     if (ev.target.closest("#r-calme")) { UI.calme = !UI.calme; ecrireR("calme", UI.calme); document.documentElement.classList.toggle("calme", UI.calme); return rendre(); }
+    var pt_ = ev.target.closest("[data-pas-t]"); if (pt_) { E15.pasT = +pt_.dataset.pasT; if (E15.pasT === 1) H.res = null; rendre(); return focusTitre(); }
+    var pc_ = ev.target.closest("[data-pas-c]"); if (pc_) { E15.pasC = +pc_.dataset.pasC; E15.cpErr = ""; rendre(); return focusTitre(); }
+    var pa_ = ev.target.closest("[data-pas-a]"); if (pa_) { var ra_ = $("r-rec-adr"); if (ra_) TR.recSaisie = ra_.value.trim(); if (+pa_.dataset.pasA === 2 && !(TR.recSaisie && window.GGTX.decoderAdresse(TR.recSaisie))) { TR.recErr = t("rec_err_adresse"); return rendre(); } TR.recErr = null; E15.pasA = +pa_.dataset.pasA; rendre(); return focusTitre(); }
+    var en_ = ev.target.closest("[data-enig]"); if (en_) { E15.enig = Math.max(0, E15.enig + (+en_.dataset.enig)); return rendre(); }
+    var fi_ = ev.target.closest("[data-fiche]"); if (fi_) { return ouvrirFiche(+fi_.dataset.fiche); }
+    var cop = ev.target.closest("[data-copier]"); if (cop) { var src = $(cop.dataset.copier), txt = src ? src.textContent : "", fait = function () { cop.textContent = "✓ " + t("ac_copie"); }; try { navigator.clipboard.writeText(txt).then(fait, fait); } catch (e) { fait(); } return; }
     var x = ev.target.closest("[data-p],[data-coffre],#rafraichir,#etat-rafraichir,#lancer,#rapport,#h-calculer,#h-lire-cri,#h-wif,#cp-envoyer,#r-garder,#r-accueil,#acheter,#ex-verifier,#ex-garder,[data-diffuser],#z-calculer,#r-rec-garder,#r-rec-changer,#r-rec-annuler,#r-rec-copier,#te-relire,[data-temoin],[data-accelerer],[data-envoyer],[data-annuler],[data-confirmer],[data-wif],[data-rec-ok],#roman-verifier,[data-retape],[data-compagnon],[data-ex-verif],[data-oublier]");
     if (!x) return;
     if (x.dataset.p) location.hash = "#/" + x.dataset.p;
@@ -2894,8 +3315,9 @@
     else if (x.id === "h-calculer") calculer();
     else if (x.id === "z-calculer") calculerZ();
     else if (x.id === "h-lire-cri") lireCri();
-    else if (x.id === "cp-envoyer") window.open(R.caisse.replace(/\/$/, "") + "/compagnon?lang=" + (R.lang === "fr" ? "fr" : "en") + "&adresse=" + encodeURIComponent(CP.adresse) + "&signature=" + encodeURIComponent(CP.signature), "_blank");
+    else if (x.id === "cp-envoyer") declarerCompagnon();
     else if (x.id === "r-garder") {
+      var etaitDemo = R.demo;
       R.lang = $("r-lang").value; R.explo = $("r-explo").value.trim() || EXPLO_DEF; R.explo2 = $("r-explo2").value.trim(); R.caisse = $("r-caisse").value.trim() || CAISSE_DEF; R.demo = $("r-demo").checked; R.temoin = $("r-temoin").checked;
       if (WEB) {                                                               // la version web ne joint que des sources en https (et sa CSP, que celles prevues)
         if (!/^https:\/\//i.test(R.explo)) R.explo = EXPLO_DEF;
@@ -2903,12 +3325,13 @@
         if (!/^https:\/\//i.test(R.caisse)) R.caisse = CAISSE_DEF;
       }
       var pr = ($("r-parrain").value || "").trim().toLowerCase(); R.parrain = /^[a-z2-7]{8,10}$/.test(pr) ? pr : null;
+      if (etaitDemo && !R.demo) sortieDemo();
       ["lang", "explo", "explo2", "caisse", "demo", "parrain", "temoin"].forEach(function (k) { ecrireR(k, R[k]); }); V.res = null; M.pret = false; rendre(); charger();
     }
     else if (x.id === "r-accueil") { AC.pas = 1; AC.temoin = R.temoin; accueil(); }
     else if (x.id === "r-rec-garder") garderReception();
-    else if (x.id === "r-rec-changer") { TR.editRec = true; TR.recErr = null; rendre(); }
-    else if (x.id === "r-rec-annuler") { TR.editRec = false; TR.recErr = null; TR.recSaisie = TR.recSig = TR.recNonce = null; rendre(); }
+    else if (x.id === "r-rec-changer") { TR.editRec = true; TR.recErr = null; E15.pasA = 1; rendre(); if (route().p === "adresse") focusTitre(); }
+    else if (x.id === "r-rec-annuler") { TR.editRec = false; TR.recErr = null; TR.recSaisie = TR.recSig = TR.recNonce = null; rendre(); if (route().p === "adresse") focusTitre(); }
     else if (x.id === "r-rec-copier") { var mt = $("r-rec-msg").textContent, ok2 = function () { x.textContent = "✓ " + t("ac_copie"); }; try { navigator.clipboard.writeText(mt).then(ok2, ok2); } catch (e) { ok2(); } }
     else if (x.dataset.accelerer) accelerer(x.dataset.accelerer);
     else if (x.dataset.envoyer) { var ke = x.dataset.envoyer; delete TR.compte[ke]; if (TR.annule) delete TR.annule[ke]; lancerEnvoi(ke); }
@@ -2923,7 +3346,7 @@
     else if (x.dataset.wif) montrerCle(x.dataset.wif);
     else if (x.dataset.retape) retaper(x.dataset.retape);
     else if (x.dataset.exVerif) { ev.preventDefault(); location.hash = "#/livres"; verifierExemplaire(x.dataset.exVerif); }   // l'exemplaire de reference, dans le registre grave
-    else if (x.dataset.compagnon != null) { var lv = MP.livres[+x.dataset.compagnon]; if (lv) { CP.livre = +x.dataset.compagnon; CP.adresse = lv.propriete || ""; CP.signature = ""; CP.statut = null; CP.statutLu = null; } if (location.hash === "#/compagnon") rendre(); else location.hash = "#/compagnon"; }
+    else if (x.dataset.compagnon != null) { var lv = MP.livres[+x.dataset.compagnon]; if (lv) { CP.livre = +x.dataset.compagnon; CP.adresse = lv.propriete || ""; CP.signature = ""; CP.statut = null; CP.statutLu = null; E15.pasC = CP.adresse ? 2 : 1; } if (location.hash === "#/compagnon") rendre(); else location.hash = "#/compagnon"; }
     else if (x.id === "te-relire") lireTemoins(true);
     else if (x.dataset.temoin) { R.temoin = x.dataset.temoin === "1"; ecrireR("temoin", R.temoin); fermerMot(); rendre(); if (R.temoin && V.res) publierConstat(); }
     else if (x.id === "acheter") acheter();
@@ -2958,23 +3381,35 @@
   if (window.MutationObserver && $("page")) new MutationObserver(function () { var h = document.querySelector(".bq:hover"); if (h) placerBulle(h); }).observe($("page"), { childList: true, subtree: true });
   ["mouseover", "focusin"].forEach(function (typ) { document.addEventListener(typ, function (ev) { var bq = ev.target.closest && ev.target.closest(".bq"); if (bq && !bq.contains(ev.relatedTarget)) placerBulle(bq); }); });
   document.addEventListener("change", function (ev) {
-    if (ev.target.id === "langue") { R.lang = ev.target.value; ecrireR("lang", R.lang); rendre(); }
     if (ev.target.id === "h-choix") { H.choix = ev.target.value; H.res = null; rendre(); }
     if (ev.target.id === "z-coffre") { CZ.coffre = +ev.target.value || 1; CZ.res = null; rendre(); }   // la chasse zero : quel coffre chasser
     if (ev.target.id === "roman-fichier" && ev.target.files[0]) { var fr_ = ev.target.files[0]; ev.target.value = ""; verifierRoman(fr_); }
     if (ev.target.id === "ex-fichier" && ev.target.files[0]) { var fichier = ev.target.files[0]; ev.target.value = ""; lireExemplaire(fichier); }
   });
+  function apercuZ(id) {
+    var el = $(id), vz = $(id === "z-r3" ? "z-v3" : "z-v17"); if (!el || !vz) return;
+    var rz = lireReponse(el.value, motsZ(CZ.coffre));
+    vz.innerHTML = !el.value.trim() ? "" : rz.err.length ? '<span class="ko">' + esc(rz.err.join(" · ")) + "</span>" : '<span class="ok">' + rz.nums.map(function (y) { return String(y).padStart(4, "0") + " " + esc(window.GG_LISTE.mots[y - 1]); }).join(" · ") + "</span>";
+  }
   document.addEventListener("input", function (ev) {
     var id = ev.target.id;
-    if (id === "h-r3") apercu("h-r3", "h-v3");
-    if (id === "h-r17") apercu("h-r17", "h-v17");
-    if (id === "z-r3" || id === "z-r17") { var rz = lireReponse(ev.target.value, motsZ(CZ.coffre)), vz = $(id === "z-r3" ? "z-v3" : "z-v17"); vz.innerHTML = !ev.target.value.trim() ? "" : rz.err.length ? '<span class="ko">' + esc(rz.err.join(" · ")) + "</span>" : '<span class="ok">' + rz.nums.map(function (y) { return String(y).padStart(4, "0") + " " + esc(window.GG_LISTE.mots[y - 1]); }).join(" · ") + "</span>"; }
+    // 1.5.0 : les mots tapes restent en memoire (jamais ecrits) : un nouveau rendu de la page (le reseau, la preparation de l'envoi)
+    // ne les efface plus pendant la saisie
+    if (id === "h-r3") { H.v3 = ev.target.value; apercu("h-r3", "h-v3"); }
+    if (id === "h-r17") { H.v17 = ev.target.value; apercu("h-r17", "h-v17"); }
+    if (id === "z-r3" || id === "z-r17") { CZ[id === "z-r3" ? "v3" : "v17"] = ev.target.value; apercuZ(id); }
+    if (id === "z-alea" && CZ.aleas) CZ.aleas[coffreZ(CZ.coffre) ? CZ.coffre : 1] = ev.target.value.trim().toLowerCase();
+    if (id === "h-alea") { var ca = cibleChasse(), va = ev.target.value.trim().toLowerCase(); if (ca && !ca.essai) { if (ca.Z) ca.Z.aleas[ca.n] = va; else H.alea[ca.n] = va; } }
     if (id === "h-dico") $("h-dico-r").innerHTML = dico(ev.target.value);
-    if (id === "r-rec-adr") { var ra = ev.target.value.trim(), okA = window.GGTX.decoderAdresse(ra); TR.recSaisie = ra; $("r-rec-msg").textContent = okA ? messageSaisie(ra) : "AEDE:reception:…"; }
+    if (id === "r-rec-adr") { var ra = ev.target.value.trim(), okA = window.GGTX.decoderAdresse(ra); TR.recSaisie = ra; if ($("r-rec-msg")) $("r-rec-msg").textContent = okA ? messageSaisie(ra) : "AEDE:reception:…"; }
     if (id === "r-rec-sig") TR.recSig = ev.target.value;
     if (id === "g-cherche") { G.q = ev.target.value; filtrerGuide(); }
     if (id === "cp-a") { CP.adresse = ev.target.value.trim(); CP.statut = null; CP.statutLu = null; rendre(); }
     if (id === "cp-s") { CP.signature = ev.target.value.trim(); rendre(); }
+    if (id === "cp-nom") CP.nom = ev.target.value;
+    if (ev.target.dataset && ev.target.dataset.morceau && ev.target.dataset.kk) {   // contre-audit 3 : un nouveau rendu n'efface plus le morceau deja tape
+      var kr = ev.target.dataset.kk; TR.retapeSaisie[kr] = TR.retapeSaisie[kr] || {}; TR.retapeSaisie[kr][ev.target.dataset.morceau] = ev.target.value;
+    }
     if (ev.target.dataset && ev.target.dataset.lien != null) { MP.livres[+ev.target.dataset.lien].lien = ev.target.value.trim(); ecrireR("livres", MP.livres); }
   });
   setInterval(function () {   // les comptes a rebours, chaque seconde ; la chaine, toutes les cinq minutes

@@ -16,18 +16,18 @@
     {
       "titre": "Estou a descobrir",
       "etapes": [
-        "Abra «O quadro»: os 24 cofres da caçada, um por mês, de janeiro de 2027 a dezembro de 2028. A cor de cada um indica o seu estado.",
-        "Toque num cofre: vê o montante, os dois enigmas quando aparecem, o grito e, mais tarde, as duas pistas.",
+        "Abra «Cofres»: os 24 cofres da caçada, um por mês, de janeiro de 2027 a dezembro de 2028. A cor de cada um indica o seu estado.",
+        "Toque num cofre: a sua ficha indica o estado, o montante e as datas dos dois enigmas; «Ver o cofre» mostra os enigmas já aparecidos, o grito e, mais tarde, as duas pistas.",
         "Para ver uma caçada em curso antes de ela começar, marque «Modo demonstração» em Definições e depois «Guardar». Tudo aí é fictício.",
-        "Volte à caçada real desmarcando esse modo e depois «Guardar»."
+        "Volte à caçada real: toque no indicador lá em cima e depois em «Sair da demonstração» (ou desmarque esse modo em Definições e depois «Guardar»)."
       ]
     },
     {
       "titre": "Estou a caçar",
       "etapes": [
-        "Antes de tudo, com calma: guarde em Definições «O meu endereço de receção», o da sua própria carteira, e assine-o com ela: a assinatura é obrigatória. É para lá que o tesouro irá.",
+        "Antes de tudo, com calma: em Mais, «O meu endereço de receção», guarde em três passos o endereço da sua própria carteira e assine-o com ela: a assinatura é obrigatória. É para lá que o tesouro irá.",
         "No dia 3 do mês às 18:15:05 UTC (19:15:05 em Paris no inverno, 20:15:05 no verão) sai o primeiro enigma do cofre; no dia 17, à mesma hora, o segundo. Leia-os em «Enigmas».",
-        "Cada resposta é feita de palavras francesas da lista das cinco mil: três palavras por enigma de pedra, quatro para uma catedral e o cofre final. Verifique as suas palavras em «Encontrar», no fundo da página.",
+        "Cada resposta é feita de palavras francesas da lista das cinco mil: três palavras por enigma de pedra, quatro para uma catedral e o cofre final. Verifique as suas palavras em «Encontrar», no passo 2: «A lista das cinco mil».",
         "Uma hora depois do segundo enigma sai o grito: traz o acaso, a última peça da chave. O GodGift Core lê-o sozinho.",
         "Em «Encontrar», escolha o cofre: o GodGift Core prepara-o e mostra «Armado». Desligue a internet, escreva as suas duas respostas e depois «Calcular a chave».",
         "Se for a chave certa, volte a ligar a internet. Na janela da aplicação instalada, aberta pelo seu ícone, o GodGift Core assina logo a transação na sua máquina e envia-a sozinha para o seu endereço, com uma oferta forte (cerca de 10 % do tesouro em taxas); noutro sítio (navegador, versão web, janela recarregada), faz-lhe primeiro voltar a escrever 16 caracteres do seu endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua carteira; em «Sem instalar», não envia nada. Se outra pessoa encontrou ao mesmo tempo, é a corrida: «Acelerar» duplica de uma vez as taxas.",
@@ -57,7 +57,7 @@
       "etapes": [
         "Em Definições, marque «Torno-me testemunha» (ou responda sim nas boas-vindas).",
         "Em cada «Verificar tudo», e uma vez por dia sozinho, o seu GodGift Core publica o seu relatório: bloco, impressões digitais, resultado. Nada de pessoal.",
-        "O separador «Rede» conta as testemunhas da semana e assinala o mínimo desacordo: um manifesto diferente, uma versão não publicada, um controlo falhado.",
+        "Em Mais, «Rede e fontes» conta as testemunhas da semana e assinala o mínimo desacordo: um manifesto diferente, uma versão não publicada, um controlo falhado.",
         "Todos os dias, os relatórios são datados no Bitcoin: uma prova datada que qualquer pessoa pode verificar."
       ]
     }
@@ -193,7 +193,7 @@
     {
       "id": "demo",
       "mot": "Modo demonstração",
-      "texte": "Uma caçada imaginada a 10 de junho de 2027, com valores ilustrativos e endereços fictícios, para ver como é o GodGift Core em plena caçada. Nenhum enigma real. Definições: marque ou desmarque «Modo demonstração» e depois «Guardar».",
+      "texte": "Uma caçada imaginada a 10 de junho de 2027, com valores ilustrativos e endereços fictícios, para ver como é o GodGift Core em plena caçada. Nenhum enigma real. Definições: marque ou desmarque «Modo demonstração» e depois «Guardar»; para sair, o indicador lá em cima oferece também «Sair da demonstração».",
       "voir": []
     },
     {
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Endereço de receção",
-      "texte": "O endereço da sua própria carteira (mesmo uma carteira fria), guardado antecipadamente em Definições. No dia em que encontrar, o tesouro parte sozinho para lá. Tem de ser assinado pela sua carteira (endereço bc1q…, 3… ou 1…): a assinatura prova que é seu e desmascara um vírus que tivesse trocado o endereço copiado. O GodGift Core volta a verificá-lo mesmo antes do envio, mostra a sua data de registo e avisa-o se mudou desde a sua última visita. Fora da janela própria da aplicação instalada, faz-lhe também voltar a escrever, antes de cada envio, 16 caracteres deste endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua própria carteira.",
+      "texte": "O endereço da sua própria carteira (mesmo uma carteira fria), guardado antecipadamente em Mais, «O meu endereço de receção». No dia em que encontrar, o tesouro parte sozinho para lá. Tem de ser assinado pela sua carteira (endereço bc1q…, 3… ou 1…): a assinatura prova que é seu e desmascara um vírus que tivesse trocado o endereço copiado. O GodGift Core volta a verificá-lo mesmo antes do envio, mostra a sua data de registo e avisa-o se mudou desde a sua última visita. Fora da janela própria da aplicação instalada, faz-lhe também voltar a escrever, antes de cada envio, 16 caracteres deste endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua própria carteira.",
       "voir": [
         "recuperer",
         "portefeuille",

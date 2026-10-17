@@ -16,18 +16,18 @@
     {
       "titre": "Descubro",
       "etapes": [
-        "Abra « El tablero »: los 24 cofres de la búsqueda, uno por mes, de enero de 2027 a diciembre de 2028. Su color indica su estado.",
-        "Toque un cofre: ve su importe, sus dos enigmas cuando han aparecido, su grito y, más tarde, sus dos indicios.",
+        "Abra « Cofres »: los 24 cofres de la búsqueda, uno por mes, de enero de 2027 a diciembre de 2028. Su color indica su estado.",
+        "Toque un cofre: su ficha indica su estado, su importe y las fechas de sus dos enigmas; « Ver el cofre » muestra sus enigmas ya aparecidos, su grito y, más tarde, sus dos indicios.",
         "Para ver una búsqueda en curso antes de que empiece, marque « Modo demostración » en Ajustes y luego « Guardar ». Todo allí es ficticio.",
-        "Vuelva a la búsqueda real desmarcando ese modo y luego « Guardar »."
+        "Vuelva a la búsqueda real: toque la pastilla de arriba y luego « Salir de la demostración » (o desmarque ese modo en Ajustes y luego « Guardar »)."
       ]
     },
     {
       "titre": "Busco",
       "etapes": [
-        "Ante todo, con calma: guarde en Ajustes « Mi dirección de recepción », la de su propio monedero, y fírmela con él: la firma es obligatoria. Allí irá el tesoro.",
+        "Ante todo, con calma: en Más, « Mi dirección de recepción », guarde en tres pasos la dirección de su propio monedero y fírmela con él: la firma es obligatoria. Allí irá el tesoro.",
         "El día 3 del mes a las 18:15:05 UTC (19:15:05 en París en invierno, 20:15:05 en verano) sale el primer enigma del cofre; el 17, a la misma hora, el segundo. Léalos en « Enigmas ».",
-        "Cada respuesta se compone de palabras francesas de la lista de las cinco mil: tres palabras por enigma de piedra, cuatro para una catedral y el cofre final. Compruebe sus palabras en « Encontrar », al final de la página.",
+        "Cada respuesta se compone de palabras francesas de la lista de las cinco mil: tres palabras por enigma de piedra, cuatro para una catedral y el cofre final. Compruebe sus palabras en « Encontrar », en el paso 2: « La lista de las cinco mil ».",
         "Una hora después del segundo enigma sale el grito: aporta el azar, la última pieza de la llave. GodGift Core lo lee solo.",
         "En « Encontrar », elija el cofre: GodGift Core lo prepara y muestra « Armado ». Desconecte internet, escriba sus dos respuestas y pulse « Calcular la llave ».",
         "Si es la llave correcta, vuelva a conectar internet. En la ventana de la aplicación instalada, abierta desde su icono, GodGift Core firma enseguida la transacción en su equipo y la envía sola hacia su dirección, con una oferta fuerte (cerca del 10 % del tesoro en comisiones); en otro lugar (navegador, versión web, ventana recargada), primero le hace volver a escribir 16 caracteres de su dirección, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su monedero; en « Sin instalar », no envía nada. Si alguien más la encontró al mismo tiempo, es la carrera: « Acelerar » dobla de una vez las comisiones.",
@@ -57,7 +57,7 @@
       "etapes": [
         "En Ajustes, marque « Me hago testigo » (o responda que sí en la bienvenida).",
         "En cada « Verificarlo todo », y una vez al día por sí solo, su GodGift Core publica su informe: bloque, huellas, resultado. Nada personal.",
-        "La pestaña « Red » cuenta los testigos de la semana y señala el menor desacuerdo: un manifiesto distinto, una versión no publicada, un control fallido.",
+        "En Más, « Red y fuentes » cuenta los testigos de la semana y señala el menor desacuerdo: un manifiesto distinto, una versión no publicada, un control fallido.",
         "Cada día, los informes se fechan en Bitcoin: una prueba con fecha que cualquiera puede verificar."
       ]
     }
@@ -193,7 +193,7 @@
     {
       "id": "demo",
       "mot": "Modo demostración",
-      "texte": "Una búsqueda imaginada el 10 de junio de 2027, con valores de ilustración y direcciones ficticias, para ver cómo es GodGift Core en plena búsqueda. Ningún enigma real. Ajustes: marque o desmarque « Modo demostración » y luego « Guardar ».",
+      "texte": "Una búsqueda imaginada el 10 de junio de 2027, con valores de ilustración y direcciones ficticias, para ver cómo es GodGift Core en plena búsqueda. Ningún enigma real. Ajustes: marque o desmarque « Modo demostración » y luego « Guardar »; para salir, la pastilla de arriba ofrece también « Salir de la demostración ».",
       "voir": []
     },
     {
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Dirección de recepción",
-      "texte": "La dirección de su propio monedero (incluso un monedero en frío), guardada de antemano en Ajustes. El día que encuentre, el tesoro sale solo hacia ella. Debe estar firmada por su monedero (dirección bc1q…, 3… o 1…): la firma prueba que es suya y desenmascara un virus que hubiera sustituido la dirección copiada. GodGift Core la verifica de nuevo justo antes del envío, muestra su fecha de registro y le avisa si ha cambiado desde su última visita. Fuera de la ventana propia de la aplicación instalada, también le hace volver a escribir, antes de cada envío, 16 caracteres de esta dirección, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su propio monedero.",
+      "texte": "La dirección de su propio monedero (incluso un monedero en frío), guardada de antemano en Más, « Mi dirección de recepción ». El día que encuentre, el tesoro sale solo hacia ella. Debe estar firmada por su monedero (dirección bc1q…, 3… o 1…): la firma prueba que es suya y desenmascara un virus que hubiera sustituido la dirección copiada. GodGift Core la verifica de nuevo justo antes del envío, muestra su fecha de registro y le avisa si ha cambiado desde su última visita. Fuera de la ventana propia de la aplicación instalada, también le hace volver a escribir, antes de cada envío, 16 caracteres de esta dirección, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su propio monedero.",
       "voir": [
         "recuperer",
         "portefeuille",

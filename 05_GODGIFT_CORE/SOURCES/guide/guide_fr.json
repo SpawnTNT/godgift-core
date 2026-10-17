@@ -16,18 +16,18 @@
     {
       "titre": "Je découvre",
       "etapes": [
-        "Ouvrez « Le tableau » : les 24 coffres de la chasse, un par mois, de janvier 2027 à décembre 2028. Leur couleur dit leur état.",
-        "Touchez un coffre : vous voyez son montant, ses deux énigmes quand elles sont parues, son cri et, plus tard, ses deux indices.",
+        "Ouvrez « Coffres » : les 24 coffres de la chasse, un par mois, de janvier 2027 à décembre 2028. Leur couleur dit leur état.",
+        "Touchez un coffre : sa fiche dit son état, son montant et les dates de ses deux énigmes ; « Voir le coffre » montre ses énigmes parues, son cri et, plus tard, ses deux indices.",
         "Pour voir une chasse en cours avant qu’elle commence, cochez « Mode démonstration » dans Réglages, puis « Enregistrer ». Tout y est factice.",
-        "Revenez à la vraie chasse en décochant ce mode, puis « Enregistrer »."
+        "Revenez à la vraie chasse : touchez la pastille en haut, puis « Quitter la démonstration » (ou décochez ce mode dans Réglages, puis « Enregistrer »)."
       ]
     },
     {
       "titre": "Je chasse",
       "etapes": [
-        "Avant tout, tranquillement : enregistrez dans Réglages « Mon adresse de réception », celle de votre propre portefeuille, et signez-la avec lui : la signature est obligatoire. C’est là que partira le trésor.",
+        "Avant tout, tranquillement : dans Plus, « Mon adresse de réception », enregistrez en trois pas l’adresse de votre propre portefeuille, et signez-la avec lui : la signature est obligatoire. C’est là que partira le trésor.",
         "Le 3 du mois à 18:15:05 UTC (19:15:05 à Paris en hiver, 20:15:05 en été) paraît la première énigme du coffre ; le 17 à la même heure, la seconde. Lisez-les dans « Énigmes ».",
-        "Chaque réponse est faite de mots français de la liste des cinq mille : trois mots par énigme de pierre, quatre pour une cathédrale et le coffre final. Vérifiez vos mots dans « Trouver », en bas de la page.",
+        "Chaque réponse est faite de mots français de la liste des cinq mille : trois mots par énigme de pierre, quatre pour une cathédrale et le coffre final. Vérifiez vos mots dans « Trouver », au pas 2 : « La liste des cinq mille ».",
         "Une heure après la seconde énigme paraît le cri : il apporte l’aléa, la dernière pièce de la clé. GodGift Core le lit tout seul.",
         "Dans « Trouver », choisissez le coffre : GodGift Core le prépare et affiche « Armé ». Coupez internet, tapez vos deux réponses, puis « Calculer la clé ».",
         "Si c’est la bonne clé, rebranchez internet. Dans la fenêtre de l’application installée, ouverte par son icône, GodGift Core signe aussitôt la transaction sur votre machine et l’envoie toute seule vers votre adresse, avec une offre forte (environ 10 % du trésor en frais) ; ailleurs (navigateur, version web, fenêtre rechargée), il vous fait d’abord retaper 16 caractères de votre adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre portefeuille ; « Sans installer », il n’envoie rien. Si quelqu’un d’autre a trouvé en même temps, c’est la course : « Accélérer » double d’un coup les frais.",
@@ -57,7 +57,7 @@
       "etapes": [
         "Dans Réglages, cochez « Je deviens témoin » (ou répondez oui à l’accueil).",
         "À chaque « Tout vérifier », et une fois par jour tout seul, votre GodGift Core publie son constat : bloc, empreintes, résultat. Rien de personnel.",
-        "L’onglet « Réseau » compte les témoins de la semaine et signale le moindre désaccord : un manifeste différent, une version non publiée, un contrôle en échec.",
+        "Dans Plus, « Réseau et sources » compte les témoins de la semaine et signale le moindre désaccord : un manifeste différent, une version non publiée, un contrôle en échec.",
         "Chaque jour, les constats sont horodatés dans Bitcoin : une preuve datée que chacun peut vérifier."
       ]
     }
@@ -193,7 +193,7 @@
     {
       "id": "demo",
       "mot": "Mode démonstration",
-      "texte": "Une chasse imaginée au 10 juin 2027, avec des valeurs d’illustration et des adresses factices, pour voir à quoi ressemble GodGift Core en pleine chasse. Aucune vraie énigme. Réglages : cochez ou décochez « Mode démonstration », puis « Enregistrer ».",
+      "texte": "Une chasse imaginée au 10 juin 2027, avec des valeurs d’illustration et des adresses factices, pour voir à quoi ressemble GodGift Core en pleine chasse. Aucune vraie énigme. Réglages : cochez ou décochez « Mode démonstration », puis « Enregistrer » ; pour en sortir, la pastille en haut propose aussi « Quitter la démonstration ».",
       "voir": []
     },
     {
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Adresse de réception",
-      "texte": "L’adresse de votre propre portefeuille (même un portefeuille à froid), enregistrée à l’avance dans Réglages. Le jour où vous trouvez, le trésor y part tout seul. Elle doit être signée par votre portefeuille (adresse bc1q…, 3… ou 1…) : la signature prouve qu’elle est à vous et démasque un virus qui aurait remplacé l’adresse copiée. GodGift Core la revérifie juste avant l’envoi, affiche sa date d’enregistrement et vous alerte si elle a changé depuis votre dernière visite. Hors de la fenêtre dédiée de l’application installée, il vous fait aussi retaper, avant chaque envoi, 16 caractères de cette adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre propre portefeuille.",
+      "texte": "L’adresse de votre propre portefeuille (même un portefeuille à froid), enregistrée à l’avance dans Plus, « Mon adresse de réception ». Le jour où vous trouvez, le trésor y part tout seul. Elle doit être signée par votre portefeuille (adresse bc1q…, 3… ou 1…) : la signature prouve qu’elle est à vous et démasque un virus qui aurait remplacé l’adresse copiée. GodGift Core la revérifie juste avant l’envoi, affiche sa date d’enregistrement et vous alerte si elle a changé depuis votre dernière visite. Hors de la fenêtre dédiée de l’application installée, il vous fait aussi retaper, avant chaque envoi, 16 caractères de cette adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre propre portefeuille.",
       "voir": [
         "recuperer",
         "portefeuille",

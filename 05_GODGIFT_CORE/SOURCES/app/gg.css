@@ -331,7 +331,7 @@ a.chasse-carte:hover{transform:translateY(-3px);box-shadow:0 0 28px rgba(226,184
 /* ---------------------------------------------------------------- la bulle « ? » et la feuille des mots */
 .bq{display:inline-flex;align-items:center;justify-content:center;position:relative;width:20px;height:20px;border-radius:50%;background:linear-gradient(180deg,#f4d98e,#c99a3e);color:#1a1206;font:700 12px var(--corps);margin-left:8px;vertical-align:middle;cursor:pointer;border:none;padding:0;box-shadow:0 0 10px rgba(244,217,142,.5);flex:none}
 .bq:hover,.bq:focus-visible{outline:none;box-shadow:0 0 16px rgba(244,217,142,.9)}
-h1 .bq{position:static}
+h1 .bq{position:relative}
 .bq-plus{display:block;margin-top:12px;color:#f4d98e;font-weight:600;text-decoration:none}.bq-plus:hover{text-decoration:underline}
 .mot{display:inline-block;padding:11px 3px;margin:-11px -3px;border:0;line-height:inherit;background:none;color:#f1d58a;font:inherit;text-decoration:underline dotted;text-underline-offset:4px;cursor:pointer}
 .mot::after{content:"\00a0ⓘ";font-size:.85em;color:var(--or2)}
@@ -433,3 +433,100 @@ nav.onglets .rail-sep{display:block;height:1px;background:rgba(201,154,62,.25);m
 nav.onglets .rail-titre{display:block;font:600 .62rem var(--corps);letter-spacing:.14em;text-transform:uppercase;color:var(--doux);padding:12px 12px 4px}
 nav.onglets .sec{display:grid;font-size:.72rem;text-transform:none;letter-spacing:.02em;padding:8px 14px 8px 12px}nav.onglets .sec svg{width:18px;height:18px;opacity:.85}
 }
+/* 1.5.0 : une idee par ecran. Les cinq ecrans principaux tiennent dans la hauteur du telephone (colonne souple, le bas en bas) ;
+   les sous-pages gardent le defilement. Les tuiles des coffres (le coffre, son numero, un montant), le fil du chasseur en une ligne,
+   la ligne « prochaine etape », l'enigme une a la fois, les parcours en trois pas, la colonne de droite sur ordinateur. */
+.dedans.ecran{display:flex;flex-direction:column;gap:10px;padding:10px 0 12px;overflow:hidden}
+.dedans.ecran>*{flex:none;animation:none}
+.dedans.ecran .item{min-height:52px;padding:8px 12px}.dedans.ecran .item small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dedans.ecran .liste{gap:5px}.dedans.ecran .visuel{height:104px}
+.dedans.ecran>.souple{flex:1 1 auto;min-height:0}
+.dedans.ecran>.bas{margin-top:auto;display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.bas>.doux,.bas>.cg{flex:1 1 auto;font-size:.84rem}.bas .bouton,.bas .bouton2{flex:0 0 auto}
+.bas .bouton2{min-height:44px;padding:9px 14px;font-size:.84rem}
+.tete-ecran{display:flex;align-items:center;justify-content:space-between;gap:8px}.tete-ecran>div{min-width:0}
+.tete-ecran h1{font-size:1.05rem}.tete-ecran .sur{display:block;margin-bottom:1px}
+.tete-ecran .bq{width:28px;height:28px;font-size:13px;margin:0}
+.fil-ch{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.fil-ch .jalons{flex:1 1 auto}
+.pe-ligne{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px}.pe-ligne>span{min-width:0;font-size:.88rem;line-height:1.4}.pe-ligne .bouton{flex:none;padding:8px 14px;font-size:.8rem;min-height:40px;white-space:nowrap}
+.vedette.v15{flex:1 1 auto;min-height:112px;position:relative}
+.vedette.v15 .ange{height:100%;min-height:112px;position:absolute;inset:0}
+.vedette.v15 .vtxt{position:absolute;left:12px;right:12px;bottom:8px;z-index:2;text-shadow:0 1px 10px #000}
+.vedette.v15 .quand{font-family:var(--voix);font-style:italic;font-size:.95rem;line-height:1.25;color:var(--doux);margin:0}.vedette.v15 .quand a{color:var(--eau-clair)}
+.vedette.v15 .rebours{gap:8px}.vedette.v15 .rebours b{font-size:1.35rem;color:var(--or-clair)}.vedette.v15 .rebours small{font-size:.58rem}
+.grille24{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.grille24.g3{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tuile{border:1px solid var(--filet2);border-radius:7px;background:#131a24;display:grid;justify-items:center;gap:1px;padding:5px 2px 4px;cursor:pointer;min-height:44px;color:var(--encre);font:inherit;text-align:center;min-width:0}
+.tuile svg{width:30px;height:28px}.tuile b{font:600 .72rem var(--corps)}.tuile small{font:.6rem var(--corps);color:var(--doux);letter-spacing:.02em;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis}
+.tuile.jeu{border-color:rgba(143,211,234,.7);box-shadow:0 0 10px rgba(143,211,234,.3)}.tuile.jeu small{color:var(--eau-clair)}
+.tuile.prendre{border-color:var(--or-clair);background:rgba(244,200,110,.1);animation:lueur 2.2s ease-in-out infinite}.tuile.prendre small{color:var(--or-clair)}
+.tuile.pris{opacity:.5}.tuile.semer{border-style:dashed}.tuile.gros{box-shadow:inset 0 0 0 1px rgba(226,184,92,.35)}
+.g3 .tuile{padding:12px 6px 10px;gap:3px}.g3 .tuile svg{width:44px;height:40px}.g3 .tuile b{font:700 1.2rem var(--titre)}.g3 .tuile small{font-size:.76rem}
+.leg{display:flex;gap:10px;flex-wrap:wrap;font:.64rem var(--corps);letter-spacing:.06em;text-transform:uppercase;color:var(--doux)}
+.leg i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle;background:#555}.leg i.jeu{background:var(--eau)}.leg i.prendre{background:var(--or)}.leg i.venir{background:#555}.leg i.pris{background:#333;border:1px solid #666}
+.leg .fin{margin-left:auto}
+.enig.une{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.enig.une .txt{flex:1 1 auto;min-height:0;overflow:auto;font-size:1.05rem}
+.enig.une .nav{margin-top:auto;display:flex;justify-content:space-between;gap:8px}
+.cadre.proch{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px}.cadre.proch>span{font-size:.84rem;color:var(--doux);min-width:0}.cadre.proch .compte{font-size:1.1rem}
+.kv{padding:2px 12px}.kv .ligne{padding:7px 0;font-size:.86rem;flex-wrap:nowrap}.kv .ligne .v{flex:1 1 auto;text-align:right}.kv .ligne>span:first-child{color:var(--doux);flex:none}
+.cadre.centre{text-align:center;padding:14px 12px}.cadre.centre .ok,.cadre.centre .att,.cadre.centre .ko{font:600 1.05rem var(--corps);display:block}
+.champ-lu{min-height:40px;display:flex;align-items:center;font-size:.8rem;color:var(--eau-clair);user-select:all}
+.enigs-pas{flex:1 1 auto;min-height:0;overflow:auto;display:grid;gap:8px;align-content:start}.enigs-pas .cg{font-size:1rem}
+.cadre.fin-pas{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px}.cadre.fin-pas>span{font-size:.82rem;color:var(--doux);min-width:0}
+.liste.msgs{flex:1 1 auto;min-height:0;overflow:auto}
+.msg-ligne{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--filet2);border-radius:6px;background:var(--panneau);color:var(--encre);text-align:left;font:inherit;cursor:pointer;width:100%;min-height:48px}
+.msg-ligne small{display:block;color:var(--doux);font-size:.74rem}.msg-ligne .t{font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg-ligne.sol{border-left:3px solid var(--or)}.msg-ligne.refuse{border-left:3px solid var(--rouge);opacity:.8}
+.point-or{position:absolute;top:6px;right:calc(50% - 16px);width:8px;height:8px;border-radius:50%;background:var(--or);box-shadow:0 0 8px var(--or)}
+nav.onglets .o{position:relative}
+.items-verif{display:flex;gap:6px;flex-wrap:wrap}.items-verif .bouton2{min-height:40px}
+.fm-panneau .kv{margin-top:10px}.fm-panneau .boutons .bouton{font-size:.84rem;padding:9px 14px}
+.lat{display:none}
+@media (max-height:720px){.vedette.v15{min-height:88px}.tuile svg{width:26px;height:24px}.visuel{height:96px}.dedans.ecran{gap:8px}}
+@media (min-width:1024px){
+.app{grid-template-columns:200px minmax(0,1fr) 300px;grid-template-areas:"haut haut haut" "fil fil fil" "etat etat etat" "nav main lat";column-gap:24px}
+.lat{grid-area:lat;display:grid;gap:8px;align-content:start;padding:18px 0 18px 18px;border-left:1px solid rgba(201,154,62,.25);overflow:auto;min-height:0}
+.lat h5{font:600 .62rem var(--corps);letter-spacing:.14em;text-transform:uppercase;color:var(--doux);margin:6px 0 0}
+.lat .cadre{font-size:.88rem}.lat .cadre p{margin:0 0 8px}.lat .bouton{font-size:.82rem;padding:8px 14px}
+.dedans.ecran{padding:16px 6px 24px;gap:12px}.vedette.v15{min-height:220px}.grille24{grid-template-columns:repeat(8,minmax(0,1fr))}.grille24.g3{max-width:420px}
+.tete-ecran h1{font-size:1.2rem}.dedans.ecran>.bas .bouton,.dedans.ecran>.bas .bouton2{flex:0 0 auto}
+nav.onglets .o .point-or{position:static;margin-left:auto;align-self:center}
+}
+/* 1.5.0, recette : une ligne de message ne deborde jamais ; les ecrans courts (360 x 740, iPhone SE) se serrent encore */
+.msg-ligne{grid-template-columns:minmax(0,1fr) auto}.msg-ligne>span:first-child{min-width:0}
+@media (max-height:800px) and (max-width:1023px){
+.dedans.ecran{gap:7px;padding:8px 0 10px}.dedans.ecran .visuel{height:76px}
+.vedette.v15{min-height:78px}.vedette.v15 .rebours b{font-size:1.15rem}.vedette.v15 .quand{font-size:.86rem}
+.tuile{padding:3px 2px 2px;min-height:44px}.tuile svg{width:24px;height:22px}.tuile b{font-size:.68rem}.tuile small{font-size:.58rem}.grille24{gap:4px}
+.pe-ligne{padding:6px 10px}.pe-ligne>span{font-size:.82rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.segment button{min-height:36px;padding:6px 4px}.fil-ch .jalons span{font-size:.62rem}
+.dedans.ecran .item{min-height:46px;padding:6px 10px}.dedans.ecran .item small{font-size:.7rem}.dedans.ecran .pied{padding-top:2px;font-size:.7rem}
+.items-verif .bouton2{min-height:36px;padding:5px 10px;font-size:.74rem}
+}
+@media (max-height:800px) and (max-width:1023px){.vedette.v15 .qt{display:none}}
+@media (max-height:700px) and (max-width:1023px){.dedans.ecran .visuel{height:54px}.dedans.ecran .visuel b{font-size:.62rem;bottom:5px}.dedans.ecran .cg{font-size:.9rem}.dedans.ecran .item{min-height:44px}.tete-ecran h1{font-size:.98rem}}
+@media (max-height:700px) and (max-width:1023px){.dedans.ecran .pied{display:none}.items-verif{gap:4px}.items-verif .bouton2{padding:4px 8px;font-size:.7rem;min-height:34px}.tuile svg{width:22px;height:20px}.tuile{gap:0}.dedans.ecran{gap:6px}}
+
+/* 1.5.0, audit independant du 17 octobre (soir) : rien ne se coupe, cibles et feuilles accessibles */
+.dedans.ecran{overflow-x:hidden;overflow-y:auto}                                   /* F2 : garde-fou ; l'etat nominal ne defile pas */
+.vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+.bq::after{content:"";position:absolute;inset:-10px 0 -10px -12px}             /* A1 : 32 x 40 px au doigt, sans depasser a droite */
+.tete-ecran .bq{width:32px;height:32px;font-size:14px}.tete-ecran .bq::after{inset:-6px 0 -6px -12px}
+.tete-ecran h1:focus{outline:none}
+.verif-chip{min-height:36px;position:relative}.verif-chip::after{content:"";position:absolute;inset:-4px 0}
+.vedette .quand a{display:inline-block;padding:10px 0;margin:-10px 0}               /* A7 : le lien de la date */
+.enig.une small a{display:inline-block;padding:12px 4px;margin:-12px -4px}
+.tuile small{font-size:.64rem}.tuile.pris{opacity:.72}
+.leg a.fin{color:var(--or-clair);text-decoration:none;text-transform:none;letter-spacing:0;font-size:.74rem;padding:10px 0;margin:-10px 0 -10px auto}
+.leg a.fin:hover{text-decoration:underline}
+.feuille-mot h4{font:600 .7rem var(--corps);letter-spacing:.1em;text-transform:uppercase;color:var(--doux);margin:14px 0 6px}
+.feuille-mot .fil-ev{max-height:40vh;overflow:auto}
+.tresor-etat{flex:none}
+@media (max-width:420px){.tuile small{font-size:.62rem}}
+@media (min-width:1024px){.dedans.ecran .pe-ligne{display:none}}                  /* la colonne de droite la porte deja */
+@media (min-width:1024px){nav.onglets .o{grid-template-columns:30px minmax(0,1fr) auto}nav.onglets .o .point-or{margin:0}}   /* le point d'or a droite du libelle, dans le rail */
+.lib-ligne{display:flex;align-items:flex-end;justify-content:space-between;gap:8px}.lib-ligne label{flex:1 1 auto}
+.bouton2.petit{padding:4px 12px;font-size:.72rem;min-height:32px;flex:none;margin-bottom:4px}
+.ad-retour{display:flex;align-items:center;gap:10px}.ad-retour .fleche-retour{position:static;flex:none}.ad-retour .jalons{flex:1 1 auto}
+.voir-lien{font-weight:600}
+@media (max-height:700px) and (max-width:1023px){.ad-fil2{display:none}}

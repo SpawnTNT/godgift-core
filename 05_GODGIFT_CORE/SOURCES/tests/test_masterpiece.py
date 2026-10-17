@@ -249,7 +249,10 @@ async def main():
         assert codes == [None, 'solution', 'doublon', 'calendrier', 'strophe', 'incomplet', 'type'], codes
         vert('regle de lecture du COFFRET (la meme que la Cave) : un element « solution », un doublon, une heure avancee, une strophe tlock d une autre ronde, un element manquant, un type inconnu : refuses')
         await pg.evaluate("location.hash = '#/enigmes'"); await pg.wait_for_timeout(600)
-        assert 'ouverte par GodGift Core lui-meme' in plat(await pg.inner_text('#page')); vert('l enigme ouverte par le COFFRET parait, alors que la librairie n en publie aucune')
+        for _ in range(12):   # 1.5.0 : une enigme a la fois, la plus recente d'abord ; on remonte jusqu'a la premiere
+            if 'ouverte par GodGift Core lui-meme' in plat(await pg.inner_text('#page')): break
+            await pg.click('[data-enig="1"]'); await pg.wait_for_timeout(150)
+        assert 'ouverte par GodGift Core lui-meme' in plat(await pg.inner_text('#page')), plat(await pg.inner_text('#page'))[:700]; vert('l enigme ouverte par le COFFRET parait, alors que la librairie n en publie aucune')
         assert await pg.evaluate('GG.aleaDuCoffret(1)') == ALEA; vert('l alea du coffre est lu dans le cri ouvert par le COFFRET, avant la chaine')
         m = await pg.evaluate('GG.MP.messages.map(x => x.valide)'); assert m == [True, False], m
         assert await pg.evaluate('GG.MP.adresseAncree') == GUICHET; vert('messages : la signature BIP-322 de la Cave est valide, le message modifie est faux ; adresse ancree par le manifeste grave')
@@ -436,7 +439,9 @@ async def main():
             await pg.click('#rafraichir'); await pg.wait_for_function(f"GG.M.pret && ({cond})", timeout=60000); await pg.wait_for_timeout(300)
         async def textes_prix():
             await pg.evaluate("location.hash = '#/livres'"); await pg.wait_for_timeout(300); a_ = plat(await pg.inner_text('#achat-prix'))
-            await pg.evaluate("location.hash = '#/compagnon'"); await pg.wait_for_timeout(300); c_ = plat(await pg.inner_text('#page'))
+            await pg.evaluate("location.hash = '#/compagnon'"); await pg.wait_for_timeout(300)
+            if await pg.locator('[data-pas-c="1"]').count(): await pg.click('[data-pas-c="1"]'); await pg.wait_for_timeout(200)   # 1.5.0 : la part est dite au pas 1
+            c_ = plat(await pg.inner_text('#page'))
             return a_, c_
         assert 'livre' not in ETAT and await pg.evaluate("GG.prixLivre() === null")
         a_, c_ = await textes_prix()
@@ -483,7 +488,7 @@ async def main():
         vert('I5 : « Mes livres » montre a qui la vente de chaque exemplaire est attribuee (vente directe, ou le compagnon : fin de son lien /c/<code> et son adresse), lu au registre public en entier (une seule lecture GET, sans l empreinte : rien ne part vers la caisse) ; il demande de verifier que c est bien le lien suivi et dit ou le signaler (section 1 des conditions generales) ; lien illisible, empreinte en double, exemplaire absent, registre muet : rien n est affirme')
         # 1.4.1 : le « ? » ouvre une feuille qui monte du bas, entierement visible, fermee par Echap
         await pg.set_viewport_size({'width': 1280, 'height': 720})
-        for page_, sel in (('livres', '#page h1 .bq'), ('messages', '#page h1 .bq'), ('chasser', '#page h1 .bq'), ('tableau', '#page h1 .bq')):
+        for page_, sel in (('livres', '#page h1 .bq'), ('messages', '#page .tete-ecran .bq'), ('chasser', '#page .tete-ecran .bq'), ('tableau', '#page .tete-ecran .bq')):
             await pg.evaluate(f"location.hash = '#/{page_}'"); await pg.wait_for_timeout(400)
             await pg.click(sel); await pg.wait_for_timeout(300)
             dans = await pg.evaluate("(function(){ var f = document.getElementById('feuille-mot'); if (!f || f.hidden) return null; var b = f.querySelector('.fm-panneau').getBoundingClientRect(); return [Math.round(b.left), Math.round(innerWidth - b.right), Math.round(b.width), Math.round(innerHeight - b.bottom), (f.querySelector('.bqb') || {}).textContent.length]; })()")
@@ -557,12 +562,15 @@ async def main():
         await pg.wait_for_timeout(500)
         s = await pg.evaluate("GG.solutionsSignees().map(function (x) { return [x.h, x.c, x.tenu, x.m.date]; })")
         assert sorted(s, key=lambda x: x[3]) == [[1, 1, True, '2027-02-20'], [1, 1, False, '2027-02-21']], s
-        txt = (plat(await pg.inner_text('#page'))).replace('\xa0', ' ')
+        txt = ''   # 1.5.0 : une ligne par message ; le texte et le badge de la solution se lisent dans la feuille du bas
+        for i_ in range(await pg.locator('#page .msg-ligne.sol').count()):
+            await pg.locator('#page .msg-ligne.sol').nth(i_).click(); await pg.wait_for_timeout(200); txt += (plat(await pg.inner_text('#feuille-mot'))).replace('\xa0', ' ') + '\n'; await pg.keyboard.press('Escape'); await pg.wait_for_timeout(100)
         assert 'engagement du semis tenu' in txt and 'engagement FAUX' in txt, txt[:600]
         mal = await pg.evaluate("GG.MP.messages.filter(function (m) { return m.date === '2027-02-31'; }).map(function (m) { return [m.forme, m.valide]; })")
-        assert mal == [[False, False]] and await pg.evaluate("document.querySelectorAll('#page details.message.refuse').length") == 2   # le message falsifie et celui mal date : replies
+        assert mal == [[False, False]] and await pg.evaluate("document.querySelectorAll('#page .msg-ligne.refuse').length") == 2   # le message falsifie et celui mal date : replies
         vert('solution publiee par message signe : « engagement du semis tenu » quand les mots et le sel redonnent l engagement grave, « engagement FAUX » sinon ; un message a la date impossible est replie')
         await pg.evaluate("location.hash = '#/chasser'"); await pg.wait_for_timeout(400)
+        if await pg.locator('[data-pas-t="2"]').count(): await pg.click('[data-pas-t="2"]'); await pg.wait_for_timeout(200)   # 1.5.0 : les mots sont au pas 2
         assert await pg.evaluate("[document.getElementById('h-r3').value, document.getElementById('h-r17').value].join('')") == ''
         assert len(BETA['posts']) == n_posts and not await pg.evaluate("Object.keys(GG.TR.envois).length + Object.keys(GG.TR.cles).length")
         vert('la solution signee ne remplit aucune reponse et ne declenche aucun envoi')
@@ -644,7 +652,9 @@ async def main():
             await pgx.wait_for_function("window.GG && GG.CZ && GG.CZ.coffret && Object.keys(GG.CZ.ouverts).length >= 4", timeout=90000)
             if prep: await pgx.wait_for_function(f"GG.TR.prep['{K0}'] && GG.TR.prep['{K0}'].utxos", timeout=30000)
             await pgx.fill('#z-r3', '1 2500 5000'); await pgx.fill('#z-r17', '873 874 4410'); await pgx.fill('#z-alea', ALEA0); await pgx.click('#z-calculer')
-            await pgx.wait_for_function(f"GG.TR.cles['{K0}'] && GG.TR.msg['{K0}']", timeout=180000); await pgx.wait_for_timeout(1500)
+            try: await pgx.wait_for_function(f"GG.TR.cles['{K0}'] && GG.TR.msg['{K0}']", timeout=180000)
+            except Exception as ex_: print('DIAG', await pgx.evaluate("[GG.CZ.res, GG.CZ.calcul, GG.CZ.coffre, Object.keys(GG.TR.cles), Object.keys(GG.TR.msg)]"), err[-3:]); raise
+            await pgx.wait_for_timeout(1500)
         pgN = await ctxN.new_page(); pgN.on('pageerror', lambda e: err.append(str(e)))
         await pgN.goto(APP_SANS + '?fenetre=' + '0' * 64 + '#/chasse/0')
         await pgN.wait_for_function("window.GG && GG.M", timeout=60000)
