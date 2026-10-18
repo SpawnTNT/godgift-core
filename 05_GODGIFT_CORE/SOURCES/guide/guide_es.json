@@ -16,21 +16,21 @@
     {
       "titre": "Descubro",
       "etapes": [
-        "Abra « Cofres »: los 24 cofres de la búsqueda, uno por mes, de enero de 2027 a diciembre de 2028. Su color indica su estado.",
-        "Toque un cofre: su ficha indica su estado, su importe y las fechas de sus dos enigmas; « Ver el cofre » muestra sus enigmas ya aparecidos, su grito y, más tarde, sus dos indicios.",
-        "Para ver una búsqueda en curso antes de que empiece, marque « Modo demostración » en Ajustes y luego « Guardar ». Todo allí es ficticio.",
-        "Vuelva a la búsqueda real: toque la pastilla de arriba y luego « Salir de la demostración » (o desmarque ese modo en Ajustes y luego « Guardar »)."
+        "Abra «Cofres»: los 24 cofres de la búsqueda, uno por mes, de enero de 2027 a diciembre de 2028. Su color indica su estado.",
+        "Toque un cofre: su ficha indica su estado, su importe y las fechas de sus dos enigmas; «Ver el cofre» muestra sus enigmas ya aparecidos, su grito y, más tarde, sus dos indicios.",
+        "Para ver una búsqueda en curso antes de que empiece, marque «Modo demostración» en Ajustes y luego «Guardar». Todo allí es ficticio.",
+        "Vuelva a la búsqueda real: toque la pastilla de arriba y luego «Salir de la demostración» (o desmarque ese modo en Ajustes y luego «Guardar»)."
       ]
     },
     {
       "titre": "Busco",
       "etapes": [
-        "Ante todo, con calma: en Más, « Mi dirección de recepción », guarde en tres pasos la dirección de su propio monedero y fírmela con él: la firma es obligatoria. Allí irá el tesoro.",
-        "El día 3 del mes a las 18:15:05 UTC (19:15:05 en París en invierno, 20:15:05 en verano) sale el primer enigma del cofre; el 17, a la misma hora, el segundo. Léalos en « Enigmas ».",
-        "Cada respuesta se compone de palabras francesas de la lista de las cinco mil: tres palabras por enigma de piedra, cuatro para una catedral y el cofre final. Compruebe sus palabras en « Encontrar », en el paso 2: « La lista de las cinco mil ».",
+        "Ante todo, con calma: en Más, «Mi dirección de recepción», guarde en tres pasos la dirección de su propio monedero y fírmela con él: la firma es obligatoria. Allí irá el tesoro.",
+        "El día 3 del mes a las 18:15:05 UTC (19:15:05 en París en invierno, 20:15:05 en verano) sale el primer enigma del cofre; el 17, a la misma hora, el segundo. Léalos en «Enigmas».",
+        "Cada respuesta se compone de palabras francesas de la lista de las cinco mil: tres palabras por enigma de piedra, cuatro para una catedral y el cofre final. Compruebe sus palabras en «Encontrar», en el paso 2: «La lista de las cinco mil».",
         "Una hora después del segundo enigma sale el grito: aporta el azar, la última pieza de la llave. GodGift Core lo lee solo.",
-        "En « Encontrar », elija el cofre: GodGift Core lo prepara y muestra « Armado ». Desconecte internet, escriba sus dos respuestas y pulse « Calcular la llave ».",
-        "Si es la llave correcta, vuelva a conectar internet. En la ventana de la aplicación instalada, abierta desde su icono, GodGift Core firma enseguida la transacción en su equipo y la envía sola hacia su dirección, con una oferta fuerte (cerca del 10 % del tesoro en comisiones); en otro lugar (navegador, versión web, ventana recargada), primero le hace volver a escribir 16 caracteres de su dirección, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su monedero; en « Sin instalar », no envía nada. Si alguien más la encontró al mismo tiempo, es la carrera: « Acelerar » dobla de una vez las comisiones.",
+        "En «Encontrar», elija el cofre: GodGift Core lo prepara y muestra «Armado». Desconecte internet, escriba sus dos respuestas y pulse «Calcular la llave».",
+        "Si es la llave correcta, vuelva a conectar internet. En la ventana de la aplicación instalada, abierta desde su icono, GodGift Core firma enseguida la transacción en su equipo y la envía sola hacia su dirección, con una oferta fuerte (cerca del 10 % del tesoro en comisiones); en otro lugar (navegador, versión web, ventana recargada), primero le hace volver a escribir 16 caracteres de su dirección, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su monedero; en «Sin instalar», no envía nada. Si alguien más la encontró al mismo tiempo, es la carrera: «Acelerar» dobla de una vez las comisiones.",
         "Practique primero con los cofres de práctica A y B: son falsos, públicos y le muestran exactamente lo que pasaría."
       ]
     },
@@ -38,16 +38,16 @@
       "titre": "Llevo el libro",
       "etapes": [
         "Solo el propietario de un ejemplar oficial puede ser compañero activo, y un ejemplar solo hace un compañero. Compre el suyo en angedeleau.com dando una dirección bc1q… de su monedero: es su dirección de propiedad, impresa en su página de título. La cacería, en cambio, sigue siendo gratuita.",
-        "Abra « Los libros », deposite el EPUB o el PDF de su ejemplar y luego « Hacerse compañero con este ejemplar »: la página Compañero retoma su dirección de propiedad; allí llegarán sus partes.",
+        "Abra «Los libros», deposite el EPUB o el PDF de su ejemplar y luego «Hacerse compañero con este ejemplar»: la página Compañero retoma su dirección de propiedad; allí llegarán sus partes.",
         "Firme el mensaje mostrado con esa dirección (en Sparrow: Herramientas, Firmar un mensaje), pegue la firma y envíela: la librería le da un enlace personal.",
-        "El enlace queda « en espera » mientras la venta de su ejemplar no esté pagada, y luego pasa a « activo »: cada libro comprado con un enlace activo le reporta el 40 % de su precio.",
+        "El enlace queda «en espera» mientras la venta de su ejemplar no esté pagada, y luego pasa a «activo»: cada libro comprado con un enlace activo le reporta el 40 % de su precio.",
         "Sus partes se pagan cada trimestre, en una transacción pública que cualquiera puede verificar."
       ]
     },
     {
       "titre": "Verifico mi libro",
       "etapes": [
-        "Abra « Los libros ».",
+        "Abra «Los libros».",
         "Suelte su EPUB o su PDF, o escriba la huella impresa en su portadilla.",
         "GodGift Core encuentra el ejemplar en el registro y recalcula la raíz grabada en la cadena: si es oficial, se lo dice, con su número."
       ]
@@ -55,9 +55,9 @@
     {
       "titre": "Me hago testigo",
       "etapes": [
-        "En Ajustes, marque « Me hago testigo » (o responda que sí en la bienvenida).",
-        "En cada « Verificarlo todo », y una vez al día por sí solo, su GodGift Core publica su informe: bloque, huellas, resultado. Nada personal.",
-        "En Más, « Red y fuentes » cuenta los testigos de la semana y señala el menor desacuerdo: un manifiesto distinto, una versión no publicada, un control fallido.",
+        "En Ajustes, marque «Compartir mis verificaciones» (o responda que sí en la bienvenida).",
+        "En cada «Verificarlo todo», y una vez al día por sí solo, su GodGift Core publica su informe: bloque, huellas, resultado. Nada personal.",
+        "En Más, «Red y fuentes» cuenta los testigos de la semana y señala el menor desacuerdo: un manifiesto distinto, una versión no publicada, un control fallido.",
         "Cada día, los informes se fechan en Bitcoin: una prueba con fecha que cualquiera puede verificar."
       ]
     }
@@ -114,7 +114,7 @@
     {
       "id": "chasse",
       "mot": "Búsqueda",
-      "texte": "Un tesoro completo: sus cofres, sus enigmas, su Piedra y su COFFRET. El Ángel del Agua (L'Ange de l'Eau) es la búsqueda n.º 1; las siguientes aparecerán solas en « Las cacerías ». Cada búsqueda tiene sus propias llaves: ninguna puede abrir la otra.",
+      "texte": "Un tesoro completo: sus cofres, sus enigmas, su Piedra y su COFFRET. El Ángel del Agua (L’Ange de l’Eau) es la búsqueda n.º 1; las siguientes aparecerán solas en «Las cacerías». Cada búsqueda tiene sus propias llaves: ninguna puede abrir la otra.",
       "voir": [
         "chasse_zero",
         "annonce",
@@ -142,7 +142,7 @@
     {
       "id": "cle",
       "mot": "Llave del cofre",
-      "texte": "La clave privada que permite gastar el cofre. Se calcula en su equipo a partir de las palabras de las dos respuestas y del azar (scrypt: unos diez segundos y un gigabyte de memoria; un intento no molesta a nadie, miles de millones costarían una fortuna). Nunca se escribe, ni se muestra salvo si usted lo pide (« Experto: mostrar la clave privada », un minuto): GodGift Core la usa para vaciar el cofre hacia su dirección y luego la olvida.",
+      "texte": "La clave privada que permite gastar el cofre. Se calcula en su equipo a partir de las palabras de las dos respuestas y del azar (scrypt: unos diez segundos y un gigabyte de memoria; un intento no molesta a nadie, miles de millones costarían una fortuna). Nunca se escribe, ni se muestra salvo si usted lo pide («Experto: mostrar la clave privada», un minuto): GodGift Core la usa para vaciar el cofre hacia su dirección y luego la olvida.",
       "voir": [
         "alea",
         "recuperer",
@@ -173,7 +173,7 @@
     {
       "id": "compagnon",
       "mot": "Compañero",
-      "texte": "El propietario de un ejemplar oficial que da a conocer la novela con su enlace personal. Se declara con la dirección de propiedad de su ejemplar: un ejemplar, un compañero. Su enlace queda « en espera » mientras la venta de ese ejemplar no esté pagada, y luego pasa a « activo ». Cada libro vendido con un enlace activo le reporta el 40 % del precio, pagado cada trimestre en esa dirección. Sin cuenta, sin ninguna clave que confiar.",
+      "texte": "El propietario de un ejemplar oficial que da a conocer la novela con su enlace personal. Se declara con la dirección de propiedad de su ejemplar: un ejemplar, un compañero. Su enlace queda «en espera» mientras la venta de ese ejemplar no esté pagada, y luego pasa a «activo». Cada libro vendido con un enlace activo le reporta el 40 % del precio, pagado cada trimestre en esa dirección. Sin cuenta, sin ninguna clave que confiar.",
       "voir": [
         "versement",
         "adresse"
@@ -193,7 +193,7 @@
     {
       "id": "demo",
       "mot": "Modo demostración",
-      "texte": "Una búsqueda imaginada el 10 de junio de 2027, con valores de ilustración y direcciones ficticias, para ver cómo es GodGift Core en plena búsqueda. Ningún enigma real. Ajustes: marque o desmarque « Modo demostración » y luego « Guardar »; para salir, la pastilla de arriba ofrece también « Salir de la demostración ».",
+      "texte": "Una búsqueda imaginada el 10 de junio de 2027, con valores de ilustración y direcciones ficticias, para ver cómo es GodGift Core en plena búsqueda. Ningún enigma real. Ajustes: marque o desmarque «Modo demostración» y luego «Guardar»; para salir, la pastilla de arriba ofrece también «Salir de la demostración».",
       "voir": []
     },
     {
@@ -257,7 +257,7 @@
     {
       "id": "exemplaire",
       "mot": "Ejemplar oficial",
-      "texte": "Un libro digital vendido por la librería. Lleva su número y su huella en la portadilla; cada trimestre, el pago graba en la cadena la raíz de todos los ejemplares. Suéltelo en « Los libros » para verificarlo.",
+      "texte": "Un libro digital vendido por la librería. Lleva su número y su huella en la portadilla; cada trimestre, el pago graba en la cadena la raíz de todos los ejemplares. Suéltelo en «Los libros» para verificarlo.",
       "voir": [
         "empreinte",
         "racine"
@@ -293,7 +293,7 @@
     {
       "id": "librairie",
       "mot": "Librería",
-      "texte": "El servidor que vende el libro digital en bitcoin y publica los enigmas, el tablero y los pagos. GodGift Core recuenta todo lo que publica; si se cae, abre el COFFRET él mismo y el botón « Comprar » cambia al servidor de respaldo que el autor designó por un mensaje firmado.",
+      "texte": "El servidor que vende el libro digital en bitcoin y publica los enigmas, el tablero y los pagos. GodGift Core recuenta todo lo que publica; si se cae, abre el COFFRET él mismo y el botón «Comprar» cambia al servidor de respaldo que el autor designó por un mensaje firmado.",
       "voir": [
         "coffret",
         "secours"
@@ -340,7 +340,7 @@
     {
       "id": "pierre",
       "mot": "Piedra del programa",
-      "texte": "El reglamento completo de la búsqueda, en francés, grabado en la cadena antes de la apertura. Nada puede apartarse de él. Se puede leer en Ajustes, « Leer la Piedra (en francés) »; las condiciones generales lo cuentan en lenguaje corriente.",
+      "texte": "El reglamento completo de la búsqueda, en francés, grabado en la cadena antes de la apertura. Nada puede apartarse de él. Se puede leer en Ajustes, «Leer la Piedra (en francés)»; las condiciones generales lo cuentan en lenguaje corriente.",
       "voir": [
         "gravure",
         "chasse"
@@ -382,7 +382,7 @@
     {
       "id": "secours",
       "mot": "Servidor de respaldo",
-      "texte": "Una segunda librería, lista para retomar la venta si la primera se cae. Se designa de antemano por un mensaje firmado del autor cuya última línea es AEDE:secours:https://… (Piedra, artículo 10), o se fija en el programa: GodGift Core solo cambia a ella, nunca a una dirección simplemente anunciada por la librería. Nunca hay dos cajas activas al mismo tiempo. Sin servidor de respaldo designado, « Comprar » lleva a angedeleau.com y dice que la venta no está disponible por el momento; la búsqueda continúa.",
+      "texte": "Una segunda librería, lista para retomar la venta si la primera se cae. Se designa de antemano por un mensaje firmado del autor cuya última línea es AEDE:secours:https://… (Piedra, artículo 10), o se fija en el programa: GodGift Core solo cambia a ella, nunca a una dirección simplemente anunciada por la librería. Nunca hay dos cajas activas al mismo tiempo. Sin servidor de respaldo designado, «Comprar» lleva a angedeleau.com y dice que la venta no está disponible por el momento; la búsqueda continúa.",
       "voir": [
         "librairie"
       ]
@@ -400,7 +400,7 @@
     {
       "id": "solution",
       "mot": "Solución firmada",
-      "texte": "La solución de un cofre solo se publica una vez tomado el cofre, mediante un mensaje firmado del autor cuya última línea es AEDE:solution:… Se verifica contra el compromiso salado grabado en la siembra: GodGift Core muestra « compromiso de la siembra cumplido » o « compromiso FALSO ». Nunca copia estas palabras en sus respuestas y no envía nada.",
+      "texte": "La solución de un cofre solo se publica una vez tomado el cofre, mediante un mensaje firmado del autor cuya última línea es AEDE:solution:… Se verifica contra el compromiso salado grabado en la siembra: GodGift Core muestra «compromiso de la siembra cumplido» o «compromiso FALSO». Nunca copia estas palabras en sus respuestas y no envía nada.",
       "voir": [
         "message",
         "manifeste",
@@ -419,7 +419,7 @@
     {
       "id": "verifier",
       "mot": "Verificarlo todo",
-      "texte": "Los controles hechos en su equipo, sin creer a nadie: la Piedra, la lista, el calendario, el manifiesto y su grabado, la siembra, los gritos, los pagos, los cofres, el COFFRET, cada cacería seguida (la cacería cero incluida), los mensajes y las soluciones firmadas, el registro, este programa y el acuerdo de las dos fuentes. « Pendiente » es normal antes de la siembra.",
+      "texte": "Los controles hechos en su equipo, sin creer a nadie: la Piedra, la lista, el calendario, el manifiesto y su grabado, la siembra, los gritos, los pagos, los cofres, el COFFRET, cada cacería seguida (la cacería cero incluida), los mensajes y las soluciones firmadas, el registro, este programa y el acuerdo de las dos fuentes. «Pendiente» es normal antes de la siembra.",
       "voir": [
         "noeud",
         "empreinte",
@@ -448,7 +448,7 @@
     {
       "id": "wif",
       "mot": "Clave privada (WIF)",
-      "texte": "La forma de una clave privada que aceptan los monederos. GodGift Core ya solo la muestra en la sección « Experto », plegada: él mismo vacía el cofre. No se la muestre a nadie: quien la vea puede vaciar el cofre antes que usted.",
+      "texte": "La forma de una clave privada que aceptan los monederos. GodGift Core ya solo la muestra en la sección «Experto», plegada: él mismo vacía el cofre. No se la muestre a nadie: quien la vea puede vaciar el cofre antes que usted.",
       "voir": [
         "cle",
         "recuperer"
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Dirección de recepción",
-      "texte": "La dirección de su propio monedero (incluso un monedero en frío), guardada de antemano en Más, « Mi dirección de recepción ». El día que encuentre, el tesoro sale solo hacia ella. Debe estar firmada por su monedero (dirección bc1q…, 3… o 1…): la firma prueba que es suya y desenmascara un virus que hubiera sustituido la dirección copiada. GodGift Core la verifica de nuevo justo antes del envío, muestra su fecha de registro y le avisa si ha cambiado desde su última visita. Fuera de la ventana propia de la aplicación instalada, también le hace volver a escribir, antes de cada envío, 16 caracteres de esta dirección, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su propio monedero.",
+      "texte": "La dirección de su propio monedero (incluso un monedero en frío), guardada de antemano en Más, «Mi dirección de recepción». El día que encuentre, el tesoro sale solo hacia ella. Debe estar firmada por su monedero (dirección bc1q…, 3… o 1…): la firma prueba que es suya y desenmascara un virus que hubiera sustituido la dirección copiada. GodGift Core la verifica de nuevo justo antes del envío, muestra su fecha de registro y le avisa si ha cambiado desde su última visita. Fuera de la ventana propia de la aplicación instalada, también le hace volver a escribir, antes de cada envío, 16 caracteres de esta dirección, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su propio monedero.",
       "voir": [
         "recuperer",
         "portefeuille",
@@ -467,7 +467,7 @@
     {
       "id": "recuperer",
       "mot": "Recuperar el tesoro",
-      "texte": "Cuando se encuentra la llave de un cofre real, GodGift Core firma, en su equipo, la transacción que envía todo el cofre a su dirección de recepción firmada, y la difunde por las dos fuentes. En la ventana propia de la aplicación instalada (abierta desde su icono), lo hace enseguida; en otro lugar (navegador, versión web, ventana recargada), solo después de que usted haya vuelto a escribir 16 caracteres de su dirección, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su propio monedero: si una página trampa hubiera cambiado la dirección guardada, no coincidirían, ni siquiera con una dirección fabricada que terminara igual. La ventana propia solo guarda su código en memoria: si se recarga, ya no envía sola; vuelva a abrirla desde su icono. En « Sin instalar », no envía nada. Sin conexión, la transacción espera a que vuelva la red. Comisiones: de entrada, incluso sin competidor, una oferta fuerte de cerca del 10 % del tesoro (como mucho 300 sat/vB), sin preguntarle; más allá, le pregunta; nunca más de la mitad del tesoro. En el teléfono, la versión web lo verifica todo; para recuperar un tesoro, la aplicación instalada en un ordenador sigue siendo la vía más segura.",
+      "texte": "Cuando se encuentra la llave de un cofre real, GodGift Core firma, en su equipo, la transacción que envía todo el cofre a su dirección de recepción firmada, y la difunde por las dos fuentes. En la ventana propia de la aplicación instalada (abierta desde su icono), lo hace enseguida; en otro lugar (navegador, versión web, ventana recargada), solo después de que usted haya vuelto a escribir 16 caracteres de su dirección, en dos trozos elegidos al azar y ocultos en pantalla, leídos en su propio monedero: si una página trampa hubiera cambiado la dirección guardada, no coincidirían, ni siquiera con una dirección fabricada que terminara igual. La ventana propia solo guarda su código en memoria: si se recarga, ya no envía sola; vuelva a abrirla desde su icono. En «Sin instalar», no envía nada. Sin conexión, la transacción espera a que vuelva la red. Comisiones: de entrada, incluso sin competidor, una oferta fuerte de cerca del 10 % del tesoro (como mucho 300 sat/vB), sin preguntarle; más allá, le pregunta; nunca más de la mitad del tesoro. En el teléfono, la versión web lo verifica todo; para recuperar un tesoro, la aplicación instalada en un ordenador sigue siendo la vía más segura.",
       "voir": [
         "reception",
         "accelerer",
@@ -477,7 +477,7 @@
     {
       "id": "accelerer",
       "mot": "Acelerar",
-      "texte": "Si alguien más lo encontró al mismo tiempo, su transacción quizá espere antes que la suya. « Acelerar » reenvía la misma transacción doblando de una vez las comisiones, nunca más allá de la mitad del tesoro: los mineros suelen tomar la que más paga. Es la carrera, la misma para todos.",
+      "texte": "Si alguien más lo encontró al mismo tiempo, su transacción quizá espere antes que la suya. «Acelerar» reenvía la misma transacción doblando de una vez las comisiones, nunca más allá de la mitad del tesoro: los mineros suelen tomar la que más paga. Es la carrera, la misma para todos.",
       "voir": [
         "recuperer",
         "pris",
@@ -487,7 +487,7 @@
     {
       "id": "officiel",
       "mot": "Versión publicada",
-      "texte": "Su GodGift Core busca su huella en los mensajes firmados del autor. « Versión publicada »: el autor publicó esta huella. Este distintivo no prueba que su copia esté intacta (una copia trampeada podría mentir sobre sí misma): para estar seguro, recompile el programa con recompiler_et_comparer.py, o verifique el instalador en angedeleau.com/verifier-installateur. « Versión desconocida » o « retirada »: descargue la buena en angedeleau.com.",
+      "texte": "Su GodGift Core busca su huella en los mensajes firmados del autor. «Versión publicada»: el autor publicó esta huella. Este distintivo no prueba que su copia esté intacta (una copia trampeada podría mentir sobre sí misma): para estar seguro, recompile el programa con recompiler_et_comparer.py, o verifique el instalador en angedeleau.com/verifier-installateur. «Versión desconocida» o «retirada»: descargue la buena en angedeleau.com.",
       "voir": [
         "installateur",
         "empreinte",
@@ -553,7 +553,7 @@
     {
       "id": "course",
       "mot": "La carrera",
-      "texte": "Todos los que encuentran las respuestas correctas obtienen la misma llave: el cofre es para la primera transacción confirmada, en general la que paga más comisiones a los mineros. Es la regla del juego, y ningún programa puede impedirlo. GodGift Core paga de entrada, incluso sin competidor, una oferta fuerte (cerca del 10 % del tesoro, como mucho 300 sat/vB) y dobla de una vez con « Acelerar », nunca más allá de la mitad del tesoro; un competidor que apueste más, o que atasque la cola con transacciones vinculadas, puede ganar.",
+      "texte": "Todos los que encuentran las respuestas correctas obtienen la misma llave: el cofre es para la primera transacción confirmada, en general la que paga más comisiones a los mineros. Es la regla del juego, y ningún programa puede impedirlo. GodGift Core paga de entrada, incluso sin competidor, una oferta fuerte (cerca del 10 % del tesoro, como mucho 300 sat/vB) y dobla de una vez con «Acelerar», nunca más allá de la mitad del tesoro; un competidor que apueste más, o que atasque la cola con transacciones vinculadas, puede ganar.",
       "voir": [
         "accelerer",
         "recuperer",
@@ -576,18 +576,18 @@
     },
     {
       "q": "¿Y si el sitio se cae?",
-      "r": "GodGift Core conserva el COFFRET y lo abre él mismo a la hora; los gritos salen a la cadena; el botón « Comprar » cambia al servidor de respaldo que el autor designó por un mensaje firmado (sin él, la venta no está disponible por el momento). La búsqueda continúa."
+      "r": "GodGift Core conserva el COFFRET y lo abre él mismo a la hora; los gritos salen a la cadena; el botón «Comprar» cambia al servidor de respaldo que el autor designó por un mensaje firmado (sin él, la venta no está disponible por el momento). La búsqueda continúa."
     },
     {
       "q": "He encontrado la llave: ¿qué hago?",
-      "r": "En la ventana de la aplicación instalada, nada que hacer: si su dirección de recepción firmada está guardada, GodGift Core envía enseguida todo el cofre a ella. En otro lugar (navegador, versión web, ventana recargada), vuelva a escribir primero los 16 caracteres pedidos de su dirección, en dos trozos ocultos en pantalla, leídos en su monedero; en « Sin instalar », instale GodGift Core y vuelva a calcular la llave. Vuelva a conectar internet si lo había desconectado. Si aparece « Acelerar », alguien más lo encontró al mismo tiempo: es la carrera, haga clic."
+      "r": "En la ventana de la aplicación instalada, nada que hacer: si su dirección de recepción firmada está guardada, GodGift Core envía enseguida todo el cofre a ella. En otro lugar (navegador, versión web, ventana recargada), vuelva a escribir primero los 16 caracteres pedidos de su dirección, en dos trozos ocultos en pantalla, leídos en su monedero; en «Sin instalar», instale GodGift Core y vuelva a calcular la llave. Vuelva a conectar internet si lo había desconectado. Si aparece «Acelerar», alguien más lo encontró al mismo tiempo: es la carrera, haga clic."
     },
     {
       "q": "Me falta una sola palabra: ¿puedo probarlo todo?",
       "r": "Sí, está permitido. Una palabra que falta son cinco mil intentos, unas horas de cálculo. La lentitud protege contra la fuerza bruta, no contra un buscador que casi lo ha encontrado."
     },
     {
-      "q": "¿Por qué « Pendiente » en Verificar?",
+      "q": "¿Por qué «Pendiente» en Verificar?",
       "r": "Antes de la siembra de diciembre de 2026, o cuando la librería aún no está abierta, todavía no hay nada que recontar. No es un error. Un control en rojo, en cambio, señala un problema real."
     },
     {
@@ -600,7 +600,7 @@
     },
     {
       "q": "¿Cómo sé que este programa es el correcto?",
-      "r": "El distintivo en lo alto de la pantalla dice « versión publicada » cuando el autor ha firmado esta huella; no prueba que su copia esté intacta. Antes de instalar, verifique el archivo en angedeleau.com/verifier-installateur; también puede recompilarlo todo usted mismo (recompiler_et_comparer.py). En Windows, el instalador llevará la firma del autor una vez firmado (Certum)."
+      "r": "El distintivo en lo alto de la pantalla dice «versión publicada» cuando el autor ha firmado esta huella; no prueba que su copia esté intacta. Antes de instalar, verifique el archivo en angedeleau.com/verifier-installateur; también puede recompilarlo todo usted mismo (recompiler_et_comparer.py). En Windows, el instalador llevará la firma del autor una vez firmado (Certum)."
     },
     {
       "q": "¿Hay que ser testigo?",
@@ -612,7 +612,7 @@
     },
     {
       "q": "¿Y si dos personas encuentran al mismo tiempo?",
-      "r": "Es la carrera, la regla del juego: todos los que encuentran tienen la misma llave, y el cofre es para la primera transacción confirmada, en general la que paga más comisiones. GodGift Core paga de entrada, incluso sin competidor, una oferta fuerte de cerca del 10 % del tesoro (como mucho 300 sat/vB, sin preguntarle) y « Acelerar » dobla de una vez, nunca más de la mitad del tesoro. Un competidor que apueste más puede ganar: ningún programa puede impedirlo."
+      "r": "Es la carrera, la regla del juego: todos los que encuentran tienen la misma llave, y el cofre es para la primera transacción confirmada, en general la que paga más comisiones. GodGift Core paga de entrada, incluso sin competidor, una oferta fuerte de cerca del 10 % del tesoro (como mucho 300 sat/vB, sin preguntarle) y «Acelerar» dobla de una vez, nunca más de la mitad del tesoro. Un competidor que apueste más puede ganar: ningún programa puede impedirlo."
     },
     {
       "q": "Alguien me ofrece otra versión de GodGift Core, o ayuda para recuperar un cofre",

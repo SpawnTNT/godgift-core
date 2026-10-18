@@ -348,7 +348,7 @@ for lg, mots in (('fr', ['Les chasses', 'La chasse du printemps', 'Chasse n° 2'
 st, _, b = pub.get('/chasse/2?lang=fr'); b = b.decode()
 assert st == 200 and 'La chasse du printemps' in b and 'Printemps 1' in b and 'Printemps 3' in b and GR2 in b and ADR2 in b and '/api/chasse/2/publications.json' in b
 st, _, b = pub.get('/chasse/2?lang=en'); assert st == 200 and b'The announcement, engraved and signed' in b and b'one chest a month' in b
-assert pub.get('/chasse/7')[0] == 404 and pub.get('/chasse/0')[0] == 303 and pub.get('/chasse-zero')[0] == 200
+assert pub.get('/chasse/7')[0] == 404 and pub.get('/chasse/0')[0] == 301 and pub.get('/chasse-zero')[0] == 200
 pub.jar.pop('lang', None)
 vert('pages publiques : « Les chasses » (FR et EN, bulle ?), la page de la chasse n° 2 (annonce, coffres, enigmes ouvertes) ; chasse inconnue : 404')
 # ---- redemarrage : la chasse annoncee reprend sa place dans chasses.py

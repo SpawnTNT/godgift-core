@@ -527,7 +527,75 @@ nav.onglets .o .point-or{position:static;margin-left:auto;align-self:center}
 @media (min-width:1024px){nav.onglets .o{grid-template-columns:30px minmax(0,1fr) auto}nav.onglets .o .point-or{margin:0}}   /* le point d'or a droite du libelle, dans le rail */
 .lib-ligne{display:flex;align-items:flex-end;justify-content:space-between;gap:8px}.lib-ligne label{flex:1 1 auto}
 .bouton2.petit{padding:4px 12px;font-size:.72rem;min-height:32px;flex:none;margin-bottom:4px}
-.ad-retour{display:flex;align-items:center;gap:10px}.ad-retour .fleche-retour{position:static;flex:none}.ad-retour .jalons{flex:1 1 auto}
+.ad-retour{display:flex;align-items:center;gap:10px}.ad-retour .fleche-retour{position:relative;left:auto;top:auto;flex:none}.ad-retour .jalons{flex:1 1 auto}
 .voir-lien{font-weight:600}
 @media (max-height:700px) and (max-width:1023px){.ad-fil2{display:none}}
 .leg i.semer{background:transparent;border:1px dashed #8f8672}
+/* audit final du 18 octobre */
+.enig.une .txt details{margin-top:10px;font-size:.92rem}.enig.une .txt details .texte{margin-top:6px}
+.msg-ligne .t{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item small b{display:inline;font-size:inherit}
+.bandeau.mince .bouton,.bandeau.mince .bouton2{flex:none;white-space:nowrap}
+.vedette.v15.mini{min-height:56px;flex:0 0 auto}.vedette.v15.mini .qt{display:none}.vedette.v15.mini .rebours b{font-size:1.05rem}
+.trouve-court{font-size:1.2rem;margin:4px 0}
+.bq:focus-visible{outline:2px solid var(--or-clair);outline-offset:3px}
+.enig .nav .bouton2,.bandeau.mince .bouton2,.items-verif .bouton2,.segment button,.verif-chip,.pe-ligne .bouton{position:relative}
+.enig .nav .bouton2::after,.bandeau.mince .bouton2::after,.items-verif .bouton2::after,.segment button::after,.pe-ligne .bouton::after{content:"";position:absolute;inset:-5px 0}
+.fleche-retour::after{content:"";position:absolute;inset:-5px}
+@media (max-width:400px){.jalons span:not(.actif){font-size:0;gap:0}.jalons span:not(.actif) i{font-size:.62rem}.jalons span+span::before{margin-right:0}}
+
+/* audit final, second tour : la pastille d'etat dit un mot court sur telephone ; les bandeaux tiennent en peu de place ; la vedette
+   reduite s'efface sur un petit ecran quand un bandeau parle ; l'aide du pas 4 de l'accueil reste visible ; les choix se voient au clavier */
+.verif-chip .t-court{display:none}
+@media (max-width:430px){.verif-chip .t-long{display:none}.verif-chip .t-court{display:inline}}
+@media (max-width:480px){.verif-chip .texte{max-width:none}}
+.bandeau.mince{padding:7px 10px;gap:8px}.bandeau.mince>span{font-size:.88rem;line-height:1.3}
+@media (max-height:800px){.vedette.v15.mini{display:none}}
+.ac-choisir{margin:10px 0 0;color:#b5aa92;font-size:.85rem}
+.ac-panneau .choix:focus-visible{outline:2px solid var(--or-clair);outline-offset:2px}
+#page:focus,#page h1[tabindex="-1"]:focus,#page h2[tabindex="-1"]:focus{outline:none}
+@media (max-height:800px){#page .visuel.avec-tresor{display:none}}
+/* audit final, troisieme tour : un ecran qui affiche un message se serre (le surtitre s'efface sur un petit ecran) ; l'aide du pas 4 pres du bouton */
+@media (max-height:700px){#page .tete-ecran.serre .sur{display:none}}
+.ac-pied .ac-choisir{flex:1 1 100%;margin:0;order:-1}
+.ac-corps h3[tabindex="-1"]:focus{outline:none}
+@media (max-height:700px){#page .tete-ecran.serre ~ div .bouton2[data-copier]{min-height:32px;padding:4px 12px;margin-top:4px!important;font-size:.8rem}#page .tete-ecran.serre ~ div label{margin-bottom:2px}}
+/* audit final, quatrieme tour : la zone de depot se voit au clavier ; Compagnon pas 2 defile au milieu ; ordinateur a hauteur courte : le rail
+   ne garde que les cinq onglets (les entrees de Plus restent dans Plus) et la vedette se serre */
+.depot:focus-within{outline:2px solid var(--or-clair);outline-offset:2px}
+.dedans.ecran>.souple.cp-milieu{display:grid;gap:10px;align-content:start}
+@media (min-width:1024px) and (max-height:820px){nav.onglets .sec,nav.onglets .rail-sep,nav.onglets .rail-titre{display:none!important}.vedette.v15{min-height:130px}.dedans.ecran{gap:9px;padding-top:10px}}
+#page [id^="g-"][tabindex="-1"]:focus{outline:none}
+
+/* audit final, cinquieme tour : l'erreur du Compagnon au-dessus des boutons ; l'aide « un mot vous manque » s'efface quand un tresor et un message
+   se partagent un petit ecran ; le champ d'empreinte des Livres au-dessus de son bouton sur une ligne etroite */
+.dedans.ecran>.cp-err{margin:0;font-size:.86rem;flex:0 0 auto}
+@media (max-height:760px){#page .cadre.fin-pas.fin-cache{display:none}}
+.ex-ligne{display:flex;gap:8px;flex-wrap:wrap}.ex-ligne>.champ{flex:1 1 230px;min-width:0}.ex-ligne>.bouton{flex:0 0 auto}
+@media (max-height:700px){#page .note-cache{display:none}}
+#lat h5[tabindex="-1"]:focus{outline:none}
+.bouton[aria-disabled="true"]{opacity:.45;cursor:progress;box-shadow:none;transform:none}
+details>summary{min-height:24px}                                     /* audit final : toute ligne repliable est une cible de 24 px au moins */
+/* audit final, neuvieme reaudit : la barre d'onglets reste dans la largeur meme quand ses libelles grandissent (zoom du texte) */
+@media (max-width:1023px){.texte-grand nav.onglets{grid-template-columns:repeat(5,minmax(0,1fr))}.texte-grand nav.onglets .o{min-width:0}.texte-grand nav.onglets .o span{max-width:100%;overflow-wrap:anywhere;text-align:center}}
+/* le texte agrandi (zoom du texte seul, au-dela de 120 %) : rien ne s'ecrase ni ne se chevauche, l'ecran defile en entier */
+.texte-grand .dedans.ecran{overflow-y:auto}
+.texte-grand .dedans.ecran>*{flex-shrink:0}
+.texte-grand .dedans.ecran>.souple,.texte-grand .enig.une,.texte-grand .enigs-pas,.texte-grand .liste.msgs{flex:0 0 auto;min-height:auto;overflow:visible}
+.texte-grand .enig.une .txt{flex:none;min-height:auto;overflow:visible}
+.texte-grand .dedans.ecran>.bas{margin-top:0}
+.texte-grand .visuel{height:auto!important;min-height:56px;display:flex;align-items:flex-end;padding:8px 12px}
+.texte-grand .visuel b{position:static}
+.texte-grand .vedette.v15{min-height:0;display:flex;flex-direction:column;justify-content:flex-end}
+.texte-grand .vedette.v15 .vtxt{position:relative;left:auto;right:auto;bottom:auto;padding:72px 12px 10px}
+.texte-grand .rebours{flex-wrap:wrap}
+.texte-grand header.haut{flex-wrap:wrap}.texte-grand .logo .n{white-space:normal;overflow-wrap:anywhere}
+.texte-grand nav.onglets .o{letter-spacing:0;padding-left:0;padding-right:0}
+.cadre.proch .compte{flex:none}                                          /* le compte a rebours compact ne se coupe jamais : le libelle cede la place */
+.texte-grand .pe-ligne>span{display:block;-webkit-line-clamp:unset;overflow:visible;overflow-wrap:anywhere}
+.texte-grand .tuile small{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word}
+.texte-grand .bas .bouton,.texte-grand .bas .bouton2{flex:0 1 auto;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.texte-grand .dedans.ecran{padding-bottom:56px}                         /* au bout du defilement, le dernier bouton passe au-dessus du rond de la cle */
+.texte-grand .pe-ligne{flex-wrap:wrap}
+.texte-grand .ligne .v{overflow-wrap:break-word;min-width:0}                  /* un montant ne se coupe qu'entre ses groupes de chiffres */
+.texte-grand .kv .ligne{flex-wrap:wrap;column-gap:8px}.texte-grand .kv .ligne>span:first-child{flex:0 1 auto;min-width:0}.texte-grand .kv .ligne .v{flex:1 1 auto}

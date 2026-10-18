@@ -55,7 +55,7 @@
     {
       "titre": "Je deviens témoin",
       "etapes": [
-        "Dans Réglages, cochez « Je deviens témoin » (ou répondez oui à l’accueil).",
+        "Dans Réglages, cochez « Partager mes vérifications » (ou répondez oui à l’accueil).",
         "À chaque « Tout vérifier », et une fois par jour tout seul, votre GodGift Core publie son constat : bloc, empreintes, résultat. Rien de personnel.",
         "Dans Plus, « Réseau et sources » compte les témoins de la semaine et signale le moindre désaccord : un manifeste différent, une version non publiée, un contrôle en échec.",
         "Chaque jour, les constats sont horodatés dans Bitcoin : une preuve datée que chacun peut vérifier."
@@ -228,7 +228,7 @@
     {
       "id": "gardien",
       "mot": "Gardien des énigmes",
-      "texte": "Une personne désignée par écrit, hors de la famille de l’auteur, qui garde sous enveloppe les mots de passe des énigmes et des indices. Si un texte n’a pas paru quarante-huit heures après son heure, il ouvre l’enveloppe de ce texte, et elle seule, et le fait publier. Son nom reste scellé ; son rôle est public. GodGift Core compare tout texte publié ainsi à l’empreinte gravée au semis.",
+      "texte": "Une personne désignée par écrit, hors de la famille de l’auteur, qui garde sous enveloppe les mots de passe des énigmes et des indices. Si un texte n’a pas paru quarante-huit heures après son heure, il ouvre l’enveloppe de ce texte, et elle seule, et le fait publier. Son nom reste scellé ; son rôle est public. GodGift Core compare tout texte publié ainsi à l’empreinte gravée au semis.",
       "voir": [
         "enigme",
         "depositaire",
@@ -238,7 +238,7 @@
     {
       "id": "depositaire",
       "mot": "Dépositaire des clés",
-      "texte": "Une personne qui garde, sur une clé, les fichiers verrouillés des énigmes et des indices, sans leurs mots de passe. Il ne peut rien lire seul : il faut l’enveloppe du gardien des énigmes. Il peut aussi faire diffuser un cri signé d’avance si le site ne le fait pas. Il n’a ni nom, ni ville en public.",
+      "texte": "Une personne qui garde, sur une clé, les fichiers verrouillés des énigmes et des indices, sans leurs mots de passe. Il ne peut rien lire seul : il faut l’enveloppe du gardien des énigmes. Il peut aussi faire diffuser un cri signé d’avance si le site ne le fait pas. Il n’a ni nom, ni ville en public.",
       "voir": [
         "gardien",
         "cri",
@@ -248,7 +248,7 @@
     {
       "id": "etats",
       "mot": "États d’un coffre",
-      "texte": "À SEMER : pas encore rempli (avant décembre 2026). À VENIR : rempli, aucune énigme parue. EN JEU : la première énigme est parue, la seconde arrive le 17. À PRENDRE : les deux énigmes sont parues, la clé peut être trouvée. TROUVÉ : quelqu’un l’a vidé.",
+      "texte": "À SEMER : pas encore rempli (avant décembre 2026). À VENIR : rempli, aucune énigme parue. EN JEU : la première énigme est parue, la seconde arrive le 17. À PRENDRE : les deux énigmes sont parues, la clé peut être trouvée. TROUVÉ : quelqu’un l’a vidé.",
       "voir": [
         "coffre",
         "pris"
@@ -358,7 +358,7 @@
     {
       "id": "pris",
       "mot": "Trouvé",
-      "texte": "Un coffre est trouvé dès que la première transaction qui le vide est confirmée sur la chaîne. Il n’y a rien à déclarer ni à réclamer : la chaîne fait foi. Un coffre non trouvé reste à prendre, sans limite de temps.",
+      "texte": "Un coffre est trouvé dès que la première transaction qui le vide est confirmée sur la chaîne. Il n’y a rien à déclarer ni à réclamer : la chaîne fait foi. Un coffre non trouvé reste à prendre, sans limite de temps.",
       "voir": [
         "balayer",
         "etats"

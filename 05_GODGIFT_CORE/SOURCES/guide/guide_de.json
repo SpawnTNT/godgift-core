@@ -55,7 +55,7 @@
     {
       "titre": "Ich werde Zeuge",
       "etapes": [
-        "Wählen Sie in den Einstellungen „Ich werde Zeuge“ (oder antworten Sie bei der Begrüßung mit Ja).",
+        "Wählen Sie in den Einstellungen „Meine Prüfungen teilen“ (oder antworten Sie bei der Begrüßung mit Ja).",
         "Bei jedem „Alles prüfen“ und einmal täglich von allein veröffentlicht Ihr GodGift Core seinen Befund: Block, Fingerabdrücke, Ergebnis. Nichts Persönliches.",
         "Unter Mehr zählt „Netz und Quellen“ die Zeugen der Woche und meldet jede Abweichung: ein anderes Manifest, eine nicht veröffentlichte Version, eine fehlgeschlagene Prüfung.",
         "Jeden Tag werden die Befunde in Bitcoin mit einem Zeitstempel versehen: ein datierter Beweis, den jeder überprüfen kann."
@@ -114,7 +114,7 @@
     {
       "id": "chasse",
       "mot": "Jagd",
-      "texte": "Ein vollständiger Schatz: seine Truhen, seine Rätsel, sein Stein und sein COFFRET. L'Ange de l'Eau ist Jagd Nr. 1; die folgenden erscheinen von selbst unter „Die Jagden“. Jede Jagd hat ihre eigenen Schlüssel: Keine kann eine andere öffnen.",
+      "texte": "Ein vollständiger Schatz: seine Truhen, seine Rätsel, sein Stein und sein COFFRET. L’Ange de l’Eau ist Jagd Nr. 1; die folgenden erscheinen von selbst unter „Die Jagden“. Jede Jagd hat ihre eigenen Schlüssel: Keine kann eine andere öffnen.",
       "voir": [
         "chasse_zero",
         "annonce",
@@ -375,8 +375,8 @@
     },
     {
       "id": "sats",
-      "mot": "Sats",
-      "texte": "Der Satoshi, die kleinste Einheit des Bitcoins: 1 Bitcoin = 100 000 000 Sats. Das Buch kostet bei Erscheinen 21 000 Sats, danach den Preis, den die Buchhandlung veröffentlicht (eine Anpassung wird sieben Tage vorher angekündigt und eingraviert: Stein, Artikel 1); die Beträge der Truhen sind auf den Satoshi genau eingraviert.",
+      "mot": "sats",
+      "texte": "Der Satoshi, die kleinste Einheit des Bitcoins: 1 Bitcoin = 100 000 000 sats. Das Buch kostet bei Erscheinen 21 000 sats, danach den Preis, den die Buchhandlung veröffentlicht (eine Anpassung wird sieben Tage vorher angekündigt und eingraviert: Stein, Artikel 1); die Beträge der Truhen sind auf den Satoshi genau eingraviert.",
       "voir": []
     },
     {

@@ -14,7 +14,7 @@
   "ouvrir": "Open the guide",
   "parcours": [
     {
-      "titre": "I'm discovering",
+      "titre": "I’m discovering",
       "etapes": [
         "Open “Chests”: the 24 chests of the hunt, one per month, from January 2027 to December 2028. Their colour shows their state.",
         "Tap a chest: its card shows its state, its amount and the dates of its two riddles; “See the chest” shows its riddles once they are out, its cry and, later, its two hints.",
@@ -23,7 +23,7 @@
       ]
     },
     {
-      "titre": "I'm hunting",
+      "titre": "I’m hunting",
       "etapes": [
         "Before anything else, calmly: in More, “My receiving address”, save in three steps the address of your own wallet, and sign it with that wallet: the signature is required. That is where the treasure will go.",
         "On the 3rd of the month at 18:15:05 UTC (19:15:05 in Paris in winter, 20:15:05 in summer) the first riddle of the chest comes out; on the 17th, at the same time, the second. Read them in “Riddles”.",
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "titre": "I'm carrying the book",
+      "titre": "I’m carrying the book",
       "etapes": [
         "Only the owner of an official copy can be an active companion, and one copy makes only one companion. Buy yours on angedeleau.com, giving a bc1q… address from your wallet: it is its ownership address, printed on its title page. The hunt itself stays free.",
         "Open “The books”, drop the EPUB or PDF of your copy, then “Become a companion with this copy”: the Companion page takes its ownership address; that is where your shares will arrive.",
@@ -45,7 +45,7 @@
       ]
     },
     {
-      "titre": "I'm verifying my book",
+      "titre": "I’m verifying my book",
       "etapes": [
         "Open “The books”.",
         "Drop your EPUB or your PDF, or type the fingerprint printed on its title page.",
@@ -55,7 +55,7 @@
     {
       "titre": "I become a witness",
       "etapes": [
-        "In Settings, tick “I become a witness” (or answer yes at the welcome screen).",
+        "In Settings, tick “Share my checks” (or answer yes at the welcome screen).",
         "At each “Verify everything”, and once a day by itself, your GodGift Core publishes its report: block, fingerprints, result. Nothing personal.",
         "In More, “Network and sources” counts the week’s witnesses and flags the slightest disagreement: a different manifest, an unpublished version, a failed check.",
         "Every day, the reports are timestamped in Bitcoin: a dated proof that anyone can verify."
@@ -75,7 +75,7 @@
     {
       "id": "alea",
       "mot": "Randomness",
-      "texte": "64 characters drawn at random in the Cave for each chest. It goes into the chest's key together with the words of the answers: without it, even the right answers are not enough. It is revealed by the cry, one hour after the second riddle.",
+      "texte": "64 characters drawn at random in the Cave for each chest. It goes into the chest’s key together with the words of the answers: without it, even the right answers are not enough. It is revealed by the cry, one hour after the second riddle.",
       "voir": [
         "cri",
         "cle",
@@ -85,7 +85,7 @@
     {
       "id": "amorce",
       "mot": "Seed transaction",
-      "texte": "The transaction of the seeding, in December 2026, which fills the 24 chests and prepares the 24 cries. It is paid from the author's counter; the engraved manifest announces the address that signs his messages.",
+      "texte": "The transaction of the seeding, in December 2026, which fills the 24 chests and prepares the 24 cries. It is paid from the author’s counter; the engraved manifest announces the address that signs his messages.",
       "voir": [
         "semis",
         "cri",
@@ -95,7 +95,7 @@
     {
       "id": "balayer",
       "mot": "Sweep",
-      "texte": "Empty an address into yours. GodGift Core does it itself when you find a chest's key: it signs on your machine and sends everything to your receiving address. The chest belongs to the first confirmed transaction that empties it.",
+      "texte": "Empty an address into yours. GodGift Core does it itself when you find a chest’s key: it signs on your machine and sends everything to your receiving address. The chest belongs to the first confirmed transaction that empties it.",
       "voir": [
         "recuperer",
         "reception",
@@ -105,7 +105,7 @@
     {
       "id": "cave",
       "mot": "Cave",
-      "texte": "The author's computer, which has never been and never will be connected to any network. The riddles are written there, the randomness drawn, the addresses computed and the messages signed. No secret ever leaves it in the clear.",
+      "texte": "The author’s computer, which has never been and never will be connected to any network. The riddles are written there, the randomness drawn, the addresses computed and the messages signed. No secret ever leaves it in the clear.",
       "voir": [
         "alea",
         "coffret"
@@ -114,7 +114,7 @@
     {
       "id": "chasse",
       "mot": "Hunt",
-      "texte": "A complete treasure: its chests, its riddles, its Stone and its COFFRET. L'Ange de l'Eau is hunt no. 1; the next ones will appear by themselves in “The hunts”. Each hunt has its own keys: none can open another.",
+      "texte": "A complete treasure: its chests, its riddles, its Stone and its COFFRET. L’Ange de l’Eau is hunt no. 1; the next ones will appear by themselves in “The hunts”. Each hunt has its own keys: none can open another.",
       "voir": [
         "chasse_zero",
         "annonce",
@@ -132,7 +132,7 @@
     {
       "id": "annonce",
       "mot": "Hunt announcement",
-      "texte": "The exact text AEDE:chasse:<no.>:<manifest fingerprint>, engraved on chain by the change of that hunt's seed transaction, before the first riddle and signed by the author's message address. A next hunt (no. 2 to 999) exists only through it. GodGift Core learns it from the bookshop or its backup server, checks the signature, the engraving and the manifest by itself, then follows the hunt; if two announcements of the same number point to two manifests, the first engraved wins and the second is refused.",
+      "texte": "The exact text AEDE:chasse:<no.>:<manifest fingerprint>, engraved on chain by the change of that hunt’s seed transaction, before the first riddle and signed by the author’s message address. A next hunt (no. 2 to 999) exists only through it. GodGift Core learns it from the bookshop or its backup server, checks the signature, the engraving and the manifest by itself, then follows the hunt; if two announcements of the same number point to two manifests, the first engraved wins and the second is refused.",
       "voir": [
         "chasse",
         "gravure",
@@ -162,7 +162,7 @@
     {
       "id": "coffret",
       "mot": "COFFRET",
-      "texte": "The public file in which the Cave locked in advance every riddle, every cry and the two hints of each chest, until their exact second. It contains no solution. Your GodGift Core keeps it, reads it by the Cave's rule (no lock twice, each at the Stone's time) and opens it itself on time, even if the site goes down. Nobody, not even the author, can open it earlier.",
+      "texte": "The public file in which the Cave locked in advance every riddle, every cry and the two hints of each chest, until their exact second. It contains no solution. Your GodGift Core keeps it, reads it by the Cave’s rule (no lock twice, each at the Stone’s time) and opens it itself on time, even if the site goes down. Nobody, not even the author, can open it earlier.",
       "voir": [
         "verrou",
         "drand",
@@ -182,7 +182,7 @@
     {
       "id": "cri",
       "mot": "Cry",
-      "texte": "The transaction that publishes a chest's randomness on chain, one hour after its second riddle. It was signed in advance in the Cave and goes out by itself: from the cry on, hunters have everything they need to compute the key.",
+      "texte": "The transaction that publishes a chest’s randomness on chain, one hour after its second riddle. It was signed in advance in the Cave and goes out by itself: from the cry on, hunters have everything they need to compute the key.",
       "voir": [
         "alea",
         "coffret",
@@ -218,7 +218,7 @@
     {
       "id": "enigme",
       "mot": "Riddle",
-      "texte": "A text whose answer is made of words from the list of five thousand. Two per month: the 3rd and the 17th at 18:15:05 UTC (19:15:05 in Paris in winter, 20:15:05 in summer). The riddle of the 3rd and the one of the 17th of the same month open that month's chest together. The riddles are published in French, the only authoritative text, sometimes with an unofficial English translation; free, for everyone at the same instant.",
+      "texte": "A text whose answer is made of words from the list of five thousand. Two per month: the 3rd and the 17th at 18:15:05 UTC (19:15:05 in Paris in winter, 20:15:05 in summer). The riddle of the 3rd and the one of the 17th of the same month open that month’s chest together. The riddles are published in French, the only authoritative text, sometimes with an unofficial English translation; free, for everyone at the same instant.",
       "voir": [
         "liste",
         "utc",
@@ -311,7 +311,7 @@
     {
       "id": "manifeste",
       "mot": "Manifest",
-      "texte": "The hunt's public file: the chests' addresses, the amounts, the fingerprint of each randomness, the commitment of each chest (its answers, fixed without being revealed) and the fingerprint of the COFFRET. Its fingerprint is engraved on chain at the seeding: everything that follows must match it. GodGift Core proves this engraving again at every start.",
+      "texte": "The hunt’s public file: the chests’ addresses, the amounts, the fingerprint of each randomness, the commitment of each chest (its answers, fixed without being revealed) and the fingerprint of the COFFRET. Its fingerprint is engraved on chain at the seeding: everything that follows must match it. GodGift Core proves this engraving again at every start.",
       "voir": [
         "gravure",
         "coffret",
@@ -321,7 +321,7 @@
     {
       "id": "message",
       "mot": "Signed message",
-      "texte": "A public message from the author, signed in the Cave (BIP-322 standard), dated YYYY-MM-DD. GodGift Core checks the signature, the form of the message, and that the signing address is the author's: pinned in the program, or announced by an engraved manifest. A false message stays folded. Nobody can speak in the author's name.",
+      "texte": "A public message from the author, signed in the Cave (BIP-322 standard), dated YYYY-MM-DD. GodGift Core checks the signature, the form of the message, and that the signing address is the author’s: pinned in the program, or announced by an engraved manifest. A false message stays folded. Nobody can speak in the author’s name.",
       "voir": [
         "amorce",
         "cave"
@@ -390,7 +390,7 @@
     {
       "id": "semis",
       "mot": "Seeding",
-      "texte": "The December 2026 session where the Cave fills the 24 chests (€4,000 in total, converted to bitcoin at the day's rate), locks the COFFRET and publishes the manifest, which is engraved.",
+      "texte": "The December 2026 session where the Cave fills the 24 chests (€4,000 in total, converted to bitcoin at the day’s rate), locks the COFFRET and publishes the manifest, which is engraved.",
       "voir": [
         "amorce",
         "manifeste",
@@ -400,7 +400,7 @@
     {
       "id": "solution",
       "mot": "Signed solution",
-      "texte": "A chest's solution is published only once the chest is taken, by a signed message from the author whose last line is AEDE:solution:… It is checked against the salted commitment engraved at the seeding: GodGift Core shows “seeding commitment kept” or “commitment FALSE”. It never copies these words into your answers and sends nothing.",
+      "texte": "A chest’s solution is published only once the chest is taken, by a signed message from the author whose last line is AEDE:solution:… It is checked against the salted commitment engraved at the seeding: GodGift Core shows “seeding commitment kept” or “commitment FALSE”. It never copies these words into your answers and sends nothing.",
       "voir": [
         "message",
         "manifeste",
@@ -438,7 +438,7 @@
     {
       "id": "versement",
       "mot": "Quarterly payout",
-      "texte": "Every quarter (dated the 1st of March, June, September and December), a public transaction pays the companions' shares, adds the treasure's share to the chests still closed (after the last riddle, to the treasure reserve, the season address) and engraves the register's root.",
+      "texte": "Every quarter (dated the 1st of March, June, September and December), a public transaction pays the companions’ shares, adds the treasure’s share to the chests still closed (after the last riddle, to the treasure reserve, the season address) and engraves the register’s root.",
       "voir": [
         "compagnon",
         "racine",
@@ -487,7 +487,7 @@
     {
       "id": "officiel",
       "mot": "Published version",
-      "texte": "Your GodGift Core looks for its fingerprint in the author's signed messages. “Published version”: the author published this fingerprint. This badge does not prove your copy is intact (a booby-trapped copy could lie about itself): to be sure, rebuild the program with recompiler_et_comparer.py, or check the installer at angedeleau.com/verifier-installateur. “Unknown version” or “withdrawn”: download the right one from angedeleau.com.",
+      "texte": "Your GodGift Core looks for its fingerprint in the author’s signed messages. “Published version”: the author published this fingerprint. This badge does not prove your copy is intact (a booby-trapped copy could lie about itself): to be sure, rebuild the program with recompiler_et_comparer.py, or check the installer at angedeleau.com/verifier-installateur. “Unknown version” or “withdrawn”: download the right one from angedeleau.com.",
       "voir": [
         "installateur",
         "empreinte",
@@ -497,7 +497,7 @@
     {
       "id": "installateur",
       "mot": "Verify my installer",
-      "texte": "On angedeleau.com/verifier-installateur, drop the downloaded file: your browser computes its fingerprint on the spot and compares it with the published installers. On Windows, the installer will also carry the author's signature, once signed (Certum); the trial version is not signed yet.",
+      "texte": "On angedeleau.com/verifier-installateur, drop the downloaded file: your browser computes its fingerprint on the spot and compares it with the published installers. On Windows, the installer will also carry the author’s signature, once signed (Certum); the trial version is not signed yet.",
       "voir": [
         "officiel",
         "jamais"
@@ -525,7 +525,7 @@
     {
       "id": "temoin",
       "mot": "Witness",
-      "texte": "A volunteer GodGift Core that publishes, after each verification, a report signed with a anonymous key renewed every week: the block, the fingerprints of the manifest, the COFFRET and the program, and the result. If the bookshop, the site or a source lied, independent witnesses would have published the opposite. Nothing personal is published; the relay only sees the connection's IP address.",
+      "texte": "A volunteer GodGift Core that publishes, after each verification, a report signed with a anonymous key renewed every week: the block, the fingerprints of the manifest, the COFFRET and the program, and the result. If the bookshop, the site or a source lied, independent witnesses would have published the opposite. Nothing personal is published; the relay only sees the connection’s IP address.",
       "voir": [
         "nostr",
         "horodatage",
@@ -544,7 +544,7 @@
     {
       "id": "horodatage",
       "mot": "Timestamping (OpenTimestamps)",
-      "texte": "Every day, the witnesses' reports are gathered and their fingerprint is anchored for free in Bitcoin by OpenTimestamps. It is the dated proof that these reports existed exactly as they were that day. Anyone can redo the anchoring and verify the proof.",
+      "texte": "Every day, the witnesses’ reports are gathered and their fingerprint is anchored for free in Bitcoin by OpenTimestamps. It is the dated proof that these reports existed exactly as they were that day. Anyone can redo the anchoring and verify the proof.",
       "voir": [
         "temoin",
         "gravure"
@@ -583,7 +583,7 @@
       "r": "In the window of the installed app, nothing to do: if your signed receiving address is saved, GodGift Core sends the whole chest to it at once. Elsewhere (browser, web version, reloaded window), first retype the 16 requested characters of your address, in two pieces hidden on screen, read in your wallet; in “No install”, install GodGift Core and compute the key again. Switch the internet back on if you had cut it. If “Speed up” appears, someone else found it at the same time: it is the race, click it."
     },
     {
-      "q": "I'm missing just one word: can I try everything?",
+      "q": "I’m missing just one word: can I try everything?",
       "r": "Yes, it is allowed. One missing word means five thousand tries, a few hours of computing. The slowness protects against brute force, not against a hunter who has almost found it."
     },
     {
@@ -600,11 +600,11 @@
     },
     {
       "q": "How do I know this program is the right one?",
-      "r": "The badge at the top of the screen says “published version” when the author signed this fingerprint; it does not prove your copy is intact. Before installing, check the file on angedeleau.com/verifier-installateur; you can also rebuild everything yourself (recompiler_et_comparer.py). On Windows, the installer will carry the author's signature once signed (Certum)."
+      "r": "The badge at the top of the screen says “published version” when the author signed this fingerprint; it does not prove your copy is intact. Before installing, check the file on angedeleau.com/verifier-installateur; you can also rebuild everything yourself (recompiler_et_comparer.py). On Windows, the installer will carry the author’s signature once signed (Certum)."
     },
     {
       "q": "Do I have to be a witness?",
-      "r": "No, it is a choice, which you can change at any time in Settings. Being a witness makes the hunt verifiable by all; it publishes nothing personal, but the Nostr relay sees the connection's IP address."
+      "r": "No, it is a choice, which you can change at any time in Settings. Being a witness makes the hunt verifiable by all; it publishes nothing personal, but the Nostr relay sees the connection’s IP address."
     },
     {
       "q": "My wallet cannot sign a message: what do I do?",
@@ -616,7 +616,7 @@
     },
     {
       "q": "Someone offers me another version of GodGift Core, or help to recover a chest",
-      "r": "Refuse. Nobody, not even the author, will ever ask for your 24 words, for payment for a riddle, a hint or an answer, or for your answers. The certified digital edition is sold only on angedeleau.com; GodGift Core is downloaded only from angedeleau.com, or opened at app.angedeleau.com. Anyone who asks, even in the author’s name, is a scammer. The real GodGift Core never sends your answers or a chest's key to anyone: it empties the chest itself to your signed receiving address."
+      "r": "Refuse. Nobody, not even the author, will ever ask for your 24 words, for payment for a riddle, a hint or an answer, or for your answers. The certified digital edition is sold only on angedeleau.com; GodGift Core is downloaded only from angedeleau.com, or opened at app.angedeleau.com. Anyone who asks, even in the author’s name, is a scammer. The real GodGift Core never sends your answers or a chest’s key to anyone: it empties the chest itself to your signed receiving address."
     },
     {
       "q": "Is the author Satoshi Nakamoto?",

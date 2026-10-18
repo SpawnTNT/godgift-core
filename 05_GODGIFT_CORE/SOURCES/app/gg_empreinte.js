@@ -1,2 +1,2 @@
 /* Ecrit par l'installateur apres avoir verifie chaque fichier. */
-this.GG_EMPREINTE = {"empreinte": "992c1bf6a0dc3e5418d31e66b7c954b6354b2857bf45745a8550dfa32fc370a5", "fichiers": 55};
+this.GG_EMPREINTE = {"empreinte": "b623c0b2e71bb4ed1ff0612b79b9500c2c8f739c51c0f45b8950739aad187848", "fichiers": 55};

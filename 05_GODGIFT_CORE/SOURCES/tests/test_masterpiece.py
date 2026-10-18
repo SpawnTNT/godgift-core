@@ -664,7 +664,7 @@ async def main():
         p1, p2 = await pgN.evaluate(f"GG.TR.morceaux['{ADRG}']"); m1, m2 = ADRG[p1:p1 + 8], ADRG[p2:p2 + 8]
         assert 4 <= p1 and p1 + 8 <= p2 and p2 + 8 <= len(ADRG), (p1, p2)
         txt = plat(await pgN.inner_text('#page')); sans = txt.replace(' ', '').replace('\n', '')
-        assert 'Retapez les deux morceaux de 8 caractères' in txt and f'Retapez les caractères {p1 + 1} à {p1 + 8} et {p2 + 1} à {p2 + 8}' in txt and '••••••••' in sans, txt[:800]
+        assert 'Retapez les deux morceaux de 8 caractères' not in txt and f'Retapez les caractères {p1 + 1} à {p1 + 8} et {p2 + 1} à {p2 + 8}' in txt and '••••••••' in sans, txt[:800]
         assert m1 not in sans and m2 not in sans and ADRG not in sans, (m1, m2)
         assert await pgN.evaluate("GG.masquee(GG.R.reception.adresse)") == ADRG[:p1] + '•' * 8 + ADRG[p1 + 8:p2] + '•' * 8 + ADRG[p2 + 8:]
         await pgN.fill('[id^="tr-retape-"]', 'qqqqqqqq'); await pgN.fill('[id^="tr-retape2-"]', 'qqqqqqqq'); await pgN.click('[data-retape]'); await pgN.wait_for_timeout(400)
@@ -808,7 +808,9 @@ async def main():
         # ---- l'adresse de reception a change depuis la derniere visite : alerte, et rien ne part seul tant qu'elle n'est pas reconnue
         await pg.evaluate("localStorage.setItem('gg.reception_vue', JSON.stringify({ adresse: 'bc1qautrechose', date: '2026-12-01' })); location.hash = '#/tableau'")
         await relancer(pg); await pg.wait_for_function("GG.M.pret", timeout=60000); await pg.wait_for_timeout(300)
-        assert await pg.evaluate("GG.TR.recAlerte === true") and 'a changé depuis votre dernière visite' in (plat(await pg.inner_text('#page'))).replace('\xa0', ' ')
+        assert await pg.evaluate("GG.TR.recAlerte === true") and 'Votre adresse de réception a changé' in (plat(await pg.inner_text('#page'))).replace('\xa0', ' ')
+        await pg.click('[data-feuille="recalerte"]'); await pg.wait_for_timeout(200)   # audit final : l'alerte tient en une ligne, le detail et le geste dans sa feuille
+        assert 'a changé depuis votre dernière visite' in plat(await pg.evaluate("document.body.innerText")).replace('\xa0', ' ')
         await pg.click('[data-rec-ok]'); await pg.wait_for_timeout(200)
         assert await pg.evaluate("GG.TR.recAlerte === false && JSON.parse(localStorage.getItem('gg.reception_vue')).adresse === GG.R.reception.adresse")
         vert('adresse de reception changee depuis la derniere visite : une alerte sur le tableau, et rien ne part seul ; le chasseur la reconnait, l alerte tombe')
