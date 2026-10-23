@@ -309,7 +309,8 @@ FAUX_LIB = [
 ]
 for nom, a_, champs, motif in FAUX_LIB:
     b = annoncer(annonce=a_, **champs)
-    assert motif in b and not CF.annonces(mag) and not mag.lire('manifeste_c2') and 2 not in H.CHASSES, (nom, re.sub(r'<[^>]+>', ' ', b)[-400:])
+    b_lu = re.sub(r'<[^>]+>', '', b).replace('\u2060', '').replace('\xa0', ' ')          # le texte tel qu il se lit : sans balises (BIP-322 d un seul tenant) ni espaces d affichage
+    assert motif in b_lu and not CF.annonces(mag) and not mag.lire('manifeste_c2') and 2 not in H.CHASSES, (nom, b_lu[-400:])
 vert(f'FAUX refuses par la librairie, rien n est garde ({len(FAUX_LIB)}) : ' + ' ; '.join(n for n, *_ in FAUX_LIB))
 
 # ---- la bonne annonce : verifiee, publiee, son COFFRET charge
@@ -343,11 +344,12 @@ assert (2, 'enigme', 2, 3) in CF.ouvrir_ce_qui_est_du(mag, None, signer=signatur
 vert('publication automatique : le 17 mars 2027 les enigmes 1 et 2 et le cri 1 de la chasse n° 2 s ouvrent ; rien avant l heure ; l enigme 3 le 3 avril')
 # ---- les pages publiques, FR et EN
 for lg, mots in (('fr', ['Les chasses', 'La chasse du printemps', 'Chasse n° 2', 'annoncée', TEXTE2, '/chasse/2']), ('en', ['The hunts', 'Hunt no. 2', 'announced', TEXTE2])):
-    st, _, b = pub.get('/chasses?lang=' + lg); b = b.decode()
-    assert st == 200 and all(m in b for m in mots) and 'class="aide"' in b, (lg, b[-800:])
-st, _, b = pub.get('/chasse/2?lang=fr'); b = b.decode()
-assert st == 200 and 'La chasse du printemps' in b and 'Printemps 1' in b and 'Printemps 3' in b and GR2 in b and ADR2 in b and '/api/chasse/2/publications.json' in b
-st, _, b = pub.get('/chasse/2?lang=en'); assert st == 200 and b'The announcement, engraved and signed' in b and b'one chest a month' in b
+    st, _, b = pub.get('/chasses?lang=' + lg); b = b.decode(); b_lu = re.sub(r'<[^>]+>', '', b).replace('\u2060', '').replace('\xa0', ' ')   # le texte tel qu il se lit (19 octobre : termes d un seul tenant, insecables)
+    assert st == 200 and all(m in b_lu or m in b for m in mots) and 'class="aide"' in b, (lg, [m for m in mots if m not in b_lu and m not in b], b_lu[-600:])
+st, _, b = pub.get('/chasse/2?lang=fr'); b = b.decode(); b_lu = re.sub(r'<[^>]+>', '', b).replace('\u2060', '').replace('\xa0', ' ')
+assert st == 200 and all(m in b_lu or m in b for m in ('La chasse du printemps', 'Printemps 1', 'Printemps 3', GR2, ADR2, '/api/chasse/2/publications.json')), [m for m in ('La chasse du printemps', 'Printemps 1', 'Printemps 3', GR2, ADR2) if m not in b_lu and m not in b]
+st, _, b = pub.get('/chasse/2?lang=en'); b = b.decode(); b_lu = re.sub(r'<[^>]+>', '', b).replace('\u2060', '').replace('\xa0', ' ')
+assert st == 200 and all(m in b_lu or m in b for m in ('The announcement, engraved and signed', 'one chest a month')), b_lu[-600:]
 assert pub.get('/chasse/7')[0] == 404 and pub.get('/chasse/0')[0] == 301 and pub.get('/chasse-zero')[0] == 200
 pub.jar.pop('lang', None)
 vert('pages publiques : « Les chasses » (FR et EN, bulle ?), la page de la chasse n° 2 (annonce, coffres, enigmes ouvertes) ; chasse inconnue : 404')
@@ -477,7 +479,8 @@ async def main():
         assert "refuse cette chasse : en attente : cette version de GodGift Core n'épingle pas encore" in plat(await pg.inner_text('#page'))
         await pg.evaluate("location.hash = '#/chasses'")
         vert('sans ancre de l adresse de l auteur : l annonce de la chasse n° 2 est lue mais rien n est retenu (ann_sans_ancre), l alerte le dit')
-        await pg.evaluate("(a) => localStorage.setItem('atelier.ancre', JSON.stringify(a))", ANCRE)
+        # l ancre epinglee, posee par un script d initialisation (execute avant gg_ancre.js a chaque document) : le stockage local sous file:// se perd parfois au rechargement
+        await pg.add_init_script(f"(function(){{ var inj = {json.dumps(ANCRE)}, v = inj; Object.defineProperty(window, 'GG_ANCRE', {{ configurable: true, get: function () {{ return v; }}, set: function (x) {{ v = Object.assign({{}}, x || {{}}, inj); }} }}); }})();")
         await pg.reload()
         try:
             await pg.wait_for_function("window.GG && GG.ZS[2] && GG.ZS[2].coffret && Object.keys(GG.ZS[2].ouverts).length >= 3", timeout=240000)
@@ -514,7 +517,7 @@ async def main():
         await pg.fill('#z-r3', ' '.join(L[x] for x in P2[1])); await pg.fill('#z-r17', ' '.join(str(x) for x in P2[2])); await pg.fill('#z-alea', ALEAS2[1])
         await pg.click('#z-calculer'); await pg.wait_for_function("GG.courant().res && !GG.courant().calcul", timeout=240000)
         assert 'trouv' in (await pg.evaluate('GG.courant().res')).lower() and await pg.evaluate(f"!!GG.TR.cles['1:{ADR2}']")
-        await pg.evaluate(f"(function(){{ var k = '1:{ADR2}'; ['cles', 'cibles', 'dest', 'msg', 'compte', 'confirmer', 'prep'].forEach(function (x) {{ delete GG.TR[x][k]; }}); }})()")
+        await pg.evaluate(f"(function(){{ var k = '1:{ADR2}'; ['cles', 'cibles', 'dest', 'msg', 'compte', 'confirmer', 'choix', 'prep'].forEach(function (x) {{ delete GG.TR[x][k]; }}); }})()")
         ch2 = await pg.evaluate(f"[GGC.chaineCoffre(1, {P2[1]}, {P2[2]}, '{ALEAS2[1]}', 2), GGC.chaineCoffre(1, {P2[1]}, {P2[2]}, '{ALEAS2[1]}', 0), GGC.chaineCoffre(1, {P2[1]}, {P2[2]}, '{ALEAS2[1]}', 1)]")
         assert ch2[0].startswith('AEDE-H2-G1:') and ch2[1].startswith('AEDE-H0-G1:') and ch2[2].startswith('AEDE-G1:')
         assert K.adresse_coffre(1, P2[1], P2[2], ALEAS2[1], chasse=2) == ADR2 != K.adresse_coffre(1, P2[1], P2[2], ALEAS2[1], chasse=0) and ADR2 != K.adresse_coffre(1, P2[1], P2[2], ALEAS2[1])

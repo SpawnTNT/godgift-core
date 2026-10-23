@@ -12,7 +12,9 @@
 
 | Version | Empreinte du programme (SHA-256 du fichier `SHA256SUMS`) |
 |---|---|
-| 1.4.0, la version design (54 fichiers ; en attente du message signé de l’auteur) | `c301d4018fc92f7b2e52482bdd4828b2cb8e4393833e010a342c16b35181a426` |
+| 1.6.0 (56 fichiers ; en attente du message signé de l’auteur) | `d3c7ac4ae808a7b1f85e6aec81df1128fc99ce754da7133d6f6d0d127ae70d4c` |
+| 1.5.0 (55 fichiers ; désignée par le message signé du 18 octobre 2026) | `b623c0b2e71bb4ed1ff0612b79b9500c2c8f739c51c0f45b8950739aad187848` |
+| 1.4.0, la version design (54 fichiers ; désignée par le message signé du 17 octobre 2026) | `25a65748620ed19686a4c2a53c487fb1a27042ff919e4eb7524c718a7a1729e0` |
 | 1.3.0 (44 fichiers ; désignée par le message signé du 16 octobre 2026) | `03f6a9640885aae94a692689ce9217f2fde399bf7274b2b91573242afb936d35` |
 | 1.2.1-beta (43 fichiers) | `d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75` |
 | 1.2.0-beta (remplacée) | `529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3` |
@@ -26,7 +28,7 @@ Cette commande refait le programme depuis ces sources et compare son empreinte, 
 
 ```
 cd 05_GODGIFT_CORE/SOURCES
-python3 recompiler_et_comparer.py --reconstruire --attendue d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75
+python3 recompiler_et_comparer.py --reconstruire --attendue b623c0b2e71bb4ed1ff0612b79b9500c2c8f739c51c0f45b8950739aad187848
 ```
 
 Il faut Python 3 et Node.js (npm). Les versions du module cryptographique sont figées par `bundle/package-lock.json`. Le résultat attendu est `IDENTIQUE`.
@@ -61,7 +63,9 @@ Les installateurs Windows officiels seront signés au nom d'Arthur Benjamin Myar
 
 | Version | Program fingerprint (SHA-256 of `SHA256SUMS`) |
 |---|---|
-| 1.4.0, the design version (54 files; awaiting the author’s signed message) | `c301d4018fc92f7b2e52482bdd4828b2cb8e4393833e010a342c16b35181a426` |
+| 1.6.0 (56 files; awaiting the author’s signed message) | `d3c7ac4ae808a7b1f85e6aec81df1128fc99ce754da7133d6f6d0d127ae70d4c` |
+| 1.5.0 (55 files; designated by the signed message of 18 October 2026) | `b623c0b2e71bb4ed1ff0612b79b9500c2c8f739c51c0f45b8950739aad187848` |
+| 1.4.0, the design version (54 files; designated by the signed message of 17 October 2026) | `25a65748620ed19686a4c2a53c487fb1a27042ff919e4eb7524c718a7a1729e0` |
 | 1.3.0 (44 files; designated by the signed message of 16 October 2026) | `03f6a9640885aae94a692689ce9217f2fde399bf7274b2b91573242afb936d35` |
 | 1.2.1-beta (43 files) | `d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75` |
 | 1.2.0-beta (superseded) | `529c2f7ab2e6c9a2bdedead36e291ab02542b0af6553e4ae9fa6fb46295e4ce3` |
@@ -73,7 +77,7 @@ The official fingerprint of a version is the one the author designates in a sign
 
 ```
 cd 05_GODGIFT_CORE/SOURCES
-python3 recompiler_et_comparer.py --reconstruire --attendue d5e320859de4d55909d8f46e6381be321275a52770d8e3d061c83ce2abad0c75
+python3 recompiler_et_comparer.py --reconstruire --attendue b623c0b2e71bb4ed1ff0612b79b9500c2c8f739c51c0f45b8950739aad187848
 ```
 
 You need Python 3 and Node.js (npm). The versions of the cryptographic module are pinned by `bundle/package-lock.json`. The expected result is `IDENTIQUE` (identical). The same tool checks an installation (`--dossier`) or the web version (`--site`). The installers are built with `python3 construire.py`, which also needs NSIS and dpkg-deb.

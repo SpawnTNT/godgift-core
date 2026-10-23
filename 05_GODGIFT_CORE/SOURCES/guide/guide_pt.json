@@ -30,7 +30,7 @@
         "Cada resposta é feita de palavras francesas da lista das cinco mil: três palavras por enigma de pedra, quatro para uma catedral e o cofre final. Verifique as suas palavras em «Encontrar», no passo 2: «A lista das cinco mil».",
         "Uma hora depois do segundo enigma sai o grito: traz o acaso, a última peça da chave. O GodGift Core lê-o sozinho.",
         "Em «Encontrar», escolha o cofre: o GodGift Core prepara-o e mostra «Armado». Desligue a internet, escreva as suas duas respostas e depois «Calcular a chave».",
-        "Se for a chave certa, volte a ligar a internet. Na janela da aplicação instalada, aberta pelo seu ícone, o GodGift Core assina logo a transação na sua máquina e envia-a sozinha para o seu endereço, com uma oferta forte (cerca de 10 % do tesouro em taxas); noutro sítio (navegador, versão web, janela recarregada), faz-lhe primeiro voltar a escrever 16 caracteres do seu endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua carteira; em «Sem instalar», não envia nada. Se outra pessoa encontrou ao mesmo tempo, é a corrida: «Acelerar» duplica de uma vez as taxas.",
+        "Se for a chave certa, volte a ligar a internet. Na janela da aplicação instalada, aberta pelo seu ícone, o GodGift Core propõe-lhe as duas ofertas de taxas, ditas com clareza (a taxa rápida do momento, ou a oferta forte, até 10 % do tesouro, para passar à frente), depois assina a transação na sua máquina e envia-a para o seu endereço; noutro sítio (navegador, versão web, janela recarregada), faz-lhe primeiro voltar a escrever 16 caracteres do seu endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua carteira; em «Sem instalar», não envia nada. Se outra pessoa encontrou ao mesmo tempo, é a corrida: «Acelerar» duplica de uma vez as taxas.",
         "Treine primeiro nos cofres de treino A e B: são falsos, públicos, e mostram-lhe exatamente o que aconteceria."
       ]
     },
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Endereço de receção",
-      "texte": "O endereço da sua própria carteira (mesmo uma carteira fria), guardado antecipadamente em Mais, «O meu endereço de receção». No dia em que encontrar, o tesouro parte sozinho para lá. Tem de ser assinado pela sua carteira (endereço bc1q…, 3… ou 1…): a assinatura prova que é seu e desmascara um vírus que tivesse trocado o endereço copiado. O GodGift Core volta a verificá-lo mesmo antes do envio, mostra a sua data de registo e avisa-o se mudou desde a sua última visita. Fora da janela própria da aplicação instalada, faz-lhe também voltar a escrever, antes de cada envio, 16 caracteres deste endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua própria carteira.",
+      "texte": "O endereço da sua própria carteira (mesmo uma carteira fria), guardado antecipadamente em Mais, «O meu endereço de receção». No dia em que encontrar, o tesouro parte para lá assim que tiver escolhido as taxas. Tem de ser assinado pela sua carteira (endereço bc1q…, 3… ou 1…): a assinatura prova que é seu e desmascara um vírus que tivesse trocado o endereço copiado. O GodGift Core volta a verificá-lo mesmo antes do envio, mostra a sua data de registo e avisa-o se mudou desde a sua última visita. Fora da janela própria da aplicação instalada, faz-lhe também voltar a escrever, antes de cada envio, 16 caracteres deste endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua própria carteira.",
       "voir": [
         "recuperer",
         "portefeuille",
@@ -467,7 +467,7 @@
     {
       "id": "recuperer",
       "mot": "Recuperar o tesouro",
-      "texte": "Quando a chave de um cofre real é encontrada, o GodGift Core assina, na sua máquina, a transação que envia todo o cofre para o seu endereço de receção assinado, e difunde-a pelas duas fontes. Na janela própria da aplicação instalada (aberta pelo seu ícone), fá-lo logo; noutro sítio (navegador, versão web, janela recarregada), só depois de ter voltado a escrever 16 caracteres do seu endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua própria carteira: se uma página armadilhada tivesse mudado o endereço guardado, não coincidiriam, nem sequer com um endereço fabricado que acabasse igual. A janela própria só guarda o seu código na memória: recarregada, já não envia sozinha; abra-a de novo pelo seu ícone. Em «Sem instalar», não envia nada. Sem ligação, a transação espera que a rede volte. Taxas: desde logo, mesmo sem concorrente, uma oferta forte de cerca de 10 % do tesouro (no máximo 300 sat/vB), sem lhe perguntar; acima disso, pergunta-lhe; nunca mais de metade do tesouro. No telemóvel, a versão web verifica tudo; para recuperar um tesouro, a aplicação instalada num computador continua a ser a via mais segura.",
+      "texte": "Quando a chave de um cofre real é encontrada, o GodGift Core assina, na sua máquina, a transação que envia todo o cofre para o seu endereço de receção assinado, e difunde-a pelas duas fontes. Na janela própria da aplicação instalada (aberta pelo seu ícone), fá-lo assim que tiver escolhido as taxas; noutro sítio (navegador, versão web, janela recarregada), só depois de ter voltado a escrever 16 caracteres do seu endereço, em dois pedaços tirados ao acaso e ocultos no ecrã, lidos na sua própria carteira: se uma página armadilhada tivesse mudado o endereço guardado, não coincidiriam, nem sequer com um endereço fabricado que acabasse igual. A janela própria só guarda o seu código na memória: recarregada, já não envia sozinha; abra-a de novo pelo seu ícone. Em «Sem instalar», não envia nada. Sem ligação, a transação espera que a rede volte. Taxas (Pedra, artigo 13): antes de assinar, o GodGift Core diz com clareza as duas ofertas e deixa-o escolher: a taxa rápida do momento, ou a oferta forte, que sacrifica à partida até 10 % do tesouro (sem nova pergunta até 300 sat/vB) para passar à frente de outra transação; nunca mais de 10 % sem uma nova pergunta; nunca mais de metade do tesouro. No telemóvel, a versão web verifica tudo; para recuperar um tesouro, a aplicação instalada num computador continua a ser a via mais segura.",
       "voir": [
         "reception",
         "accelerer",
@@ -497,7 +497,7 @@
     {
       "id": "installateur",
       "mot": "Verificar o meu instalador",
-      "texte": "Em angedeleau.com/verifier-installateur, deposite o ficheiro descarregado: o seu navegador calcula a impressão no próprio local e compara-a com os instaladores publicados. No Windows, o instalador terá também a assinatura do autor, depois de assinado (Certum); a versão de ensaio ainda não está.",
+      "texte": "Em angedeleau.com/verifier-installateur, deposite o ficheiro descarregado: o seu navegador calcula a impressão no próprio local e compara-a com os instaladores publicados. No Windows, o instalador terá também a assinatura do autor, depois de assinado (Certum).",
       "voir": [
         "officiel",
         "jamais"
@@ -553,7 +553,7 @@
     {
       "id": "course",
       "mot": "A corrida",
-      "texte": "Todos os que encontram as respostas certas obtêm a mesma chave: o cofre fica para a primeira transação confirmada, em geral a que paga mais taxas aos mineradores. É a regra do jogo, e nenhum programa o pode impedir. O GodGift Core paga desde logo, mesmo sem concorrente, uma oferta forte (cerca de 10 % do tesouro, no máximo 300 sat/vB) e duplica de uma vez com «Acelerar», nunca além de metade do tesouro; um concorrente que aposte mais, ou que entupa a fila com transações ligadas, pode ganhar.",
+      "texte": "Todos os que encontram as respostas certas obtêm a mesma chave: o cofre fica para a primeira transação confirmada, em geral a que paga mais taxas aos mineradores. É a regra do jogo, e nenhum programa o pode impedir. O GodGift Core propõe-lhe, antes de assinar, a taxa rápida do momento ou uma oferta forte (até 10 % do tesouro, sem nova pergunta até 300 sat/vB), e depois duplica de uma vez com «Acelerar», nunca além de metade do tesouro; um concorrente que aposte mais, ou que entupa a fila com transações ligadas, pode ganhar.",
       "voir": [
         "accelerer",
         "recuperer",
@@ -580,7 +580,7 @@
     },
     {
       "q": "Encontrei a chave: o que devo fazer?",
-      "r": "Na janela da aplicação instalada, nada a fazer: se o seu endereço de receção assinado estiver guardado, o GodGift Core envia logo todo o cofre para lá. Noutro sítio (navegador, versão web, janela recarregada), volte primeiro a escrever os 16 caracteres pedidos do seu endereço, em dois pedaços ocultos no ecrã, lidos na sua carteira; em «Sem instalar», instale o GodGift Core e volte a calcular a chave. Volte a ligar a internet se a tinha desligado. Se aparecer «Acelerar», outra pessoa encontrou ao mesmo tempo: é a corrida, clique."
+      "r": "Na janela da aplicação instalada, se o seu endereço de receção assinado estiver guardado, o GodGift Core propõe-lhe as duas ofertas de taxas, ditas com clareza (a taxa rápida, a oferta forte): escolha, e ele assina e envia todo o cofre para lá. Noutro sítio (navegador, versão web, janela recarregada), volte primeiro a escrever os 16 caracteres pedidos do seu endereço, em dois pedaços ocultos no ecrã, lidos na sua carteira; em «Sem instalar», instale o GodGift Core e volte a calcular a chave. Volte a ligar a internet se a tinha desligado. Se aparecer «Acelerar», outra pessoa encontrou ao mesmo tempo: é a corrida, clique."
     },
     {
       "q": "Falta-me uma única palavra: posso experimentar tudo?",
@@ -612,7 +612,7 @@
     },
     {
       "q": "E se duas pessoas encontrarem ao mesmo tempo?",
-      "r": "É a corrida, a regra do jogo: todos os que encontram têm a mesma chave, e o cofre fica para a primeira transação confirmada, em geral a que paga mais taxas. O GodGift Core paga desde logo, mesmo sem concorrente, uma oferta forte de cerca de 10 % do tesouro (no máximo 300 sat/vB, sem lhe perguntar) e «Acelerar» duplica de uma vez, nunca mais de metade do tesouro. Um concorrente que aposte mais pode ganhar: nenhum programa o pode impedir."
+      "r": "É a corrida, a regra do jogo: todos os que encontram têm a mesma chave, e o cofre fica para a primeira transação confirmada, em geral a que paga mais taxas. O GodGift Core propõe-lhe, antes de assinar, a taxa rápida do momento ou uma oferta forte (até 10 % do tesouro, sem nova pergunta até 300 sat/vB), e «Acelerar» duplica de uma vez, nunca mais de metade do tesouro. Um concorrente que aposte mais pode ganhar: nenhum programa o pode impedir."
     },
     {
       "q": "Alguém me propõe outra versão do GodGift Core, ou ajuda para recuperar um cofre",

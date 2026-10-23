@@ -30,7 +30,7 @@
         "Each answer is made of French words from the list of five thousand: three words per stone riddle, four for a cathedral and the final chest. Check your words in “Find”, at step 2: “The list of five thousand”.",
         "One hour after the second riddle comes the cry: it brings the randomness, the last piece of the key. GodGift Core reads it by itself.",
         "In “Find”, choose the chest: GodGift Core prepares it and shows “Armed”. Switch off the internet, type your two answers, then “Compute the key”.",
-        "If it is the right key, switch the internet back on. In the window of the installed app, opened from its icon, GodGift Core signs the transaction at once on your machine and sends it by itself to your address, with a strong offer (about 10% of the treasure in fees); elsewhere (browser, web version, reloaded window), it first has you retype 16 characters of your address, in two pieces drawn at random and hidden on screen, read in your wallet; in “No install”, it sends nothing. If someone else found it at the same time, it is the race: “Speed up” doubles the fees at once.",
+        "If it is the right key, switch the internet back on. In the window of the installed app, opened from its icon, GodGift Core offers you the two fee options, stated plainly (the current fast rate, or the strong offer, up to 10% of the treasure, to get ahead), then signs the transaction on your machine and sends it to your address; elsewhere (browser, web version, reloaded window), it first has you retype 16 characters of your address, in two pieces drawn at random and hidden on screen, read in your wallet; in “No install”, it sends nothing. If someone else found it at the same time, it is the race: “Speed up” doubles the fees at once.",
         "Practise first on practice chests A and B: they are fake, public, and show you exactly what would happen."
       ]
     },
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Receiving address",
-      "texte": "The address of your own wallet (even a cold wallet), saved in advance in More, “My receiving address”. The day you find, the treasure goes there by itself. It must be signed by your wallet (a bc1q…, 3… or 1… address): the signature proves it is yours and unmasks a virus that would have swapped the copied address. GodGift Core checks it again right before sending, shows the date it was saved and alerts you if it changed since your last visit. Outside the dedicated window of the installed app, it also has you retype, before each sending, 16 characters of this address, in two pieces drawn at random and hidden on screen, read in your own wallet.",
+      "texte": "The address of your own wallet (even a cold wallet), saved in advance in More, “My receiving address”. The day you find, the treasure goes there as soon as you have chosen the fees. It must be signed by your wallet (a bc1q…, 3… or 1… address): the signature proves it is yours and unmasks a virus that would have swapped the copied address. GodGift Core checks it again right before sending, shows the date it was saved and alerts you if it changed since your last visit. Outside the dedicated window of the installed app, it also has you retype, before each sending, 16 characters of this address, in two pieces drawn at random and hidden on screen, read in your own wallet.",
       "voir": [
         "recuperer",
         "portefeuille",
@@ -467,7 +467,7 @@
     {
       "id": "recuperer",
       "mot": "Recover the treasure",
-      "texte": "When the key of a real chest is found, GodGift Core signs, on your machine, the transaction that sends the whole chest to your signed receiving address, and broadcasts it through both sources. In the dedicated window of the installed app (opened from its icon), it does so at once; elsewhere (browser, web version, reloaded window), only after you have retyped 16 characters of your address, in two pieces drawn at random and hidden on screen, read in your own wallet: if a booby-trapped page had changed the saved address, they would not match, even for a forged address ending the same way. The dedicated window keeps its token in memory only: once reloaded, it no longer sends by itself; reopen it from its icon. In “No install”, it sends nothing. Offline, the transaction waits for the network to come back. Fees: right away, even with no competitor, a strong offer of about 10% of the treasure (at most 300 sat/vB), without asking you; beyond that, it asks you; never more than half the treasure. On a phone, the web version checks everything; to recover a treasure, the app installed on a computer remains the safest way.",
+      "texte": "When the key of a real chest is found, GodGift Core signs, on your machine, the transaction that sends the whole chest to your signed receiving address, and broadcasts it through both sources. In the dedicated window of the installed app (opened from its icon), it does so as soon as you have chosen the fees; elsewhere (browser, web version, reloaded window), only after you have retyped 16 characters of your address, in two pieces drawn at random and hidden on screen, read in your own wallet: if a booby-trapped page had changed the saved address, they would not match, even for a forged address ending the same way. The dedicated window keeps its token in memory only: once reloaded, it no longer sends by itself; reopen it from its icon. In “No install”, it sends nothing. Offline, the transaction waits for the network to come back. Fees (Stone, article 13): before signing, GodGift Core states the two offers plainly and lets you choose: the current fast rate, or the strong offer, which sacrifices up to 10% of the treasure outright (without a new question up to 300 sat/vB) to get ahead of another transaction; never more than 10% without a new question; never more than half the treasure. On a phone, the web version checks everything; to recover a treasure, the app installed on a computer remains the safest way.",
       "voir": [
         "reception",
         "accelerer",
@@ -497,7 +497,7 @@
     {
       "id": "installateur",
       "mot": "Verify my installer",
-      "texte": "On angedeleau.com/verifier-installateur, drop the downloaded file: your browser computes its fingerprint on the spot and compares it with the published installers. On Windows, the installer will also carry the author’s signature, once signed (Certum); the trial version is not signed yet.",
+      "texte": "On angedeleau.com/verifier-installateur, drop the downloaded file: your browser computes its fingerprint on the spot and compares it with the published installers. On Windows, the installer will also carry the author’s signature, once signed (Certum).",
       "voir": [
         "officiel",
         "jamais"
@@ -553,7 +553,7 @@
     {
       "id": "course",
       "mot": "The race",
-      "texte": "Everyone who finds the right answers gets the same key: the chest goes to the first confirmed transaction, generally the one that pays the miners the most fees. That is the rule of the game, and no program can prevent it. GodGift Core pays a strong offer right away, even with no competitor (about 10% of the treasure, at most 300 sat/vB), and doubles at once with “Speed up”, never beyond half the treasure; a competitor who bids more, or who clogs the queue with linked transactions, can win.",
+      "texte": "Everyone who finds the right answers gets the same key: the chest goes to the first confirmed transaction, generally the one that pays the miners the most fees. That is the rule of the game, and no program can prevent it. GodGift Core offers you, before signing, the current fast rate or a strong offer (up to 10% of the treasure, without a new question up to 300 sat/vB), then doubles at once with “Speed up”, never beyond half the treasure; a competitor who bids more, or who clogs the queue with linked transactions, can win.",
       "voir": [
         "accelerer",
         "recuperer",
@@ -580,7 +580,7 @@
     },
     {
       "q": "I found the key: what do I do?",
-      "r": "In the window of the installed app, nothing to do: if your signed receiving address is saved, GodGift Core sends the whole chest to it at once. Elsewhere (browser, web version, reloaded window), first retype the 16 requested characters of your address, in two pieces hidden on screen, read in your wallet; in “No install”, install GodGift Core and compute the key again. Switch the internet back on if you had cut it. If “Speed up” appears, someone else found it at the same time: it is the race, click it."
+      "r": "In the window of the installed app, if your signed receiving address is saved, GodGift Core offers you the two fee options, stated plainly (the fast rate, the strong offer): choose, and it signs and sends the whole chest to it. Elsewhere (browser, web version, reloaded window), first retype the 16 requested characters of your address, in two pieces hidden on screen, read in your wallet; in “No install”, install GodGift Core and compute the key again. Switch the internet back on if you had cut it. If “Speed up” appears, someone else found it at the same time: it is the race, click it."
     },
     {
       "q": "I’m missing just one word: can I try everything?",
@@ -612,7 +612,7 @@
     },
     {
       "q": "What if two people find it at the same time?",
-      "r": "It is the race, the rule of the game: everyone who finds has the same key, and the chest goes to the first confirmed transaction, generally the one that pays the most fees. GodGift Core pays right away, even with no competitor, a strong offer of about 10% of the treasure (at most 300 sat/vB, without asking you) and “Speed up” doubles at once, never more than half the treasure. A competitor who bids more can win: no program can prevent it."
+      "r": "It is the race, the rule of the game: everyone who finds has the same key, and the chest goes to the first confirmed transaction, generally the one that pays the most fees. GodGift Core offers you, before signing, the current fast rate or a strong offer (up to 10% of the treasure, without a new question up to 300 sat/vB), and “Speed up” doubles at once, never more than half the treasure. A competitor who bids more can win: no program can prevent it."
     },
     {
       "q": "Someone offers me another version of GodGift Core, or help to recover a chest",

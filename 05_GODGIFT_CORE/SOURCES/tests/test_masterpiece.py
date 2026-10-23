@@ -157,6 +157,7 @@ def signe_brut(date, texte):
 SECOURS_MSG = signe_brut('2026-11-20', 'Le serveur de secours de la vente, si la librairie tombe.\nAEDE:secours:https://secours.test')
 FAUX_SECOURS = dict(SECOURS_MSG, texte=SECOURS_MSG['texte'].replace('secours.test', 'pirate.test'))
 PANNE = {'librairie': False}
+CAPC = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'captures', 'choix_160')
 BETA = {'diverge': False, 'posts': [], 'vus': {}, 'frais': 10, 'conflit': False, 'confirme': set(), 'messages_extra': [], 'compagnons': [], 'secours_msgs': [], 'utxo0': [{'txid': '77' * 32, 'vout': 0, 'value': 600000, 'status': {'confirmed': True}}]}
 def repondre(u, methode='GET', corps=None):
     from urllib.parse import urlparse
@@ -323,7 +324,7 @@ async def main():
         await pg.fill('#z-r3', '1 2500 5000'); await pg.fill('#z-r17', '873 874 4410'); await pg.click('#z-calculer')
         await pg.wait_for_function("GG.CZ.res && !GG.CZ.calcul", timeout=180000)
         assert 'trouv' in (await pg.evaluate('GG.CZ.res')).lower() and await pg.evaluate(f"!!GG.TR.cles['2:{ADRS0[2]}']")
-        await pg.evaluate(f"(function(){{ var k = '2:{ADRS0[2]}'; ['cles', 'cibles', 'dest', 'msg', 'compte', 'confirmer', 'prep'].forEach(function (x) {{ delete GG.TR[x][k]; }}); }})()")   # le banc ne vide que le coffre 1
+        await pg.evaluate(f"(function(){{ var k = '2:{ADRS0[2]}'; ['cles', 'cibles', 'dest', 'msg', 'compte', 'confirmer', 'choix', 'prep'].forEach(function (x) {{ delete GG.TR[x][k]; }}); }})()")   # le banc ne vide que le coffre 1
         await pg.select_option('#z-coffre', '1'); await pg.wait_for_timeout(200)
         assert await pg.input_value('#z-alea') == ALEA0
         await pg.fill('#z-r3', '1 2500 5000'); await pg.fill('#z-r17', '873 874 4410'); await pg.click('#z-calculer')
@@ -684,6 +685,10 @@ async def main():
         assert json.loads(await pgN.evaluate("localStorage.getItem('gg.reception')"))['adresse'] == ADRX   # relire force l'ecriture (sinon un rechargement trop tot la perd, et le banc rougit a tort)
         await pgN.wait_for_timeout(700)                                           # le stockage local s'ecrit en differe : on le laisse se poser avant de recharger
         await pgN.reload(); await pgN.wait_for_function("window.GG && GG.M", timeout=60000)
+        if await pgN.evaluate("GG.R.reception && GG.R.reception.adresse") != ADRX:   # l ecriture s est perdue au rechargement (cela arrive sous la charge) : refaite une fois
+            await pgN.evaluate(f"localStorage.setItem('gg.reception', {json.dumps(intrusN)}); localStorage.setItem('gg.reception_vue', JSON.stringify({{adresse: '{ADRX}', date: '2026-12-01'}}))")
+            assert json.loads(await pgN.evaluate("localStorage.getItem('gg.reception')"))['adresse'] == ADRX; await pgN.wait_for_timeout(1500)
+            await pgN.reload(); await pgN.wait_for_function("window.GG && GG.M", timeout=60000)
         assert await pgN.evaluate("GG.receptionValide().ok && GG.R.reception.adresse") == ADRX, await pgN.evaluate("[GG.receptionValide(), localStorage.getItem('gg.reception')]")
         await trouver_(pgN)
         q1, q2 = await pgN.evaluate(f"GG.TR.morceaux['{ADRX}']")
@@ -701,11 +706,18 @@ async def main():
         vert('V3 : hors du sceau de la fenetre dediee, le formulaire « Changer » part vide ; l adresse s affiche partout avec ses deux morceaux demandes masques (cartes d essai comprises)')
         await pgN.evaluate("location.hash = '#/chasse/0'"); await pgN.wait_for_function(f"GG.TR.msg['{K0}'] && GG.TR.msg['{K0}'].retape", timeout=30000); await pgN.wait_for_timeout(300)
         await pgN.fill('[id^="tr-retape-"]', m1.upper()); await pgN.fill('[id^="tr-retape2-"]', m2); await pgN.click('[data-retape]')
-        await pgN.wait_for_function(f"GG.TR.envois['{K0}'] && GG.TR.envois['{K0}'].etat === 'diffusee'", timeout=60000)
+        await pgN.wait_for_function(f"GG.TR.choix['{K0}'] && !GG.TR.envois['{K0}']", timeout=60000)      # 1.6.0 : le choix des frais, dit en clair, avant de signer
+        assert not BETA['posts'] and 'À vous de choisir avant de signer' in plat(await pgN.inner_text('#page'))
+        await pgN.click('[data-choix][data-mode="forte"]'); await pgN.wait_for_timeout(300)
+        assert not await pgN.evaluate("!!document.querySelector('[data-confirmer]')"), 'offre forte sous les seuils (10 % du coffre, 300 sat/vB) : aucune question attendue'
+        try: await pgN.wait_for_function(f"GG.TR.envois['{K0}'] && GG.TR.envois['{K0}'].etat === 'diffusee'", timeout=60000)
+        except Exception:
+            print('DIAG 1.6.0', await pgN.evaluate(f"JSON.stringify({{msg: GG.TR.msg['{K0}'], conf: GG.TR.confirmer['{K0}'], choix: GG.TR.choix['{K0}'], env: GG.TR.envois['{K0}'], retape: GG.TR.retape['{K0}'], prep: GG.TR.prep['{K0}'] && Object.keys(GG.TR.prep['{K0}'])}})"), plat(await pgN.inner_text('#page'))[:1500], err[-3:], flush=True); raise
         txN = TXE.parse(bytes.fromhex(BETA['posts'][0][1])); assert txN.vout[0].script_pubkey.address(NETWORKS['main']) == ADRG
         assert await pgN.evaluate(f"!GG.TR.retape['{K0}']")                     # la retape a servi a CET envoi
         await pgN.click('[data-accelerer]'); await pgN.wait_for_timeout(500)
-        if await pgN.evaluate("!!document.querySelector('[data-confirmer]')"): await pgN.click('[data-confirmer]'); await pgN.wait_for_timeout(500)
+        assert await pgN.evaluate("!!document.querySelector('[data-confirmer]')") and 'Frais élevés' in plat(await pgN.inner_text('#page')), 'Accelerer au double (> 10 % du coffre) : la question attendue'
+        await pgN.click('[data-confirmer]'); await pgN.wait_for_timeout(500)
         n_p = len(BETA['posts'])
         assert await pgN.evaluate(f"GG.TR.msg['{K0}'] && GG.TR.msg['{K0}'].retape") and len(BETA['posts']) == n_p
         assert await pgN.evaluate(f"!!document.querySelector('[id^=\"tr-retape2-\"]') && GG.TR.morceaux['{ADRG}'].length === 2")
@@ -726,20 +738,61 @@ async def main():
         assert '600 000 sats' in (plat(await pg.inner_text('#page'))).replace('\u202f', ' ').replace('\xa0', ' ')
         BETA['posts'].clear(); K0 = '1:' + ADR0; EV = f"GG.TR.envois['{K0}']"; BETA['frais'] = 400   # des frais tres eleves annonces : GodGift Core doit demander
         await pg.fill('#z-r3', '1 2500 5000'); await pg.fill('#z-r17', '873 874 4410'); await pg.fill('#z-alea', ALEA0); await pg.click('#z-calculer')
-        await pg.wait_for_function(f"GG.TR.compte['{K0}']", timeout=180000)
+        await pg.wait_for_function(f"GG.TR.choix['{K0}'] && !GG.TR.compte['{K0}']", timeout=180000)     # 1.6.0 : la cle trouvee ouvre le choix des frais, rien ne part seul
+        ch_ = await pg.evaluate(f"GG.TR.choix['{K0}']"); assert ch_['rapide'] < ch_['forte'] and ch_['forte'] <= 60000 and ch_['total'] == 600000, ch_
+        os.makedirs(CAPC, exist_ok=True)                                         # 1.6.0 : l ecran du choix sur telephone, et aucun ecran principal ne defile
+        for w_, h_ in ((320, 568), (375, 667), (360, 740), (390, 844)):
+            await pg.set_viewport_size({'width': w_, 'height': h_}); await pg.wait_for_timeout(400)
+            await pg.screenshot(path=f'{CAPC}/choix_{w_}x{h_}.png')
+            mes_ = await pg.evaluate("(function(){var p=document.getElementById('page');return {page:[p.scrollHeight,p.clientHeight],doc:[document.documentElement.scrollHeight,innerHeight],ecran:p.classList.contains('ecran'),large:document.documentElement.scrollWidth>innerWidth}})()")
+            print('CHOIX', w_, h_, mes_, flush=True)
+            assert not mes_['large'] and (not mes_['ecran'] or mes_['page'][0] <= mes_['page'][1] + 1), mes_
+        assert ('(< 1 % du coffre' in plat(await pg.inner_text('#page'))) == (ch_['rapide'] < 6000), (ch_, plat(await pg.inner_text('#page'))[:600])   # sous 1 % du coffre, l ecran dit « < 1 % » (jamais « 0 % ») ; plat() remplace les insecables
+        MES_T = "(function(){var p=document.getElementById('page');return {page:[p.scrollHeight,p.clientHeight],ecran:p.classList.contains('ecran'),large:document.documentElement.scrollWidth>innerWidth,choix:!!document.querySelector('[data-choix]')}})()"
+        await pg.evaluate("location.hash = '#/chasser'"); await pg.wait_for_timeout(400)
+        if await pg.evaluate("!!document.querySelector('[data-pas-t=\"3\"]')"): await pg.click('[data-pas-t="3"]'); await pg.wait_for_timeout(300)
+        for w_, h_ in ((320, 568), (375, 667)):                                   # Trouver, pas 3 : l ecran du choix, sur l ecran principal (overflow:hidden) : rien de coupe, rien de deborde
+            await pg.set_viewport_size({'width': w_, 'height': h_}); await pg.wait_for_timeout(400)
+            mes_ = await pg.evaluate(MES_T); print('CHOIX chasser', w_, h_, mes_, flush=True); await pg.screenshot(path=f'{CAPC}/choix_chasser_{w_}x{h_}.png')
+            assert mes_['choix'] and not mes_['large'] and (not mes_['ecran'] or mes_['page'][0] <= mes_['page'][1] + 1), mes_
+        await pg.evaluate("location.hash = '#/chasse/0'"); await pg.wait_for_timeout(400)
+        await pg.set_viewport_size({'width': 1280, 'height': 720}); await pg.wait_for_timeout(300)
         bonne_sig = await pg.evaluate("GG.R.reception.signature")
-        await pg.evaluate(f"GG.R.reception.signature = {json.dumps(sig137(KG, 'AEDE:reception:' + ADRG))}")   # remplacee pendant le compte a rebours
-        await pg.wait_for_function(f"!GG.TR.compte['{K0}'] && GG.TR.msg['{K0}'] && GG.TR.msg['{K0}'].attenteAdresse", timeout=30000)
+        await pg.evaluate(f"GG.R.reception.signature = {json.dumps(sig137(KG, 'AEDE:reception:' + ADRG))}")   # remplacee pendant que le choix attend
+        await pg.click('[data-choix]')                                            # le bouton present (un seul quand le taux rapide depasse deja l offre forte)
+        await pg.wait_for_function(f"!GG.TR.choix['{K0}'] && GG.TR.msg['{K0}'] && GG.TR.msg['{K0}'].attenteAdresse", timeout=30000)
         assert not BETA['posts'] and await pg.evaluate(f"GG.TR.msg['{K0}'].e") == 'ko'
         await pg.evaluate(f"GG.R.reception.signature = {json.dumps(bonne_sig)}; GG.receptionReconnue()")
-        await pg.wait_for_function(f"GG.TR.compte['{K0}']", timeout=30000)
-        vert('la signature de l adresse de reception est reverifiee au moment de l envoi : remplacee pendant le compte a rebours, rien ne part ; reconnue, l envoi reprend')
-        txt = plat(await pg.inner_text('#page')); assert 'part vers votre adresse dans' in txt and ADRG[:4] in txt and not BETA['posts']
+        await pg.wait_for_function(f"GG.TR.choix['{K0}']", timeout=30000)
+        vert('1.6.0 : la cle trouvee ouvre le choix des frais (taux rapide, offre forte), rien ne part seul ; la signature de l adresse de reception est reverifiee au moment du choix : remplacee, rien ne part ; reconnue, le choix revient')
+        # D1 (tour 3) : le chasseur enregistre une autre adresse pendant que le choix attend : le choix revient avec la nouvelle, le dit, et rien ne part ; puis il remet la premiere
+        K2 = EC.PrivateKey(hashlib.sha256(b'la seconde adresse').digest()); ADR2 = SC.p2wpkh(K2.get_public_key()).address(NETWORKS['main'])
+        async def enregistrer_(cle_, adr_):
+            await pg.evaluate("location.hash = '#/reglages'"); await pg.wait_for_timeout(400)
+            if await pg.evaluate("!!document.getElementById('r-rec-changer')"): await pg.click('#r-rec-changer'); await pg.wait_for_timeout(200)
+            await pg.fill('#r-rec-adr', adr_); m_ = await pg.evaluate("document.getElementById('r-rec-msg').textContent"); assert m_.startswith('AEDE:reception:' + adr_ + ':'), m_
+            await pg.fill('#r-rec-sig', sig137(cle_, m_)); await pg.click('#r-rec-garder'); await pg.wait_for_timeout(300)
+            assert (await pg.evaluate("GG.receptionValide()"))['adresse'] == adr_
+        await enregistrer_(K2, ADR2)
+        await pg.wait_for_function(f"GG.TR.choix['{K0}'] && GG.TR.choix['{K0}'].nouvelle && GG.TR.dest['{K0}'] === '{ADR2}'", timeout=30000)
+        await pg.evaluate("location.hash = '#/chasse/0'")
+        await pg.wait_for_function("document.getElementById('page').innerText.indexOf('la nouvelle qui est affich') >= 0", timeout=30000); txt = plat(await pg.inner_text('#page'))
+        sans_ = txt.replace(' ', '').replace('\n', '')                              # les groupes de quatre sont des span d une boite flex : innerText met un saut de ligne entre eux
+        assert "c'est la nouvelle qui est affichée ici" in txt and ADR2[:12] in sans_ and ADR2[-6:] in sans_ and not BETA['posts'], txt[:800]   # plat() aplatit l apostrophe
+        await enregistrer_(KG, ADRG)                                           # la premiere adresse, remise : le choix revient avec elle, et le dit
+        await pg.wait_for_function(f"GG.TR.choix['{K0}'] && GG.TR.dest['{K0}'] === '{ADRG}' && !GG.TR.envois['{K0}']", timeout=30000)
+        await pg.evaluate("location.hash = '#/chasse/0'"); await pg.wait_for_timeout(400)
+        assert not [p_ for p_ in BETA['posts']], BETA['posts']
+        vert('D1 (tour 3) : une adresse enregistree pendant que le choix attend : le choix revient avec la nouvelle adresse et le dit en tete ; rien ne part sur un choix fait pour une autre adresse')
+        ch2_ = await pg.evaluate(f"GG.TR.choix['{K0}']"); txt = plat(await pg.inner_text('#page'))
+        assert 'À vous de choisir avant de signer' in txt and 'Taux rapide du moment' in txt and ('Offre forte' in txt) == (ch2_['forte'] > ch2_['rapide']) and ADRG[:4] in txt and not BETA['posts'], (txt[:1200], len(BETA['posts']), ch2_)
+        assert ch2_['forte'] <= 300000 and ch2_['rapide'] <= 300000                 # M3 : jamais plus de la moitie du coffre, meme sur l ecran du choix
         assert not await pg.evaluate("/[KL][1-9A-HJ-NP-Za-km-z]{51}/.test(document.getElementById('page').innerText)")
         # en un seul appel : un rendu de la page (la preparation du coffre qui se termine) peut survenir entre deux appels du banc
         wif = await pg.evaluate("document.querySelector('.tresor-trouve details').open = true; document.querySelector('[data-wif]').click(); document.getElementById('h-wif').textContent")
         assert wif[:1] in ('K', 'L') and len(wif) == 52, wif
-        await pg.wait_for_function(f"GG.TR.confirmer['{K0}']", timeout=60000)
+        await pg.click('[data-choix][data-mode="forte"]' if ch2_['forte'] > ch2_['rapide'] else '[data-choix]')   # 1.6.0 : l offre forte choisie ; au-dela de 10 % du tresor, une nouvelle question
+        await pg.wait_for_function(f"GG.TR.confirmer['{K0}'] && !GG.TR.choix['{K0}']", timeout=60000)
         assert 'Frais élevés' in plat(await pg.inner_text('#page')) and not BETA['posts']
         BETA['frais'] = 10; await pg.click('[data-confirmer]')
         await pg.wait_for_function(f"{EV} && {EV}.etat === 'diffusee'", timeout=60000)
@@ -749,24 +802,60 @@ async def main():
         pub = EC.PublicKey.parse(tx.vin[0].witness.items[1]); assert SC.p2wpkh(pub).address(NETWORKS['main']) == ADR0
         assert pub.verify(EC.Signature.parse(tx.vin[0].witness.items[0][:-1]), tx.sighash_segwit(0, SC.p2pkh(pub), 600000))
         assert tx.vout[0].value + env['frais'] == 600000 and env['frais'] >= 300 * env['vt'] and env['frais'] <= 300000, env
-        vert(f"recuperer le tresor : cle trouvee, l adresse s affiche 10 s (la cle privee n entre dans la page qu a la demande), puis la transaction signee sur la machine part par les deux sources vers l adresse prouvee ({tx.vout[0].value} sats, frais {env['frais']} sats) ; signature valide, remplacement autorise")
+        vert(f"recuperer le tresor : cle trouvee, le choix des frais avec l adresse (la cle privee n entre dans la page qu a la demande), puis la transaction signee sur la machine part par les deux sources vers l adresse prouvee ({tx.vout[0].value} sats, frais {env['frais']} sats) ; signature valide, remplacement autorise")
         # ---- accelerer : meme entree, frais plus eleves, nouvelle transaction
         async def accelerer_():
             await pg.click('[data-accelerer]'); await pg.wait_for_timeout(400)
-            if await pg.evaluate("!!document.querySelector('[data-confirmer]')"):   # au-dela de 10 % du tresor, GodGift Core demande
-                assert 'Frais élevés' in plat(await pg.inner_text('#page')); await pg.click('[data-confirmer]')
+            assert await pg.evaluate("!!document.querySelector('[data-confirmer]')"), 'Accelerer au double (> 10 % du tresor) : la question attendue'   # au-dela de 10 % du tresor, GodGift Core demande
+            assert 'Frais élevés' in plat(await pg.inner_text('#page')); await pg.click('[data-confirmer]')
+        # I1 (tour 4) : « Accelerer » apres cinq minutes : l explorateur ne rend plus la sortie depensee (en mempool) ; notre propre transaction fournit les entrees sans etre un concurrent
+        utxo_avant = BETA['utxo0']; BETA['utxo0'] = []
+        BETA['mempool0'] = [{'txid': env['txid'], 'fee': env['frais'], 'weight': env['vt'] * 4, 'vin': [{'txid': '77' * 32, 'vout': 0, 'prevout': {'scriptpubkey_address': ADR0, 'value': 600000}}]}]
+        await pg.evaluate(f"GG.TR.prep['{K0}'].date -= 6 * 60 * 1000")
         n0 = len(BETA['posts']); await accelerer_()
         await pg.wait_for_function(f"{EV} && {EV}.etat === 'diffusee' && {EV}.txid !== '{env['txid']}'", timeout=30000)
         env2 = await pg.evaluate(EV); tx2 = TXE.parse(bytes.fromhex(BETA['posts'][-1][1]))
         assert env2['frais'] >= env['frais'] * 1.5 and tx2.vin[0].txid == tx.vin[0].txid and tx2.vout[0].script_pubkey.address(NETWORKS['main']) == ADRG
+        prep_ = await pg.evaluate(f"GG.TR.prep['{K0}']")
+        assert not prep_.get('concurrent') and len(prep_['utxos']) == 1 and prep_['utxos'][0]['txid'] == '77' * 32, prep_   # nos entrees, pas de concurrent
+        assert not await pg.evaluate(f"GG.TR.msg['{K0}'] && GG.TR.msg['{K0}'].d"), await pg.evaluate(f"GG.TR.msg['{K0}']")   # jamais « nouvel essai dans 30 secondes »
+        BETA['utxo0'] = utxo_avant; BETA['mempool0'] = []
         ch = await pg.evaluate("""GG.choisirSorties([{txid: 'aa'.repeat(32), vout: 0, value: 60000, status: {confirmed: true}}, {txid: 'bb'.repeat(32), vout: 1, value: 700, status: {confirmed: true}},
             {txid: 'cc'.repeat(32), vout: 0, value: 900000, status: {confirmed: false}}, {txid: 'dd'.repeat(32), vout: 2, value: 5000, status: {confirmed: true}}], 1000)""")
         assert [x['txid'][:2] for x in ch] == ['aa', 'dd'], ch     # le semis garde meme a 1000 sat/vB ; poussiere et non confirme laisses
-        vert(f"accelerer : la meme entree repart avec des frais plus eleves ({env['frais']} puis {env2['frais']} sats), toujours vers l adresse prouvee")
+        vert(f"accelerer apres cinq minutes, la sortie du coffre plus rendue par l explorateur (I1) : nos propres entrees servent, notre transaction n est pas un concurrent ; la meme entree repart avec des frais plus eleves ({env['frais']} puis {env2['frais']} sats), toujours vers l adresse prouvee")
+        # tour 6 : la cle recalculee pendant qu une transaction attend : la question du double, rien ne part sans clic ; « Annuler » la retire, l envoi en attente reste
+        n6 = len(BETA['posts']); await pg.evaluate(f"delete GG.TR.cles['{K0}']; GG.TR.envois['{K0}'].frais = 1650; GG.TR.envois['{K0}'].vt = 110")   # en memoire : une transaction en attente au taux rapide, dont le double reste sous 10 % et 300 sat/vB
+        async def recalculer_():
+            await pg.fill('#z-r3', '1 2500 5000'); await pg.fill('#z-r17', '873 874 4410'); await pg.fill('#z-alea', ALEA0); await pg.click('#z-calculer')
+            await pg.wait_for_function(f"GG.TR.cles['{K0}'] && GG.TR.confirmer['{K0}'] && !GG.TR.choix['{K0}']", timeout=180000); await pg.wait_for_timeout(800)
+        await recalculer_()
+        cf6 = await pg.evaluate(f"GG.TR.confirmer['{K0}']"); env6 = await pg.evaluate(EV); txt6 = plat(await pg.inner_text('#page'))
+        assert len(BETA['posts']) == n6 and env6['txid'] == env2['txid'] and cf6['frais'] == 3300 and cf6.get('remplace') and not cf6.get('nouvelle'), (cf6, len(BETA['posts']) - n6)   # sous les seuils : la question quand meme, rien ne part
+        assert 'Une transaction attend déjà' in txt6 and '3 300 sats (< 1 % du trésor' in txt6 and 'Frais élevés' not in txt6 and ADRG[:4] in txt6 and 'Annuler' in txt6, txt6[:600]
+        await pg.evaluate(f"GG.TR.envois['{K0}'].frais = {env2['frais']}; GG.TR.envois['{K0}'].vt = {env2['vt']}")
+        await pg.click('[data-annuler]'); await pg.wait_for_timeout(400)
+        assert await pg.evaluate(f"!GG.TR.confirmer['{K0}'] && !GG.TR.choix['{K0}']") and len(BETA['posts']) == n6
+        # l adresse changee pendant qu un envoi attend : rien ne se passe a l enregistrement ; la cle recalculee pose la question avec la nouvelle adresse, jamais le premier choix
+        await enregistrer_(K2, ADR2); await pg.wait_for_timeout(500)
+        assert await pg.evaluate(f"!GG.TR.confirmer['{K0}'] && !GG.TR.choix['{K0}'] && GG.TR.envois['{K0}'].txid === '{env2['txid']}'") and len(BETA['posts']) == n6
+        await pg.evaluate("location.hash = '#/chasse/0'"); await pg.wait_for_timeout(400); await pg.evaluate(f"delete GG.TR.cles['{K0}']"); await recalculer_()
+        cf7 = await pg.evaluate(f"GG.TR.confirmer['{K0}']"); txt7 = plat(await pg.inner_text('#page')); sans7 = txt7.replace(' ', '').replace('\n', '')
+        assert cf7.get('nouvelle') and cf7['frais'] >= 2 * env2['frais'] and await pg.evaluate(f"GG.TR.dest['{K0}']") == ADR2 and "c'est la nouvelle qui est affichée ici" in txt7 and ADR2[:12] in sans7 and len(BETA['posts']) == n6, (cf7, txt7[:500])
+        await enregistrer_(KG, ADRG); await pg.evaluate("location.hash = '#/chasse/0'"); await pg.wait_for_timeout(600)
+        assert await pg.evaluate(f"GG.TR.confirmer['{K0}'] && GG.TR.dest['{K0}'] === '{ADRG}' && !GG.TR.choix['{K0}']") and len(BETA['posts']) == n6
+        vert('tour 7 : une adresse enregistree pendant qu une transaction attend ne change rien ; la cle recalculee pose la question du double avec la nouvelle adresse, dite en tete, jamais le premier choix ; rien ne part')
+        await pg.click('[data-annuler]'); await pg.wait_for_timeout(400)
+        assert await pg.evaluate(f"!GG.TR.confirmer['{K0}'] && !GG.TR.choix['{K0}'] && GG.TR.envois['{K0}'].txid === '{env2['txid']}' && !!document.querySelector('[data-accelerer]') && !document.querySelector('[data-envoyer]')") and len(BETA['posts']) == n6
+        vert('tour 6 : la cle recalculee pendant qu une transaction attend ne part pas seule : la question du double (adresse, sats, part du coffre, « Annuler ») ; annulee, l envoi en attente reste et « Accelerer » aussi')
         # ---- un concurrent en attente : detecte, et on passe devant
         BETA['conflit'] = True
-        BETA['mempool0'] = [{'txid': 'cc' * 32, 'fee': 9000, 'weight': 440, 'vin': [{'txid': '77' * 32, 'vout': 0, 'prevout': {'scriptpubkey_address': ADR0, 'value': 600000}}]}]
-        await accelerer_(); await pg.wait_for_function(f"{EV} && {EV}.etat === 'concurrence'", timeout=40000)
+        BETA['mempool0'] = [{'txid': env2['txid'], 'fee': env2['frais'], 'weight': env2['vt'] * 4, 'vin': [{'txid': '77' * 32, 'vout': 0, 'prevout': {'scriptpubkey_address': ADR0, 'value': 600000}}]}]   # tour 6 : notre ancienne encore en mempool, la remplacante refusee : aucun faux concurrent
+        await accelerer_(); await pg.wait_for_function(f"{EV} && {EV}.txid !== '{env2['txid']}' && {EV}.anciens.indexOf('{env2['txid']}') >= 0", timeout=40000); await pg.wait_for_timeout(7000)
+        assert await pg.evaluate(f"{EV}.etat === 'a_diffuser' && !{EV}.concurrent"), await pg.evaluate(EV)
+        vert('tour 6 : une remplacante refusee pendant que notre ancienne transaction est encore en mempool : notre ancienne n est jamais prise pour un concurrent')
+        BETA['mempool0'] = [{'txid': 'cc' * 32, 'fee': 9000, 'weight': 440, 'vin': [{'txid': '77' * 32, 'vout': 0, 'prevout': {'scriptpubkey_address': ADR0, 'value': 600000}}]}]   # puis un vrai concurrent
+        await pg.wait_for_function(f"{EV} && {EV}.etat === 'concurrence'", timeout=40000)
         assert '9 000' in (plat(await pg.inner_text('#page'))).replace('\u202f', ' ').replace('\xa0', ' ')
         BETA['conflit'] = False; await accelerer_()
         await pg.wait_for_function(f"{EV} && {EV}.etat === 'diffusee' && {EV}.frais > 9000", timeout=40000)

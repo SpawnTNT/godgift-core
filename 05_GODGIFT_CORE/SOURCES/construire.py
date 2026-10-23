@@ -116,6 +116,12 @@ def conditions():
             for k, v in m.items():
                 if v:
                     x['texte'] = x['texte'].replace('{{' + k.upper() + '}}', v)
+    # 1.6.0 : ce que GodGift Core n'embarque pas (l'adresse de l'auteur, decision du 20 octobre 2026 ; le SIRET, le mediateur) renvoie aux
+    # mentions legales du site, ou la loi l'exige ; jamais un champ vide ni un {{MOT}} a l'ecran
+    renvoi = {'fr': '(voir les mentions légales du site angedeleau.com)', 'en': '(see the legal notice on angedeleau.com)'}
+    for l, x in cg.items():
+        x['texte'] = re.sub(r'\{\{[A-Z_]+\}\}', renvoi[l], x['texte'])
+        assert '{{' not in x['texte']
     ecrire(os.path.join(APP, 'gg_cg.js'), '/* Les conditions generales (le francais fait foi), texte integral et empreinte du fichier publie (Pierre, 01_PIERRE). */\nthis.GG_CG = ' +
            json.dumps(cg, ensure_ascii=False, sort_keys=True) + ';\n')
 

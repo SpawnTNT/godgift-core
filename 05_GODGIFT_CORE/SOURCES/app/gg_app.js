@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   if (window.top !== window.self) { document.body.textContent = ""; return; }   // jamais dans le cadre d'une autre page
-  var VERSION = "1.5.0";
+  var VERSION = "1.6.0";
   var A = 2027;
   // la version web (https://app.angedeleau.com/, hebergement statique a part) lit la librairie sur angedeleau.com ; installe, sur librairie.angedeleau.com
   var WEB = location.protocol === "https:";
@@ -59,7 +59,7 @@
   // Partout ailleurs (« Sans installer », navigateur principal, repli d'un lanceur, fenetre rechargee, version web), avant chaque envoi,
   // le chasseur retape deux morceaux de 8 caracteres de son adresse de reception, tires au hasard et masques a l'ecran, lus dans son
   // propre portefeuille (GGR.morceauxARetaper, la regle de la Cave) ; « Sans installer » ne recupere aucun tresor.
-  // Et dans la fenetre dediee elle-meme, l'envoi automatique ne vaut que pour une adresse enregistree (ou retapee) DANS cette fenetre :
+  // Et dans la fenetre dediee elle-meme, l'envoi sans retape ne vaut que pour une adresse enregistree (ou retapee) DANS cette fenetre :
   // elle porte un sceau, HMAC du jeton (voir sceauReception) ; un fichier qu'on aurait ouvert dans ce profil pourrait reecrire l'adresse
   // et sa signature, pas ce sceau.
   var JETON_F = (function () {
@@ -949,10 +949,14 @@
     return INDEX;
   }
   function lireReponse(s, m) {   // "873 clef 4410" -> {nums, erreurs}
-    var ix = index(), nums = [], err = [];
+    var ix = index(), nums = [], err = []; s = String(s || ""); if (s.normalize) s = s.normalize("NFC");   // « côte » tape en forme decomposee (NFD) est le meme mot (m3)
     s.split(/[\s,;]+/).filter(Boolean).forEach(function (x) {
       if (/^\d{1,4}$/.test(x)) { var v = +x; if (v >= 1 && v <= 5000) nums.push(v); else err.push(x); }
-      else if (ix.mot[x.toLowerCase()]) nums.push(ix.mot[x.toLowerCase()]);
+      else if (ix.mot[x.toLowerCase()]) {                                     // 1.6.0 : « cote » est un mot, « côte » et « côté » aussi (29 groupes) : on le dit avant la cle
+        var lx = x.toLowerCase(), gx = ix.plie[plier(lx)];
+        if (gx && gx.length > 1 && plier(lx) === lx) err.push(t("mot_accent", { m: x, c: gx.map(function (k) { return String(k).padStart(4, "0") + " " + window.GG_LISTE.mots[k - 1]; }).join(" / ") }));
+        else nums.push(ix.mot[lx]);
+      }
       else { var p = ix.plie[plier(x)]; if (p && p.length === 1) nums.push(p[0]); else err.push(x + (p ? " (" + p.map(function (k) { return String(k).padStart(4, "0") + " " + window.GG_LISTE.mots[k - 1]; }).join(" / ") + " ?)" : "")); }
     });
     if (!err.length && nums.length !== m) err.push(t("il_faut_mots", { m: m }));
@@ -1150,15 +1154,16 @@
   // avant l'envoi. Le nombre propre a cette installation, dans le message, n'est pas une preuve (il se lit dans ce navigateur) : il
   // empeche seulement de reprendre une signature preparee pour une autre installation. La date d'enregistrement s'affiche ; si l'adresse
   // a change depuis la derniere visite, une alerte le dit et RIEN ne part tout seul tant que le chasseur ne l'a pas reconnue.
-  // Quand la cle d'un vrai coffre est trouvee, GodGift Core montre l'adresse 10 secondes (on peut annuler), puis signe,
-  // sur la machine, la transaction qui vide le coffre vers cette adresse, et la diffuse par les deux sources.
+  // Quand la cle d'un vrai coffre est trouvee, GodGift Core montre l'adresse et les deux offres de frais (on peut annuler) ; au clic,
+  // il signe sur la machine la transaction qui vide le coffre vers cette adresse, et la diffuse par les deux sources.
   // Gardes : seules des sorties CONFIRMEES et vues pareil par les deux sources sont depensees (la poussiere est laissee) ;
-  // frais : une offre forte d'emblee, jusqu'au plafond de l'envoi automatique (10 % du tresor et 300 sat/vB) ; au-dela il faut
-  // confirmer ; jamais plus de la moitie (audit godgift I9, protocole M7 : la course se gagne en misant tout de suite, pas par paliers) ;
+  // frais (1.6.0, Pierre V1k article 13, CG A5) : avant de signer, GodGift Core dit en clair les deux offres et laisse le choix : le taux
+  // rapide du moment, ou l'offre forte (jusqu'a 10 % du tresor, au plus 300 sat/vB, ou plus face a un concurrent) ; jamais plus de 10 %
+  // sans une nouvelle question ; jamais plus de la moitie (audit godgift I9, protocole M7 : la course se gagne en misant tout de suite, pas par paliers) ;
   // la transaction n'est tenue pour sure qu'a 3 confirmations vues par les deux sources ; alors seulement la cle est oubliee.
   // La cle ne vit qu'en memoire ; elle n'est jamais ecrite ; elle n'est affichee que sur demande (Expert), puis effacee.
   var AUTO_TAUX_MAX = 300, AUTO_PART_MAX = 0.10, CONFS_SURES = 3, PREP_FRAICHE = 5 * 60000, RECUL_MAX = 300000;
-  var TR = { cles: {}, cibles: {}, dest: {}, prep: {}, envois: lireR("envois", null) || {}, boucles: {}, msg: {}, compte: {}, confirmer: {}, gen: {}, recul: {}, cleEssai: null, retape: {}, suite: {}, retapeSaisie: {} };   // retapeSaisie : en memoire seulement
+  var TR = { cles: {}, cibles: {}, dest: {}, prep: {}, envois: lireR("envois", null) || {}, boucles: {}, msg: {}, compte: {}, confirmer: {}, choix: {}, gen: {}, recul: {}, cleEssai: null, retape: {}, suite: {}, retapeSaisie: {} };   // retapeSaisie : en memoire seulement ; choix : 1.6.0, le choix des frais avant de signer
   (function () { var e = lireR("envoi", null); if (e && e.adresse && !TR.envois[e.n + ":" + e.adresse]) { TR.envois[e.n + ":" + e.adresse] = e; ecrireR("envois", TR.envois); } })();
   // le nombre propre a l'installation : RENOUVELE a chaque enregistrement d'une adresse (contre-audit N7) : la signature d'une ancienne
   // adresse ne vaut plus des qu'une autre est enregistree. Pendant une saisie, le nombre neuf attend (TR.recNonce) ; il ne devient le nombre
@@ -1212,7 +1217,10 @@
   function receptionReconnue() {
     if (!R.reception || !R.reception.adresse) return;
     REC_VUE = { adresse: R.reception.adresse, date: new Date().toISOString().slice(0, 10) }; ecrireR("reception_vue", REC_VUE); TR.recAlerte = false;
-    Object.keys(TR.cles).forEach(function (k) { if (TR.msg[k] && TR.msg[k].attenteAdresse) trouveReel(TR.cibles[k], TR.cles[k]); });   // une cle attendait son adresse
+    Object.keys(TR.cles).forEach(function (k) {
+      if (TR.msg[k] && TR.msg[k].attenteAdresse) trouveReel(TR.cibles[k], TR.cles[k]);                                   // une cle attendait son adresse
+      else if ((TR.choix[k] || TR.confirmer[k]) && TR.dest[k] !== R.reception.adresse) { delete TR.choix[k]; delete TR.confirmer[k]; lancerEnvoi(k); }   // le choix montrait une autre adresse : il revient avec la nouvelle, apres la retape s'il en faut une (D1)
+    });
   }
   function alerteReception() {
     if (!TR.recAlerte || R.demo) return "";
@@ -1269,11 +1277,11 @@
       return { taux: taux, ecart: mx > 3 * mn };
     });
   }
-  function concurrence(adr, notre) {   // une transaction d'un autre chasseur, en attente, qui vide deja ce coffre : vue pareil par chaque source
-    var s = sources();
+  function concurrence(adr, notre) {   // une transaction d'un autre chasseur, en attente, qui vide deja ce coffre : vue pareil par chaque source ; notre : notre txid, ou la liste de nos txid (versions remplacees comprises)
+    var s = sources(), notres = Array.isArray(notre) ? notre : notre ? [notre] : [];
     return Promise.allSettled(s.map(function (b) { return lire(b + "/address/" + adr + "/txs/mempool"); })).then(function (rs) {
       var vues = rs.filter(function (r) { return r.status === "fulfilled" && Array.isArray(r.value); }).map(function (r) {
-        return r.value.filter(function (tx) { return tx && tx.txid !== notre && Array.isArray(tx.vin) && tx.vin.some(function (v) { return v.prevout && v.prevout.scriptpubkey_address === adr; }); });
+        return r.value.filter(function (tx) { return tx && notres.indexOf(tx.txid) < 0 && Array.isArray(tx.vin) && tx.vin.some(function (v) { return v.prevout && v.prevout.scriptpubkey_address === adr; }); });
       });
       if (!vues.length || !vues[0].length) return null;
       var x = vues[0][0], fee = Number(x.fee), vt = Math.ceil(Number(x.weight) / 4);
@@ -1294,9 +1302,10 @@
     var k = cleDe(c), adr = c.adresse;
     if (TR.prep[k] && TR.prep[k].enCours) return TR.prep[k].enCours;
     var p = Promise.all([explo("/address/" + adr + "/utxo"), tauxPrioritaire()]).then(function (r) {
-      var ut = choisirSorties(r[0] || [], r[1].taux);
+      var ut = choisirSorties(r[0] || [], r[1].taux), e = TR.envois[k];
       return (ut.length ? Promise.resolve(null) : concurrence(adr)).then(function (cc) {
-        TR.prep[k] = { utxos: ut.length ? ut : cc ? cc.entrees : [], taux: r[1].taux, ecartFrais: r[1].ecart, secours: !!r[1].secours, concurrent: cc, date: Date.now() };
+        var notre = !!(cc && e && (cc.txid === e.txid || (e.anciens || []).indexOf(cc.txid) >= 0));   // notre propre transaction en attente (ou une version remplacee) : ses entrees servent a « Accelerer » (la sortie du coffre n'est plus rendue par /utxo), mais elle n'est pas un concurrent (m3, I1)
+        TR.prep[k] = { utxos: ut.length ? ut : cc ? cc.entrees : [], taux: r[1].taux, ecartFrais: r[1].ecart, secours: !!r[1].secours, concurrent: notre ? null : cc, date: Date.now() };
         return TR.prep[k];
       });
     }, function (e) { TR.prep[k] = { erreur: String(e.message || e), date: Date.now() }; return null; });
@@ -1316,7 +1325,7 @@
     trouveReel(c, k);
     return '<div class="cadre tresor-trouve" style="margin-top:12px"><div class="ok cz" style="font-size:22px">✓ ' + esc(t("trouve")) + '</div><p>' + esc(t(SANS_INSTALLER ? "tr_sans_installer" : receptionScellee() ? "tr_trouve_envoi" : "tr_trouve_retape")) + "</p>" + expert(cleDe(c)) + "</div>";
   }
-  // ou tourne ce GodGift Core : la fenetre dediee (envoi seul), le navigateur (retape avant chaque envoi), « Sans installer » (aucun envoi)
+  // ou tourne ce GodGift Core : la fenetre dediee (sans retape), le navigateur (retape avant chaque envoi), « Sans installer » (aucun envoi)
   function modeEnvoi() { return FENETRE ? (!R.reception || receptionScellee() ? "fenetre_oui" : "fenetre_sceau") : FENETRE_RECHARGEE ? "fenetre_rechargee" : SANS_INSTALLER ? "fenetre_sans_installer" : WEB ? "fenetre_web" : "fenetre_non"; }
   function bandeauFenetre() {   // la fenetre dediee rechargee : elle n'envoie plus rien seule ; on le dit en haut de chaque page
     return FENETRE_RECHARGEE ? '<div class="bandeau" id="fenetre-rechargee" style="border-color:#e8c46a;background:rgba(232,196,106,.14)">⚠ ' + esc(t("fenetre_rechargee")) + "</div>" : "";
@@ -1342,12 +1351,12 @@
     }
     delete TR.morceaux[rv.adresse];                                           // la prochaine retape portera sur deux autres morceaux
     delete TR.retapeSaisie[kk];
-    TR.retape[kk] = rv.adresse; TR.dest[kk] = rv.adresse;
+    TR.retape[kk] = rv.adresse;                                               // TR.dest reste a l'adresse du choix : si elle a change, lancerEnvoi rouvre le choix pour la nouvelle (D1)
     if (FENETRE) scellerReception();                                           // dans la fenetre dediee, l'adresse retapee devient celle de la fenetre
     var s = TR.suite[kk] || {}; delete TR.suite[kk]; TR.msg[kk] = null;
     lancerEnvoi(kk, s.frais || null, s.confirme || false);
   }
-  function trouveReel(c, k) {   // la cle reste en memoire ; dans la fenetre dediee, on montre la destination 10 secondes, puis on envoie
+  function trouveReel(c, k) {   // la cle reste en memoire ; dans la fenetre dediee, le choix des frais vient tout de suite ; ailleurs, la retape d'abord
     var kk = cleDe(c), rv = receptionValide();
     TR.cles[kk] = k; TR.cibles[kk] = { n: c.n, h: c.h == null ? 1 : c.h, adresse: c.adresse };
     if (SANS_INSTALLER) { TR.msg[kk] = { e: "att", d: t("tr_sans_installer") }; return rendreSiChasse(); }   // « Sans installer » : aucun envoi, on renvoie a l'installation
@@ -1356,17 +1365,7 @@
     if (TR.recAlerte) { TR.msg[kk] = { e: "ko", d: t("tr_rec_changee"), attenteAdresse: true }; return rendreSiChasse(); }   // adresse changee depuis la derniere visite : rien ne part seul
     TR.dest[kk] = rv.adresse; TR.msg[kk] = null;
     if (!retapeFaite(kk, rv.adresse)) return demanderRetape(kk, {});           // hors de la fenetre dediee (ou adresse sans sceau) : rien ne part sans la retape
-    demarrerCompte(kk);
-  }
-  function demarrerCompte(kk) {
-    TR.compte[kk] = Date.now() + 10000;
-    function tic() {
-      if (!TR.compte[kk]) return;
-      if (Date.now() >= TR.compte[kk]) { delete TR.compte[kk]; return lancerEnvoi(kk); }
-      var el = $("tr-compte-" + kk.replace(/\W/g, "_")); if (el) el.textContent = Math.ceil((TR.compte[kk] - Date.now()) / 1000);
-      setTimeout(tic, 250);
-    }
-    tic(); rendreSiChasse();
+    lancerEnvoi(kk);                                                           // 1.6.0 : le choix des frais, avec l'adresse, avant de signer (plus d'envoi seul au bout de 10 s)
   }
   function expert(kk) {
     return '<details class="expert"><summary>' + esc(t("tr_expert")) + '</summary><p class="att" style="font-size:12px">' + esc(t("tr_expert_note")) + '</p><button class="bouton2" data-wif="' + esc(kk) + '">' + esc(t("tr_voir_cle")) + '</button><div class="champ mono" id="h-wif" translate="no" style="word-break:break-all;min-height:20px"></div><p class="doux" style="font-size:12px">' + esc(t("wif_note")) + "</p></details>";
@@ -1385,7 +1384,10 @@
     if (!rv.ok) { TR.msg[kk] = { e: "ko", d: t("tr_dest_changee"), attenteAdresse: true }; return rendreSiChasse(); }
     if (TR.recAlerte) { TR.msg[kk] = { e: "ko", d: t("tr_rec_changee"), attenteAdresse: true }; return rendreSiChasse(); }
     if (!retapeFaite(kk, rv.adresse)) return demanderRetape(kk, { frais: fraisImpose, confirme: confirme });   // hors de la fenetre dediee : la retape, avant CHAQUE envoi
-    if (rv.adresse !== TR.dest[kk]) { TR.dest[kk] = rv.adresse; TR.msg[kk] = { e: "att", d: t("tr_dest_nouvelle") }; return demarrerCompte(kk); }   // l'adresse a change : on montre la nouvelle 10 s
+    var nouvelleDest = rv.adresse !== TR.dest[kk];
+    if (nouvelleDest) { TR.dest[kk] = rv.adresse; delete TR.choix[kk]; delete TR.confirmer[kk]; fraisImpose = null; confirme = null; }   // l'adresse a change : rien ne se signe sur un choix fait pour une autre ; l'ecran du choix revient, montre la nouvelle, et le dit (D1)
+    var e0 = TR.envois[kk];
+    if (!fraisImpose && e0 && (e0.etat === "a_diffuser" || e0.etat === "diffusee" || e0.etat === "concurrence")) return questionAccel(kk, e0, nouvelleDest);   // une transaction attend deja : jamais le premier choix sous les frais deja payes, ni un envoi sans clic : la question du double, avec l'adresse courante
     TR.msg[kk] = { e: "att", d: t("tr_prep_encours") }; rendreSiChasse();
     var pr = TR.prep[kk], frais = pr && !pr.erreur && pr.utxos && Date.now() - pr.date < PREP_FRAICHE ? Promise.resolve(pr) : preparer(c).then(function (x) { return x || (pr && pr.utxos ? pr : null); });
     frais.then(function (p) {
@@ -1395,10 +1397,16 @@
       delete TR.recul[kk];
       if (!p.utxos.length) { TR.msg[kk] = { e: "att", d: t("tr_vide_encore") }; delete TR.prep[kk]; plusTard(30000); return rendreSiChasse(); }
       var vt = window.GGTX.vtaille(p.utxos.length, window.GGTX.decoderAdresse(rv.adresse).script), total = p.utxos.reduce(function (s, u) { return s + u.valeur; }, 0);
+      if (!fraisImpose && !confirme) {                                         // 1.6.0 (Pierre, article 13) : les deux offres, dites en clair ; rien ne se signe avant le choix
+        var moitie = Math.floor(total / 2), fFort = Math.min(moitie, offreForte(p.taux, vt, total, p.concurrent)), fRap = p.concurrent ? fFort : Math.min(moitie, Math.max(1, Math.ceil(p.taux * vt)));   // face a un concurrent deja vu, seule l'offre forte (I4) ; jamais plus de la moitie (M3)
+        if (p.concurrent && !passeDevant(moitie, vt, p.concurrent)) { TR.msg[kk] = { e: "ko", d: t("tr_frais_max") }; return rendreSiChasse(); }   // la moitie ne passerait pas devant (sats ou taux) : rien a proposer (m1, m6)
+        TR.choix[kk] = { rapide: fRap, forte: fFort, total: total, vt: vt, entrees: p.utxos.length, concurrent: p.concurrent || null, secours: !!p.secours, ecartFrais: !!p.ecartFrais, nouvelle: nouvelleDest, date: Date.now() };
+        TR.msg[kk] = null; return rendreSiChasse();
+      }
       var f = fraisImpose ? Math.max(fraisImpose, p.concurrent ? contreOffre(p.concurrent, vt) : 0) : offreForte(p.taux, vt, total, p.concurrent);   // un concurrent apparu depuis : on monte, jamais une enchere deja battue
       if (f > Math.floor(total / 2)) {                                         // jamais plus de la moitie : on s'arrete au plafond s'il passe encore devant
-        if (fraisImpose || (p.concurrent && Math.floor(total / 2) <= p.concurrent.frais + vt)) { TR.msg[kk] = { e: "ko", d: t("tr_frais_max") }; return rendreSiChasse(); }
-        f = Math.floor(total / 2);
+        if ((fraisImpose && fraisImpose < Math.floor(total / 2)) || (p.concurrent && !passeDevant(Math.floor(total / 2), vt, p.concurrent))) { TR.msg[kk] = { e: "ko", d: t("tr_frais_max") }; return rendreSiChasse(); }
+        f = Math.floor(total / 2);                                             // l'offre plafonnee a la moitie, choisie et confirmee, part a la moitie si elle passe encore devant (m1)
       }
       // trop cher pour partir seul : on demande ; et ce qui a ete confirme (frais, taille, total) doit etre ce qui part (audit F1) :
       // si quelque chose a bouge depuis l'ecran de confirmation, on redemande au lieu de partir avec d'autres frais
@@ -1465,18 +1473,26 @@
       var dep = (l || []).filter(function (tx) { return tx.status && tx.status.confirmed && (tx.vin || []).some(function (v) { return v.prevout && v.prevout.scriptpubkey_address === e.adresse; }); })[0];
       if (dep) return statutTx(dep.txid).then(function (st) {                // confirme, et vu pareil par les deux sources, sinon on ne conclut rien
         if (!st.confirme || !(st.deux || (sources().length === 1 && st.confs >= 6))) return;
-        var anous = (dep.vout || []).some(function (o) { return o.scriptpubkey_address === e.dest; }) && (dep.txid === e.txid || (e.anciens || []).indexOf(dep.txid) >= 0);
-        if (anous) { e.txid = dep.txid; e.etat = "confirmee"; e.bloc = dep.status.block_height; return; }
+        var anous = dep.txid === e.txid || (e.anciens || []).indexOf(dep.txid) >= 0;   // la notre, ou une version remplacee (vers une adresse d'alors) : un tresor arrive n'est jamais dit « perdu »
+        if (anous) {                                                           // la version confirmee donne son detail (une version remplacee peut l'avoir emporte : son montant, ses frais, son adresse d'alors)
+          var so = (dep.vout || [])[0];
+          if (so && isFinite(Number(so.value)) && Number(so.value) > 0) { e.montant = Number(so.value); if (so.scriptpubkey_address) e.dest = so.scriptpubkey_address; }
+          if (isFinite(Number(dep.fee)) && Number(dep.fee) > 0) e.frais = Number(dep.fee);
+          if (isFinite(Number(dep.weight)) && Number(dep.weight) > 0) e.vt = Math.ceil(Number(dep.weight) / 4);
+          e.txid = dep.txid; e.etat = "confirmee"; e.bloc = dep.status.block_height; return;
+        }
         e.etat = "perdu"; delete TR.cles[e.n + ":" + e.adresse];
       });
-      return concurrence(e.adresse, e.txid).then(function (cc) { if (cc) { e.etat = "concurrence"; e.concurrent = cc; } });
+      return concurrence(e.adresse, [e.txid].concat(e.anciens || [])).then(function (cc) { if (cc) { e.etat = "concurrence"; e.concurrent = cc; } });   // nos versions remplacees ne sont pas des concurrents
     }, function () { });
   }
-  // L'offre forte (audit godgift I9, protocole M7) : d'emblee, le plafond de l'envoi automatique (10 % du tresor, 300 sat/vB), ou plus si le
-  // reseau l'exige ; face a un concurrent vu dans la mempool, au moins le double de ses frais et de son taux ; jamais par petits paliers.
+  // L'offre forte (audit godgift I9, protocole M7 ; 1.6.0 : proposee, jamais imposee) : le plafond de l'envoi sans question (10 % du tresor,
+  // 300 sat/vB), ou plus si le reseau l'exige ; face a un concurrent vu dans la mempool, au moins le double de ses frais et de son taux ;
+  // jamais par petits paliers.
   function contreOffre(cc, vt) { return Math.max(2 * cc.frais, Math.ceil(2 * cc.frais / cc.vt * vt), cc.frais + vt + 1); }
-  function offreForte(taux, vt, total, cc) {
-    var f = Math.max(Math.ceil(taux * vt), Math.floor(Math.min(total * AUTO_PART_MAX, AUTO_TAUX_MAX * vt)));
+  function passeDevant(f, vt, cc) { return f > cc.frais + vt && f / vt > cc.frais / cc.vt; }   // des frais qui passent devant un concurrent : plus de sats ET un meilleur taux (les noeuds exigent les deux)
+  function offreForte(taux, vt, total, cc) {   // 1.6.0 : quand le taux rapide depasse deja 300 sat/vB, l'offre forte va jusqu'au double de ce taux, toujours sous 10 % du tresor
+    var f = Math.max(Math.ceil(taux * vt), Math.floor(Math.min(total * AUTO_PART_MAX, Math.max(AUTO_TAUX_MAX * vt, 2 * Math.ceil(taux * vt)))));
     return cc ? Math.max(f, contreOffre(cc, vt)) : f;
   }
   function fraisAccel(e) {                                                     // « Accelerer » : doubler d'un coup, au plafond de la moitie s'il le faut
@@ -1490,19 +1506,33 @@
     if (!TR.cles[kk]) { TR.msg[kk] = { e: "att", d: t("tr_recalculer") }; return rendreSiChasse(); }
     var f = fraisAccel(e);
     if (f > Math.floor(e.total / 2)) { TR.msg[kk] = { e: "att", d: t("tr_frais_max") }; return rendreSiChasse(); }
-    TR.dest[kk] = TR.dest[kk] || e.dest; TR.cibles[kk] = TR.cibles[kk] || { n: e.n, h: e.h, adresse: e.adresse };
-    if (f > e.total * AUTO_PART_MAX || f / e.vt > AUTO_TAUX_MAX || (e.concurrent && e.concurrent.uneSource)) {   // cher, ou concurrent vu d'un seul cote : on demande
-      TR.confirmer[kk] = { frais: f, total: e.total, vt: e.vt, entrees: e.entrees, fraisImpose: f }; return rendreSiChasse();
+    var rva = receptionValide(); TR.dest[kk] = rva.ok ? rva.adresse : (TR.dest[kk] || e.dest); TR.cibles[kk] = TR.cibles[kk] || { n: e.n, h: e.h, adresse: e.adresse };   // l'adresse courante : c'est elle que la question montre et que la signature vise
+    if (f > e.total * AUTO_PART_MAX || f / e.vt > AUTO_TAUX_MAX || (e.concurrent && e.concurrent.uneSource) || TR.dest[kk] !== e.dest) {   // cher, concurrent vu d'un seul cote, ou adresse changee : on demande
+      TR.confirmer[kk] = { frais: f, total: e.total, vt: e.vt, entrees: e.entrees, fraisImpose: f, nouvelle: TR.dest[kk] !== e.dest }; return rendreSiChasse();
     }
-    lancerEnvoi(kk, f, true);
+    lancerEnvoi(kk, f, { frais: f, vt: e.vt, total: e.total, entrees: e.entrees });   // 1.6.0 (I5) : si un concurrent a releve les frais entre-temps, une nouvelle question, jamais plus de 10 % sans elle
+  }
+  function questionAccel(kk, e, nouvelle) {   // une transaction attend deja (cle recalculee, « Choisir les frais », adresse changee) : la question du double, jamais un envoi sans clic (article 13)
+    var f = fraisAccel(e), rvq = receptionValide();
+    TR.dest[kk] = rvq.ok ? rvq.adresse : (TR.dest[kk] || e.dest); TR.cibles[kk] = TR.cibles[kk] || { n: e.n, h: e.h, adresse: e.adresse }; delete TR.choix[kk];
+    if (f > Math.floor(e.total / 2)) { TR.msg[kk] = { e: "att", d: t("tr_frais_max") }; return rendreSiChasse(); }
+    TR.confirmer[kk] = { frais: f, total: e.total, vt: e.vt, entrees: e.entrees, fraisImpose: f, nouvelle: !!nouvelle || TR.dest[kk] !== e.dest, remplace: true }; TR.msg[kk] = null; return rendreSiChasse();
   }
   function carteTresor(adresseCoffre) {   // l'etat des envois, sur la page Chasser et sur celle de la chasse zero
     var h = "";
-    Object.keys(TR.envois).concat(Object.keys(TR.msg), Object.keys(TR.compte), Object.keys(TR.confirmer)).filter(function (k, i, a) { return a.indexOf(k) === i; }).forEach(function (kk) {
+    Object.keys(TR.envois).concat(Object.keys(TR.msg), Object.keys(TR.compte), Object.keys(TR.choix), Object.keys(TR.confirmer)).filter(function (k, i, a) { return a.indexOf(k) === i; }).forEach(function (kk) {
       var adr = kk.slice(kk.indexOf(":") + 1); if (adresseCoffre && adr !== adresseCoffre) return;
       var e = TR.envois[kk], m = TR.msg[kk], id = kk.replace(/\W/g, "_"), x = "";
-      if (TR.compte[kk]) x += '<p class="att" style="font-size:15px">' + esc(t("tr_compte")) + ' <b id="tr-compte-' + id + '">' + Math.ceil((TR.compte[kk] - Date.now()) / 1000) + '</b> s</p><div class="rec-adr">' + groupesEnvoi(TR.dest[kk]) + '</div>' + (R.reception && R.reception.adresse === TR.dest[kk] && R.reception.date ? '<p class="doux" style="font-size:12px">' + esc(t("rec_date", { d: fdateIso(R.reception.date) })) + "</p>" : "") + '<p><button class="bouton" data-envoyer="' + esc(kk) + '">' + esc(t("tr_envoyer_maintenant")) + '</button> <button class="bouton2" data-annuler="' + esc(kk) + '">' + esc(t("tr_annuler")) + "</button></p>";
-      if (TR.confirmer[kk]) { var cf = TR.confirmer[kk]; x += '<p class="att">' + esc(t("tr_confirmer", { f: fsats(cf.frais), p: Math.round(cf.frais / cf.total * 100), t: Math.round(cf.frais / cf.vt) })) + (cf.secours ? " " + esc(t("tr_frais_secours")) : "") + '</p><div class="rec-adr petit">' + groupesEnvoi(TR.dest[kk] || "") + '</div><p><button class="bouton" data-confirmer="' + esc(kk) + '">' + esc(t("tr_envoyer_frais")) + "</button></p>"; }
+      if (TR.choix[kk]) {                                                    // 1.6.0 : les deux offres, en clair (sats, part du tresor, sat/vB), et l'adresse ou tout partira
+        var ch = TR.choix[kk], pcx = function (f) { var q = f / ch.total * 100; return q < 1 ? "<\u00a01" : String(Math.round(q)); }, svb = function (f) { return Math.round(f / ch.vt); };
+        x += (ch.nouvelle ? '<p class="ko" style="font-size:12.5px">⚠ ' + esc(t("tr_dest_nouvelle")) + "</p>" : "") +
+          '<p class="att" style="font-size:14px">' + esc(t("tr_choix_titre", { m: fsats(ch.total) })) + '</p><div class="rec-adr petit">' + groupesEnvoi(TR.dest[kk] || "") + "</div>" +
+          (ch.concurrent ? '<p class="ko" style="font-size:12.5px">⚠ ' + esc(t(ch.forte < contreOffre(ch.concurrent, ch.vt) ? "tr_choix_concurrent_moitie" : "tr_choix_concurrent", { f: fsats(ch.concurrent.frais) })) + "</p>" : "") +
+          '<div class="choix-frais">' + (ch.concurrent ? "" : '<button class="bouton" data-choix="' + esc(kk) + '" data-mode="rapide">' + esc(t("tr_choix_rapide", { f: fsats(ch.rapide), p: pcx(ch.rapide), t: svb(ch.rapide) })) + "</button>") +
+          (ch.concurrent || ch.forte > ch.rapide ? '<button class="bouton' + (ch.concurrent ? "" : "2") + '" data-choix="' + esc(kk) + '" data-mode="forte">' + esc(t("tr_choix_forte", { f: fsats(ch.forte), p: pcx(ch.forte), t: svb(ch.forte) })) + "</button>" : "") + "</div>" +
+          '<p class="doux" style="font-size:12px">' + esc(t("tr_choix_note")) + ' <button class="bouton2" data-annuler="' + esc(kk) + '">' + esc(t("tr_annuler")) + "</button></p>";
+      }
+      if (TR.confirmer[kk]) { var cf = TR.confirmer[kk], pcq = cf.frais / cf.total * 100; x += (cf.nouvelle ? '<p class="ko" style="font-size:12.5px">⚠ ' + esc(t("tr_dest_nouvelle")) + "</p>" : "") + '<p class="att">' + esc(t(cf.remplace ? "tr_remplacer" : "tr_confirmer", { f: fsats(cf.frais), p: pcq < 1 ? "<\u00a01" : String(Math.round(pcq)), t: Math.round(cf.frais / cf.vt) })) + (cf.secours ? " " + esc(t("tr_frais_secours")) : "") + '</p><div class="rec-adr petit">' + groupesEnvoi(TR.dest[kk] || "") + '</div><p><button class="bouton" data-confirmer="' + esc(kk) + '">' + esc(t("tr_envoyer_frais")) + '</button> <button class="bouton2" data-annuler="' + esc(kk) + '">' + esc(t("tr_annuler")) + "</button></p>"; }   // un clic par erreur se rattrape (m2)
       if (m && !(m.retape && m.e === "att" && receptionValide().ok)) x += '<p class="' + esc(m.e) + '">' + esc(m.d) + (m.attenteAdresse ? ' <a href="#/adresse">' + esc(t("plus_adresse")) + "</a>" : "") + "</p>";
       if (m && m.retape) x += carteRetape(kk, id);
       if (TR.annule && TR.annule[kk] && !e) x += '<p><button class="bouton" data-envoyer="' + esc(kk) + '">' + esc(t("tr_envoyer_maintenant")) + "</button></p>";
@@ -2950,9 +2980,9 @@
       if (document.activeElement === h) return;
     }
   }
-  // un tresor attend un geste (retape, frais a confirmer, compte a rebours) ou un envoi n'est pas fini : l'ecran le montre partout
+  // un tresor attend un geste (retape, choix des frais, frais a confirmer) ou un envoi n'est pas fini : l'ecran le montre partout
   function tresorSignature() {
-    return Object.keys(TR.compte).concat(Object.keys(TR.confirmer), Object.keys(TR.msg).filter(function (k) { return TR.msg[k] && (TR.msg[k].retape || TR.msg[k].attenteAdresse); })).sort().join(",");
+    return Object.keys(TR.choix).concat(Object.keys(TR.confirmer), Object.keys(TR.msg).filter(function (k) { return TR.msg[k] && (TR.msg[k].retape || TR.msg[k].attenteAdresse); })).sort().join(",");
   }
   function tresorEnAttente() {
     return !!tresorSignature() || Object.keys(TR.envois).some(function (k) { var e = TR.envois[k]; return e && !e.fini && e.etat !== "perdu"; });
@@ -3096,10 +3126,10 @@
     // F12 : au choix, une cible qui n'est pas dans la liste (forgee, prise, a venir) devient la premiere de la liste
     if (p === 1 && opts.length && !opts.some(function (o) { return o[0] === H.choix; })) { H.choix = opts[0][0]; H.res = null; }
     var c = cibleChasse(), m = c ? MOTS[c.type] : 3;
-    // F1 : un tresor qui attend un geste (retape, frais, compte a rebours) ou un envoi en cours se montre a chaque pas, en tete
+    // F1 : un tresor qui attend un geste (retape, choix des frais, question) ou un envoi en cours se montre a chaque pas, en tete
     var tresor = carteTresor(null), geste = !!tresorSignature();
     var rappel = tresor && p !== 3 ? '<div class="bandeau mince ' + (geste ? "att" : "ok") + '"><span>' + esc(t(geste ? "tr_attend_ici" : "tr_en_cours_ici")) + '</span><button type="button" class="bouton" data-pas-t="3">' + esc(t("tr_voir")) + "</button></div>" : "";
-    var fil_ = filPas(["tr_pas1", "tr_pas2", "tr_pas3"], p) + (p === 3 ? tresor : rappel);
+    var fil_ = filPas(["tr_pas1", "tr_pas2", "tr_pas3"], p) + (p === 3 ? (tresor ? '<div class="souple" style="overflow:auto">' + tresor + "</div>" : "") : rappel);   // au pas 3, la carte du tresor (le choix des frais) prend la place qui reste et defile seule : l'ecran ne defile jamais, 320 x 568 compris
     var serre = !!tresor || (p === 2 && ((!!H.res && /class="ko"/.test(H.res)) || !!H.criMsg));
     var tete_ = visuel("chasser", t("d_lg_chasser")).replace('class="visuel', 'id="h-cle" class="visuel' + (serre ? " avec-tresor" : "")), corps;   // audit final : un tresor parle, l'image de tete s'efface sur un petit ecran
     if (p === 1) {
@@ -3350,9 +3380,9 @@
 
     if (surTitre) focusTitre();                                               // contre-audit 9 : un rendu en arriere-plan ne fait pas perdre le titre
     if (p === "messages") cadre(p);                                            // F10 : le point d'or s'eteint des que les messages sont lus
-    if (p === "chasser") {                                                     // F1 : la retape, les frais ou le compte a rebours viennent a l'ecran
+    if (p === "chasser") {                                                     // F1 : la retape, le choix des frais ou la question viennent a l'ecran
       var sigT = tresorSignature();
-      if (sigT && sigT !== UI.tresorSig) { var cib = document.querySelector('#page [id^="tr-retape-"], #page [data-confirmer], #page [id^="tr-compte-"]'); if (cib && cib.scrollIntoView) cib.scrollIntoView({ block: "center" }); }
+      if (sigT && sigT !== UI.tresorSig) { var cib = document.querySelector('#page [id^="tr-retape-"], #page [data-confirmer], #page [data-choix]'); if (cib && cib.scrollIntoView) cib.scrollIntoView({ block: "center" }); }
       UI.tresorSig = sigT;
     }
     if ($("h-r3") && $("h-r3").value) apercu("h-r3", "h-v3"); if ($("h-r17") && $("h-r17").value) apercu("h-r17", "h-v17");
@@ -3434,7 +3464,7 @@
     var en_ = ev.target.closest("[data-enig]"); if (en_) { E15.enig = Math.max(0, E15.enig + (+en_.dataset.enig)); return rendre(); }
     var fi_ = ev.target.closest("[data-fiche]"); if (fi_) { return ouvrirFiche(+fi_.dataset.fiche); }
     var cop = ev.target.closest("[data-copier]"); if (cop) { var src = $(cop.dataset.copier), txt = src ? src.textContent : "", fait = function () { cop.textContent = "✓ " + t("d_copie_m"); }; try { navigator.clipboard.writeText(txt).then(fait, fait); } catch (e) { fait(); } return; }
-    var x = ev.target.closest("[data-p],[data-coffre],#rafraichir,#etat-rafraichir,#lancer,#rapport,#h-calculer,#h-lire-cri,#h-wif,#cp-envoyer,#r-garder,#r-accueil,#acheter,#ex-verifier,#ex-garder,[data-diffuser],#z-calculer,#r-rec-garder,#r-rec-changer,#r-rec-annuler,#r-rec-copier,#te-relire,[data-temoin],[data-accelerer],[data-envoyer],[data-annuler],[data-confirmer],[data-wif],[data-rec-ok],#roman-verifier,[data-retape],[data-compagnon],[data-ex-verif],[data-oublier]");
+    var x = ev.target.closest("[data-p],[data-coffre],#rafraichir,#etat-rafraichir,#lancer,#rapport,#h-calculer,#h-lire-cri,#h-wif,#cp-envoyer,#r-garder,#r-accueil,#acheter,#ex-verifier,#ex-garder,[data-diffuser],#z-calculer,#r-rec-garder,#r-rec-changer,#r-rec-annuler,#r-rec-copier,#te-relire,[data-temoin],[data-accelerer],[data-envoyer],[data-annuler],[data-confirmer],[data-choix],[data-wif],[data-rec-ok],#roman-verifier,[data-retape],[data-compagnon],[data-ex-verif],[data-oublier]");
     if (!x) return;
     if (x.dataset.p) location.hash = "#/" + x.dataset.p;
     else if (x.dataset.coffre) location.hash = "#/coffre/" + x.dataset.coffre;
@@ -3467,7 +3497,11 @@
     else if (x.id === "r-rec-copier") { var mt = $("r-rec-msg").textContent, ok2 = function () { x.textContent = "✓ " + t("d_copie_m"); }; try { navigator.clipboard.writeText(mt).then(ok2, ok2); } catch (e) { ok2(); } }
     else if (x.dataset.accelerer) accelerer(x.dataset.accelerer);
     else if (x.dataset.envoyer) { var ke = x.dataset.envoyer; delete TR.compte[ke]; if (TR.annule) delete TR.annule[ke]; lancerEnvoi(ke); }
-    else if (x.dataset.annuler) { delete TR.compte[x.dataset.annuler]; TR.annule = TR.annule || {}; TR.annule[x.dataset.annuler] = 1; TR.msg[x.dataset.annuler] = { e: "att", d: t("tr_annule") }; rendreSiChasse(); }
+    else if (x.dataset.annuler) {                                              // le choix ou la question, annule : la cle reste, « Choisir les frais » reprend ; apres un envoi (Accelerer), la question s'efface seulement
+      var ka = x.dataset.annuler; delete TR.compte[ka]; delete TR.choix[ka]; delete TR.confirmer[ka];
+      if (TR.envois[ka]) TR.msg[ka] = null; else { TR.annule = TR.annule || {}; TR.annule[ka] = 1; TR.msg[ka] = { e: "att", d: t("tr_annule") }; }
+      rendreSiChasse();
+    }
     else if (x.dataset.oublier) {
       var ho = +x.dataset.oublier;
       if (M.oublierDemande === ho) { oublierPremier(ho); M.oublie = true; M.oublierDemande = null; }
@@ -3475,6 +3509,12 @@
       rendre();
     }
     else if (x.dataset.confirmer) { var kc = x.dataset.confirmer, cf0 = TR.confirmer[kc] || {}; delete TR.confirmer[kc]; lancerEnvoi(kc, cf0.fraisImpose || null, { frais: cf0.frais, vt: cf0.vt, total: cf0.total, entrees: cf0.entrees }); }
+    else if (x.dataset.choix) {                                                // 1.6.0 : le choix des frais (Pierre, article 13) ; au-dela de 10 % du tresor, une nouvelle question
+      var kx = x.dataset.choix, ch0 = TR.choix[kx]; if (!ch0) return;
+      delete TR.choix[kx]; var fx = x.dataset.mode === "forte" ? ch0.forte : ch0.rapide;
+      if (fx > ch0.total * AUTO_PART_MAX || fx / ch0.vt > AUTO_TAUX_MAX || ch0.ecartFrais || (ch0.concurrent && ch0.concurrent.uneSource)) { TR.confirmer[kx] = { frais: fx, total: ch0.total, vt: ch0.vt, entrees: ch0.entrees, fraisImpose: fx, secours: ch0.secours }; rendreSiChasse(); }
+      else lancerEnvoi(kx, fx, { frais: fx, vt: ch0.vt, total: ch0.total, entrees: ch0.entrees });
+    }
     else if (x.dataset.wif) montrerCle(x.dataset.wif);
     else if (x.dataset.retape) retaper(x.dataset.retape);
     else if (x.dataset.exVerif) { ev.preventDefault(); location.hash = "#/livres"; verifierExemplaire(x.dataset.exVerif); }   // l'exemplaire de reference, dans le registre grave

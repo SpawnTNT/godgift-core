@@ -30,7 +30,7 @@
         "Chaque réponse est faite de mots français de la liste des cinq mille : trois mots par énigme de pierre, quatre pour une cathédrale et le coffre final. Vérifiez vos mots dans « Trouver », au pas 2 : « La liste des cinq mille ».",
         "Une heure après la seconde énigme paraît le cri : il apporte l’aléa, la dernière pièce de la clé. GodGift Core le lit tout seul.",
         "Dans « Trouver », choisissez le coffre : GodGift Core le prépare et affiche « Armé ». Coupez internet, tapez vos deux réponses, puis « Calculer la clé ».",
-        "Si c’est la bonne clé, rebranchez internet. Dans la fenêtre de l’application installée, ouverte par son icône, GodGift Core signe aussitôt la transaction sur votre machine et l’envoie toute seule vers votre adresse, avec une offre forte (environ 10 % du trésor en frais) ; ailleurs (navigateur, version web, fenêtre rechargée), il vous fait d’abord retaper 16 caractères de votre adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre portefeuille ; « Sans installer », il n’envoie rien. Si quelqu’un d’autre a trouvé en même temps, c’est la course : « Accélérer » double d’un coup les frais.",
+        "Si c’est la bonne clé, rebranchez internet. Dans la fenêtre de l’application installée, ouverte par son icône, GodGift Core vous propose les deux offres de frais, dites en clair (le taux rapide du moment, ou l’offre forte, jusqu’à 10 % du trésor, pour passer devant), puis signe la transaction sur votre machine et l’envoie vers votre adresse ; ailleurs (navigateur, version web, fenêtre rechargée), il vous fait d’abord retaper 16 caractères de votre adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre portefeuille ; « Sans installer », il n’envoie rien. Si quelqu’un d’autre a trouvé en même temps, c’est la course : « Accélérer » double d’un coup les frais.",
         "Entraînez-vous d’abord sur les coffres d’essai A et B : ils sont faux, publics, et vous montrent exactement ce qui se passerait."
       ]
     },
@@ -40,7 +40,7 @@
         "Seul le propriétaire d’un exemplaire officiel peut être compagnon actif, et un exemplaire ne fait qu’un compagnon. Achetez le vôtre sur angedeleau.com en donnant une adresse bc1q… de votre portefeuille : c’est son adresse de propriété, imprimée sur sa page de titre. La chasse, elle, reste gratuite.",
         "Ouvrez « Les livres », déposez l’EPUB ou le PDF de votre exemplaire, puis « Devenir compagnon avec cet exemplaire » : la page Compagnon reprend son adresse de propriété ; c’est là que vos parts arriveront.",
         "Signez le message affiché avec cette adresse (dans Sparrow : Outils, Signer un message), collez la signature, puis envoyez-la : la librairie vous donne un lien personnel.",
-        "Le lien reste « en attente » tant que la vente de votre exemplaire n’est pas réglée, puis devient « actif » : chaque livre acheté par un lien actif vous rapporte 40 % de son prix.",
+        "Le lien reste « en attente » tant que la vente de votre exemplaire n’est pas réglée, puis devient « actif » : chaque livre acheté par un lien actif vous rapporte 40 % de son prix.",
         "Vos parts sont versées chaque trimestre, dans une transaction publique que chacun peut vérifier."
       ]
     },
@@ -173,7 +173,7 @@
     {
       "id": "compagnon",
       "mot": "Compagnon",
-      "texte": "Le propriétaire d’un exemplaire officiel qui fait connaître le roman avec son lien personnel. Il se déclare avec l’adresse de propriété de son exemplaire : un exemplaire, un compagnon. Son lien reste « en attente » tant que la vente de cet exemplaire n’est pas réglée, puis devient « actif ». Chaque livre vendu par un lien actif lui rapporte 40 % du prix, versés chaque trimestre sur cette adresse. Aucun compte, aucune clé à confier.",
+      "texte": "Le propriétaire d’un exemplaire officiel qui fait connaître le roman avec son lien personnel. Il se déclare avec l’adresse de propriété de son exemplaire : un exemplaire, un compagnon. Son lien reste « en attente » tant que la vente de cet exemplaire n’est pas réglée, puis devient « actif ». Chaque livre vendu par un lien actif lui rapporte 40 % du prix, versés chaque trimestre sur cette adresse. Aucun compte, aucune clé à confier.",
       "voir": [
         "versement",
         "adresse"
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Adresse de réception",
-      "texte": "L’adresse de votre propre portefeuille (même un portefeuille à froid), enregistrée à l’avance dans Plus, « Mon adresse de réception ». Le jour où vous trouvez, le trésor y part tout seul. Elle doit être signée par votre portefeuille (adresse bc1q…, 3… ou 1…) : la signature prouve qu’elle est à vous et démasque un virus qui aurait remplacé l’adresse copiée. GodGift Core la revérifie juste avant l’envoi, affiche sa date d’enregistrement et vous alerte si elle a changé depuis votre dernière visite. Hors de la fenêtre dédiée de l’application installée, il vous fait aussi retaper, avant chaque envoi, 16 caractères de cette adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre propre portefeuille.",
+      "texte": "L’adresse de votre propre portefeuille (même un portefeuille à froid), enregistrée à l’avance dans Plus, « Mon adresse de réception ». Le jour où vous trouvez, le trésor y part dès votre choix des frais. Elle doit être signée par votre portefeuille (adresse bc1q…, 3… ou 1…) : la signature prouve qu’elle est à vous et démasque un virus qui aurait remplacé l’adresse copiée. GodGift Core la revérifie juste avant l’envoi, affiche sa date d’enregistrement et vous alerte si elle a changé depuis votre dernière visite. Hors de la fenêtre dédiée de l’application installée, il vous fait aussi retaper, avant chaque envoi, 16 caractères de cette adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre propre portefeuille.",
       "voir": [
         "recuperer",
         "portefeuille",
@@ -467,7 +467,7 @@
     {
       "id": "recuperer",
       "mot": "Récupérer le trésor",
-      "texte": "Quand la clé d’un vrai coffre est trouvée, GodGift Core signe, sur votre machine, la transaction qui envoie tout le coffre vers votre adresse de réception signée, et la diffuse par les deux sources. Dans la fenêtre dédiée de l’application installée (ouverte par son icône), il le fait aussitôt ; ailleurs (navigateur, version web, fenêtre rechargée), seulement après que vous avez retapé 16 caractères de votre adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre propre portefeuille : si une page piégée avait changé l’adresse enregistrée, ils ne correspondraient pas, même pour une adresse fabriquée qui finirait pareil. La fenêtre dédiée ne garde son jeton qu’en mémoire : rechargée, elle n’envoie plus seule ; rouvrez-la par son icône. « Sans installer », il n’envoie rien. Hors ligne, la transaction attend le retour du réseau. Frais : d’emblée, même sans concurrent, une offre forte d’environ 10 % du trésor (au plus 300 sat/vB), sans rien vous demander ; au-delà, il vous demande ; jamais plus de la moitié du trésor. Sur téléphone, la version web vérifie tout ; pour récupérer un trésor, l’application installée sur un ordinateur reste la voie la plus sûre.",
+      "texte": "Quand la clé d’un vrai coffre est trouvée, GodGift Core signe, sur votre machine, la transaction qui envoie tout le coffre vers votre adresse de réception signée, et la diffuse par les deux sources. Dans la fenêtre dédiée de l’application installée (ouverte par son icône), il le fait dès votre choix des frais ; ailleurs (navigateur, version web, fenêtre rechargée), seulement après que vous avez retapé 16 caractères de votre adresse, en deux morceaux tirés au hasard et masqués à l’écran, lus dans votre propre portefeuille : si une page piégée avait changé l’adresse enregistrée, ils ne correspondraient pas, même pour une adresse fabriquée qui finirait pareil. La fenêtre dédiée ne garde son jeton qu’en mémoire : rechargée, elle n’envoie plus seule ; rouvrez-la par son icône. « Sans installer », il n’envoie rien. Hors ligne, la transaction attend le retour du réseau. Frais (Pierre, article 13) : avant de signer, GodGift Core dit en clair les deux offres et vous laisse choisir : le taux rapide du moment, ou l’offre forte, qui sacrifie d’office jusqu’à 10 % du trésor (sans nouvelle question jusqu’à 300 sat/vB) pour passer devant une autre transaction ; jamais plus de 10 % sans une nouvelle question ; jamais plus de la moitié du trésor. Sur téléphone, la version web vérifie tout ; pour récupérer un trésor, l’application installée sur un ordinateur reste la voie la plus sûre.",
       "voir": [
         "reception",
         "accelerer",
@@ -497,7 +497,7 @@
     {
       "id": "installateur",
       "mot": "Vérifier mon installateur",
-      "texte": "Sur angedeleau.com/verifier-installateur, déposez le fichier téléchargé : votre navigateur calcule son empreinte sur place et la compare aux installateurs publiés. Sous Windows, l’installateur portera aussi la signature de l’auteur, une fois signé (Certum) ; la version d’essai ne l’est pas encore.",
+      "texte": "Sur angedeleau.com/verifier-installateur, déposez le fichier téléchargé : votre navigateur calcule son empreinte sur place et la compare aux installateurs publiés. Sous Windows, l’installateur portera aussi la signature de l’auteur, une fois signé (Certum).",
       "voir": [
         "officiel",
         "jamais"
@@ -553,7 +553,7 @@
     {
       "id": "course",
       "mot": "La course",
-      "texte": "Tous ceux qui trouvent les bonnes réponses obtiennent la même clé : le coffre revient à la première transaction confirmée, en général celle qui paie le plus de frais aux mineurs. C’est la règle du jeu, et aucun programme ne peut l’empêcher. GodGift Core paie d’emblée, même sans concurrent, une offre forte (environ 10 % du trésor, au plus 300 sat/vB) et double d’un coup avec « Accélérer », jamais au-delà de la moitié du trésor ; un concurrent qui mise davantage, ou qui encombre la file d’attente de transactions liées, peut gagner.",
+      "texte": "Tous ceux qui trouvent les bonnes réponses obtiennent la même clé : le coffre revient à la première transaction confirmée, en général celle qui paie le plus de frais aux mineurs. C’est la règle du jeu, et aucun programme ne peut l’empêcher. GodGift Core vous propose, avant de signer, le taux rapide du moment ou une offre forte (jusqu’à 10 % du trésor, sans nouvelle question jusqu’à 300 sat/vB), puis double d’un coup avec « Accélérer », jamais au-delà de la moitié du trésor ; un concurrent qui mise davantage, ou qui encombre la file d’attente de transactions liées, peut gagner.",
       "voir": [
         "accelerer",
         "recuperer",
@@ -580,7 +580,7 @@
     },
     {
       "q": "J’ai trouvé la clé : que faire ?",
-      "r": "Dans la fenêtre de l’application installée, rien à faire : si votre adresse de réception signée est enregistrée, GodGift Core envoie aussitôt tout le coffre vers elle. Ailleurs (navigateur, version web, fenêtre rechargée), retapez d’abord les 16 caractères demandés de votre adresse, en deux morceaux masqués à l’écran, lus dans votre portefeuille ; « Sans installer », installez GodGift Core et recalculez la clé. Rebranchez internet si vous l’aviez coupé. Si « Accélérer » apparaît, quelqu’un d’autre a trouvé en même temps : c’est la course, cliquez."
+      "r": "Dans la fenêtre de l’application installée, si votre adresse de réception signée est enregistrée, GodGift Core vous propose les deux offres de frais, dites en clair (le taux rapide, l’offre forte) : choisissez, il signe et envoie tout le coffre vers elle. Ailleurs (navigateur, version web, fenêtre rechargée), retapez d’abord les 16 caractères demandés de votre adresse, en deux morceaux masqués à l’écran, lus dans votre portefeuille ; « Sans installer », installez GodGift Core et recalculez la clé. Rebranchez internet si vous l’aviez coupé. Si « Accélérer » apparaît, quelqu’un d’autre a trouvé en même temps : c’est la course, cliquez."
     },
     {
       "q": "Il me manque un seul mot : puis-je tout essayer ?",
@@ -612,7 +612,7 @@
     },
     {
       "q": "Et si deux personnes trouvent en même temps ?",
-      "r": "C’est la course, la règle du jeu : tous ceux qui trouvent ont la même clé, et le coffre revient à la première transaction confirmée, en général celle qui paie le plus de frais. GodGift Core paie d’emblée, même sans concurrent, une offre forte d’environ 10 % du trésor (au plus 300 sat/vB, sans vous demander) et « Accélérer » double d’un coup, jamais plus de la moitié du trésor. Un concurrent qui mise davantage peut gagner : aucun programme ne peut l’empêcher."
+      "r": "C’est la course, la règle du jeu : tous ceux qui trouvent ont la même clé, et le coffre revient à la première transaction confirmée, en général celle qui paie le plus de frais. GodGift Core vous propose, avant de signer, le taux rapide du moment ou une offre forte (jusqu’à 10 % du trésor, sans nouvelle question jusqu’à 300 sat/vB), et « Accélérer » double d’un coup, jamais plus de la moitié du trésor. Un concurrent qui mise davantage peut gagner : aucun programme ne peut l’empêcher."
     },
     {
       "q": "Quelqu’un me propose une autre version de GodGift Core, ou de l’aide pour récupérer un coffre",

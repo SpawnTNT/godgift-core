@@ -30,7 +30,7 @@
         "Jede Antwort besteht aus französischen Wörtern der Liste der Fünftausend: drei Wörter pro Stein-Rätsel, vier bei einer Kathedrale und der letzten Truhe. Prüfen Sie Ihre Wörter unter „Finden“, in Schritt 2: „Die Liste der Fünftausend“.",
         "Eine Stunde nach dem zweiten Rätsel erscheint der Ruf: Er bringt den Zufall, das letzte Teil des Schlüssels. GodGift Core liest ihn ganz allein.",
         "Wählen Sie unter „Finden“ die Truhe: GodGift Core bereitet sie vor und zeigt „Bereit“ an. Trennen Sie das Internet, tippen Sie Ihre beiden Antworten und dann „Schlüssel berechnen“.",
-        "Ist es der richtige Schlüssel, verbinden Sie das Internet wieder. Im Fenster der installierten Anwendung, über ihr Symbol geöffnet, signiert GodGift Core sofort die Transaktion auf Ihrem Rechner und sendet sie von selbst an Ihre Adresse, mit einem starken Angebot (etwa 10 % des Schatzes als Gebühren); anderswo (Browser, Webversion, neu geladenes Fenster) lässt es Sie zuerst 16 Zeichen Ihrer Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer Wallet; „Ohne Installation“ sendet es nichts. Hat jemand anderes gleichzeitig gefunden, ist es das Rennen: „Beschleunigen“ verdoppelt die Gebühren auf einen Schlag.",
+        "Ist es der richtige Schlüssel, verbinden Sie das Internet wieder. Im Fenster der installierten Anwendung, über ihr Symbol geöffnet, schlägt GodGift Core Ihnen die beiden Gebührenangebote klar vor (den aktuellen schnellen Satz oder das starke Angebot, bis zu 10 % des Schatzes, um vorbeizuziehen), signiert dann die Transaktion auf Ihrem Rechner und sendet sie an Ihre Adresse; anderswo (Browser, Webversion, neu geladenes Fenster) lässt es Sie zuerst 16 Zeichen Ihrer Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer Wallet; „Ohne Installation“ sendet es nichts. Hat jemand anderes gleichzeitig gefunden, ist es das Rennen: „Beschleunigen“ verdoppelt die Gebühren auf einen Schlag.",
         "Üben Sie zuerst an den Übungstruhen A und B: Sie sind falsch, öffentlich und funktionieren genau wie die echten."
       ]
     },
@@ -457,7 +457,7 @@
     {
       "id": "reception",
       "mot": "Empfangsadresse",
-      "texte": "Die Adresse Ihrer eigenen Wallet (auch einer Cold Wallet), vorab unter Mehr, „Meine Empfangsadresse“, gespeichert. An dem Tag, an dem Sie fündig werden, geht der Schatz von allein dorthin. Sie muss von Ihrer Wallet signiert sein (Adresse bc1q…, 3… oder 1…): Die Signatur beweist, dass sie Ihnen gehört, und entlarvt einen Virus, der die kopierte Adresse ausgetauscht hätte. GodGift Core prüft sie unmittelbar vor dem Versand erneut, zeigt ihr Speicherdatum und warnt Sie, wenn sie sich seit Ihrem letzten Besuch geändert hat. Außerhalb des eigenen Fensters der installierten Anwendung lässt es Sie außerdem vor jedem Versand 16 Zeichen dieser Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer eigenen Wallet.",
+      "texte": "Die Adresse Ihrer eigenen Wallet (auch einer Cold Wallet), vorab unter Mehr, „Meine Empfangsadresse“, gespeichert. An dem Tag, an dem Sie fündig werden, geht der Schatz dorthin, sobald Sie die Gebühren gewählt haben. Sie muss von Ihrer Wallet signiert sein (Adresse bc1q…, 3… oder 1…): Die Signatur beweist, dass sie Ihnen gehört, und entlarvt einen Virus, der die kopierte Adresse ausgetauscht hätte. GodGift Core prüft sie unmittelbar vor dem Versand erneut, zeigt ihr Speicherdatum und warnt Sie, wenn sie sich seit Ihrem letzten Besuch geändert hat. Außerhalb des eigenen Fensters der installierten Anwendung lässt es Sie außerdem vor jedem Versand 16 Zeichen dieser Adresse erneut eintippen, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer eigenen Wallet.",
       "voir": [
         "recuperer",
         "portefeuille",
@@ -467,7 +467,7 @@
     {
       "id": "recuperer",
       "mot": "Den Schatz holen",
-      "texte": "Wird der Schlüssel einer echten Truhe gefunden, signiert GodGift Core auf Ihrem Rechner die Transaktion, die die ganze Truhe an Ihre signierte Empfangsadresse sendet, und verbreitet sie über beide Quellen. Im eigenen Fenster der installierten Anwendung (über ihr Symbol geöffnet) tut es das sofort; anderswo (Browser, Webversion, neu geladenes Fenster) erst, nachdem Sie 16 Zeichen Ihrer Adresse erneut eingetippt haben, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer eigenen Wallet: Hätte eine präparierte Seite die gespeicherte Adresse verändert, würden sie nicht übereinstimmen, auch nicht bei einer gefälschten Adresse mit demselben Ende. Das eigene Fenster hält sein Token nur im Speicher: Neu geladen, sendet es nicht mehr von selbst; öffnen Sie es erneut über sein Symbol. „Ohne Installation“ sendet es nichts. Offline wartet die Transaktion, bis das Netz zurück ist. Gebühren: sofort, auch ohne Konkurrenten, ein starkes Angebot von etwa 10 % des Schatzes (höchstens 300 sat/vB), ohne Sie zu fragen; darüber hinaus fragt es Sie; nie mehr als die Hälfte des Schatzes. Auf dem Telefon prüft die Webversion alles; um einen Schatz zu holen, bleibt die auf einem Computer installierte Anwendung der sicherste Weg.",
+      "texte": "Wird der Schlüssel einer echten Truhe gefunden, signiert GodGift Core auf Ihrem Rechner die Transaktion, die die ganze Truhe an Ihre signierte Empfangsadresse sendet, und verbreitet sie über beide Quellen. Im eigenen Fenster der installierten Anwendung (über ihr Symbol geöffnet) tut es das, sobald Sie die Gebühren gewählt haben; anderswo (Browser, Webversion, neu geladenes Fenster) erst, nachdem Sie 16 Zeichen Ihrer Adresse erneut eingetippt haben, in zwei zufällig gewählten, auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer eigenen Wallet: Hätte eine präparierte Seite die gespeicherte Adresse verändert, würden sie nicht übereinstimmen, auch nicht bei einer gefälschten Adresse mit demselben Ende. Das eigene Fenster hält sein Token nur im Speicher: Neu geladen, sendet es nicht mehr von selbst; öffnen Sie es erneut über sein Symbol. „Ohne Installation“ sendet es nichts. Offline wartet die Transaktion, bis das Netz zurück ist. Gebühren (Stein, Artikel 13): Vor dem Signieren nennt GodGift Core die beiden Angebote klar und lässt Sie wählen: den aktuellen schnellen Satz oder das starke Angebot, das von vornherein bis zu 10 % des Schatzes opfert (ohne neue Frage bis 300 sat/vB), um an einer anderen Transaktion vorbeizuziehen; nie mehr als 10 % ohne eine neue Frage; nie mehr als die Hälfte des Schatzes. Auf dem Telefon prüft die Webversion alles; um einen Schatz zu holen, bleibt die auf einem Computer installierte Anwendung der sicherste Weg.",
       "voir": [
         "reception",
         "accelerer",
@@ -497,7 +497,7 @@
     {
       "id": "installateur",
       "mot": "Mein Installationsprogramm prüfen",
-      "texte": "Legen Sie auf angedeleau.com/verifier-installateur die heruntergeladene Datei ab: Ihr Browser berechnet ihren Fingerabdruck an Ort und Stelle und vergleicht ihn mit den veröffentlichten Installationsprogrammen. Unter Windows wird das Installationsprogramm auch die Signatur des Autors tragen, sobald es signiert ist (Certum); die Probeversion ist es noch nicht.",
+      "texte": "Legen Sie auf angedeleau.com/verifier-installateur die heruntergeladene Datei ab: Ihr Browser berechnet ihren Fingerabdruck an Ort und Stelle und vergleicht ihn mit den veröffentlichten Installationsprogrammen. Unter Windows wird das Installationsprogramm auch die Signatur des Autors tragen, sobald es signiert ist (Certum).",
       "voir": [
         "officiel",
         "jamais"
@@ -553,7 +553,7 @@
     {
       "id": "course",
       "mot": "Das Rennen",
-      "texte": "Alle, die die richtigen Antworten finden, erhalten denselben Schlüssel: Die Truhe gehört der ersten bestätigten Transaktion, in der Regel der, die den Minern die höchsten Gebühren zahlt. Das ist die Spielregel, und kein Programm kann es verhindern. GodGift Core zahlt sofort, auch ohne Konkurrenten, ein starkes Angebot (etwa 10 % des Schatzes, höchstens 300 sat/vB) und verdoppelt mit „Beschleunigen“ auf einen Schlag, nie über die Hälfte des Schatzes hinaus; ein Konkurrent, der mehr bietet oder die Warteschlange mit verketteten Transaktionen verstopft, kann gewinnen.",
+      "texte": "Alle, die die richtigen Antworten finden, erhalten denselben Schlüssel: Die Truhe gehört der ersten bestätigten Transaktion, in der Regel der, die den Minern die höchsten Gebühren zahlt. Das ist die Spielregel, und kein Programm kann es verhindern. GodGift Core schlägt Ihnen vor dem Signieren den aktuellen schnellen Satz oder ein starkes Angebot vor (bis zu 10 % des Schatzes, ohne neue Frage bis 300 sat/vB) und verdoppelt dann mit „Beschleunigen“ auf einen Schlag, nie über die Hälfte des Schatzes hinaus; ein Konkurrent, der mehr bietet oder die Warteschlange mit verketteten Transaktionen verstopft, kann gewinnen.",
       "voir": [
         "accelerer",
         "recuperer",
@@ -580,7 +580,7 @@
     },
     {
       "q": "Ich habe den Schlüssel gefunden: Was tun?",
-      "r": "Im Fenster der installierten Anwendung nichts zu tun: Ist Ihre signierte Empfangsadresse gespeichert, sendet GodGift Core sofort die ganze Truhe dorthin. Anderswo (Browser, Webversion, neu geladenes Fenster) tippen Sie zuerst die 16 verlangten Zeichen Ihrer Adresse erneut ein, in zwei auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer Wallet; „Ohne Installation“ installieren Sie GodGift Core und berechnen den Schlüssel erneut. Verbinden Sie das Internet wieder, falls Sie es getrennt hatten. Erscheint „Beschleunigen“, hat jemand anderes gleichzeitig gefunden: Das ist das Rennen, klicken Sie darauf."
+      "r": "Im Fenster der installierten Anwendung schlägt GodGift Core Ihnen, wenn Ihre signierte Empfangsadresse gespeichert ist, die beiden Gebührenangebote klar vor (den schnellen Satz, das starke Angebot): Wählen Sie, und es signiert und sendet die ganze Truhe dorthin. Anderswo (Browser, Webversion, neu geladenes Fenster) tippen Sie zuerst die 16 verlangten Zeichen Ihrer Adresse erneut ein, in zwei auf dem Bildschirm verdeckten Stücken, abgelesen in Ihrer Wallet; „Ohne Installation“ installieren Sie GodGift Core und berechnen den Schlüssel erneut. Verbinden Sie das Internet wieder, falls Sie es getrennt hatten. Erscheint „Beschleunigen“, hat jemand anderes gleichzeitig gefunden: Das ist das Rennen, klicken Sie darauf."
     },
     {
       "q": "Mir fehlt nur ein einziges Wort: Darf ich alles ausprobieren?",
@@ -612,7 +612,7 @@
     },
     {
       "q": "Und wenn zwei Personen gleichzeitig fündig werden?",
-      "r": "Das ist das Rennen, die Spielregel: Alle, die finden, haben denselben Schlüssel, und die Truhe gehört der ersten bestätigten Transaktion, in der Regel der mit den höchsten Gebühren. GodGift Core zahlt sofort, auch ohne Konkurrenten, ein starkes Angebot von etwa 10 % des Schatzes (höchstens 300 sat/vB, ohne Sie zu fragen), und „Beschleunigen“ verdoppelt auf einen Schlag, nie mehr als die Hälfte des Schatzes. Ein Konkurrent, der mehr bietet, kann gewinnen: Kein Programm kann es verhindern."
+      "r": "Das ist das Rennen, die Spielregel: Alle, die finden, haben denselben Schlüssel, und die Truhe gehört der ersten bestätigten Transaktion, in der Regel der mit den höchsten Gebühren. GodGift Core schlägt Ihnen vor dem Signieren den aktuellen schnellen Satz oder ein starkes Angebot vor (bis zu 10 % des Schatzes, ohne neue Frage bis 300 sat/vB), und „Beschleunigen“ verdoppelt auf einen Schlag, nie mehr als die Hälfte des Schatzes. Ein Konkurrent, der mehr bietet, kann gewinnen: Kein Programm kann es verhindern."
     },
     {
       "q": "Jemand bietet mir eine andere Version von GodGift Core an, oder Hilfe, eine Truhe zu holen",
