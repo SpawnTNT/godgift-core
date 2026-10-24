@@ -1508,7 +1508,7 @@
     if (f > Math.floor(e.total / 2)) { TR.msg[kk] = { e: "att", d: t("tr_frais_max") }; return rendreSiChasse(); }
     var rva = receptionValide(); TR.dest[kk] = rva.ok ? rva.adresse : (TR.dest[kk] || e.dest); TR.cibles[kk] = TR.cibles[kk] || { n: e.n, h: e.h, adresse: e.adresse };   // l'adresse courante : c'est elle que la question montre et que la signature vise
     if (f > e.total * AUTO_PART_MAX || f / e.vt > AUTO_TAUX_MAX || (e.concurrent && e.concurrent.uneSource) || TR.dest[kk] !== e.dest) {   // cher, concurrent vu d'un seul cote, ou adresse changee : on demande
-      TR.confirmer[kk] = { frais: f, total: e.total, vt: e.vt, entrees: e.entrees, fraisImpose: f, nouvelle: TR.dest[kk] !== e.dest }; return rendreSiChasse();
+      TR.confirmer[kk] = { frais: f, total: e.total, vt: e.vt, entrees: e.entrees, fraisImpose: f, nouvelle: TR.dest[kk] !== e.dest, remplace: !(f > e.total * AUTO_PART_MAX || f / e.vt > AUTO_TAUX_MAX || (e.concurrent && e.concurrent.uneSource)) }; return rendreSiChasse();   // seule l'adresse a change : la question du double ; « Frais eleves » reste pour les seuils
     }
     lancerEnvoi(kk, f, { frais: f, vt: e.vt, total: e.total, entrees: e.entrees });   // 1.6.0 (I5) : si un concurrent a releve les frais entre-temps, une nouvelle question, jamais plus de 10 % sans elle
   }
@@ -1542,7 +1542,7 @@
           confirmee: ["ok", "🏆 " + t(e.fini ? "tr_confirmee" : "tr_confirmee_attente", { b: fsats(e.bloc || 0), c: e.confs || 1 })], concurrence: ["ko", "⚠ " + t("tr_concurrence", { f: fsats(e.concurrent ? e.concurrent.frais : 0) })], perdu: ["ko", "✗ " + t("tr_perdu")] };
         var y = etats[e.etat] || etats.a_diffuser;
         x += '<p class="' + y[0] + '" style="font-size:15px">' + esc(y[1]) + '</p><p class="doux" style="font-size:12px">' + esc(t("tr_detail", { m: fsats(e.montant), f: fsats(e.frais), v: e.vt })) + " · " + lien + "</p>" +
-          ((e.etat === "diffusee" || e.etat === "concurrence" || e.etat === "a_diffuser") && fraisAccel(e) <= Math.floor(e.total / 2) ? '<button class="bouton" data-accelerer="' + esc(kk) + '">' + esc(t("tr_accelerer")) + " · " + esc(fsats(fraisAccel(e))) + " sats (" + pc(Math.round(fraisAccel(e) / e.total * 100)) + ")</button>" : "");
+          ((e.etat === "diffusee" || e.etat === "concurrence" || e.etat === "a_diffuser") && fraisAccel(e) <= Math.floor(e.total / 2) ? '<button class="bouton" data-accelerer="' + esc(kk) + '">' + esc(t("tr_accelerer")) + " · " + esc(fsats(fraisAccel(e))) + " sats (" + pc(fraisAccel(e) / e.total * 100 < 1 ? "<\u00a01" : Math.round(fraisAccel(e) / e.total * 100)) + ")</button>" : "");
       }
       if (x) h += '<div class="cadre tresor-etat"><div class="sur">' + esc(t("tr_titre")) + " · " + esc(t("coffre_n", { n: kk.split(":")[0] })) + "</div>" + x + "</div>";
     });

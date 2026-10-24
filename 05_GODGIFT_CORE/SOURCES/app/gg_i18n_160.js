@@ -27,6 +27,8 @@
     tr_annule: "Envoi annulé. La clé reste en mémoire tant que GodGift Core est ouvert : « Choisir les frais » quand vous êtes prêt.",
     tr_dest_changee: "L’adresse de réception a changé depuis la découverte : rien n’est envoyé. Vérifiez-la (Mon adresse de réception) : le choix des frais reviendra ensuite.",
     tr_remplacer: "Une transaction attend déjà\u00a0: la remplacer au double, {f} sats ({p}\u00a0% du trésor, {t}\u00a0sat/vB)\u00a0? Rien ne part sans vous.",
+    v_programme_essai: "en attente de signature, empreinte {h}… (pas encore désignée par un message signé de l’auteur)",
+    version_essai: "en attente de signature",
     mot_accent: "«\u00a0{m}\u00a0» s’écrit aussi avec un accent dans la liste\u00a0: {c}. Tapez le numéro du mot voulu, ou le mot avec son accent."
   };
   var en = {
@@ -53,6 +55,8 @@
     tr_annule: "Sending cancelled. The key stays in memory while GodGift Core is open: “Choose the fees” when you are ready.",
     tr_dest_changee: "The receiving address changed since the discovery: nothing is sent. Check it (My receiving address): the choice of fees will come back afterwards.",
     tr_remplacer: "A transaction is already waiting: replace it at double, {f} sats ({p}% of the treasure, {t} sat/vB)? Nothing leaves without you.",
+    v_programme_essai: "awaiting signature, fingerprint {h}… (not yet designated by a signed message from the author)",
+    version_essai: "awaiting signature",
     mot_accent: "“{m}” also exists with an accent in the list: {c}. Type the number of the word you mean, or the word with its accent."
   };
   var es = {
@@ -80,6 +84,8 @@
     tr_annule: "Envío cancelado. La clave sigue en memoria mientras GodGift Core esté abierto: «Elegir las comisiones» cuando esté listo.",
     tr_dest_changee: "La dirección de recepción ha cambiado desde el hallazgo: no se envía nada. Compruébela (Mi dirección de recepción): la elección de las comisiones volverá después.",
     tr_remplacer: "Ya hay una transacción en espera: ¿reemplazarla al doble, {f} sats ({p}\u00a0% del tesoro, {t} sat/vB)? Nada sale sin usted.",
+    v_programme_essai: "a la espera de firma, huella {h}… (aún no designada por un mensaje firmado del autor)",
+    version_essai: "a la espera de firma",
     mot_accent: "«{m}» también existe con acento en la lista: {c}. Escriba el número de la palabra que quiere, o la palabra con su acento."
   };
   var de = {
@@ -106,7 +112,9 @@
     tr_envoyer_maintenant: "Gebühren wählen",
     tr_annule: "Senden abgebrochen. Der Schlüssel bleibt im Speicher, solange GodGift Core geöffnet ist: „Gebühren wählen“, wenn Sie bereit sind.",
     tr_dest_changee: "Die Empfangsadresse hat sich seit dem Fund geändert: Nichts wird gesendet. Prüfen Sie sie (Meine Empfangsadresse): Die Wahl der Gebühren kommt danach zurück.",
-    tr_remplacer: "Eine Transaktion wartet bereits: Sie zum Doppelten ersetzen, {f} sats ({p}\u00a0% des Schatzes, {t} sat/vB)? Nichts geht ohne Sie.",
+    tr_remplacer: "Eine Transaktion wartet bereits: sie zum Doppelten ersetzen, {f} sats ({p}\u00a0% des Schatzes, {t} sat/vB)? Nichts geht ohne Sie.",
+    v_programme_essai: "wartet auf Signatur, Fingerabdruck {h}… (noch nicht durch eine signierte Nachricht des Autors bezeichnet)",
+    version_essai: "wartet auf Signatur",
     mot_accent: "„{m}“ gibt es in der Liste auch mit Akzent: {c}. Geben Sie die Nummer des gemeinten Wortes ein, oder das Wort mit seinem Akzent."
   };
   var pt = {
@@ -134,6 +142,8 @@
     tr_annule: "Envio cancelado. A chave fica em memória enquanto o GodGift Core estiver aberto: «Escolher as taxas» quando estiver pronto.",
     tr_dest_changee: "O endereço de receção mudou desde a descoberta: nada é enviado. Verifique-o (O meu endereço de receção): a escolha das taxas voltará depois.",
     tr_remplacer: "Já há uma transação à espera: substituí-la pelo dobro, {f} sats ({p}\u00a0% do tesouro, {t} sat/vB)? Nada parte sem si.",
+    v_programme_essai: "à espera de assinatura, impressão {h}… (ainda não designada por uma mensagem assinada do autor)",
+    version_essai: "à espera de assinatura",
     mot_accent: "«{m}» também existe com acento na lista: {c}. Escreva o número da palavra pretendida, ou a palavra com o seu acento."
   };
   var I = racine.GG_I18N;

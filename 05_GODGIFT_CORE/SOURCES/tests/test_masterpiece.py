@@ -848,6 +848,18 @@ async def main():
         await pg.click('[data-annuler]'); await pg.wait_for_timeout(400)
         assert await pg.evaluate(f"!GG.TR.confirmer['{K0}'] && !GG.TR.choix['{K0}'] && GG.TR.envois['{K0}'].txid === '{env2['txid']}' && !!document.querySelector('[data-accelerer]') && !document.querySelector('[data-envoyer]')") and len(BETA['posts']) == n6
         vert('tour 6 : la cle recalculee pendant qu une transaction attend ne part pas seule : la question du double (adresse, sats, part du coffre, « Annuler ») ; annulee, l envoi en attente reste et « Accelerer » aussi')
+        # tour 8 : « Accelerer » quand seule l adresse a change, sous les seuils : la question du double, pas « Frais eleves » ; le bouton dit « < 1 % »
+        await pg.evaluate(f"GG.TR.envois['{K0}'].frais = 1650; GG.TR.envois['{K0}'].vt = 110"); await enregistrer_(K2, ADR2); await pg.wait_for_timeout(500)
+        await pg.evaluate("location.hash = '#/chasse/0'"); await pg.wait_for_timeout(500)
+        bt8 = plat(await pg.inner_text('[data-accelerer]')); assert '(< 1 %)' in bt8, bt8
+        await pg.click('[data-accelerer]'); await pg.wait_for_timeout(500)
+        cf8 = await pg.evaluate(f"GG.TR.confirmer['{K0}']"); txt8 = plat(await pg.inner_text('#page'))
+        assert cf8 and cf8.get('nouvelle') and cf8.get('remplace') and len(BETA['posts']) == n6 and 'Une transaction attend déjà' in txt8 and 'Frais élevés' not in txt8 and '(< 1 % du trésor' in txt8, (cf8, txt8[:500])
+        await pg.click('[data-annuler]'); await pg.wait_for_timeout(400)
+        await pg.evaluate(f"GG.TR.envois['{K0}'].frais = {env2['frais']}; GG.TR.envois['{K0}'].vt = {env2['vt']}"); await enregistrer_(KG, ADRG); await pg.wait_for_timeout(500)
+        await pg.evaluate("location.hash = '#/chasse/0'"); await pg.wait_for_timeout(600)
+        assert await pg.evaluate(f"!GG.TR.confirmer['{K0}'] && !GG.TR.choix['{K0}'] && !!document.querySelector('[data-accelerer]')") and len(BETA['posts']) == n6
+        vert('tour 8 : « Accelerer » quand seule l adresse a change (sous les seuils) pose la question du double (« Une transaction attend deja »), jamais « Frais eleves » ; le bouton dit « < 1 % » ; rien ne part')
         # ---- un concurrent en attente : detecte, et on passe devant
         BETA['conflit'] = True
         BETA['mempool0'] = [{'txid': env2['txid'], 'fee': env2['frais'], 'weight': env2['vt'] * 4, 'vin': [{'txid': '77' * 32, 'vout': 0, 'prevout': {'scriptpubkey_address': ADR0, 'value': 600000}}]}]   # tour 6 : notre ancienne encore en mempool, la remplacante refusee : aucun faux concurrent
